@@ -12,15 +12,16 @@ import {
   Typography,
 } from '@mui/material';
 import { IProduct } from '../../interfaces';
+import { useRole } from '../../hooks';
 
 interface Props {
   product: IProduct;
-  role: string
 }
 
-export const ProductCard: FC<PropsWithChildren<Props>> = ({ product, role }) => {
+export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
   const [isHovered, setisHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const { role } = useRole('user/rol');
 
   const productImage = useMemo(() => {
     return isHovered ? product.images[1] : product.images[0];
@@ -35,14 +36,18 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product, role }) => 
       onMouseLeave={() => setisHovered(false)}
     >
       <Card>
-        <NextLink href={`/product/${role}/${product.slug}`} passHref prefetch={false}>
+        <NextLink
+          href={`/product/${role.message}/${product.slug}`}
+          passHref
+          prefetch={false}
+        >
           <Link>
             <CardActionArea>
               <CardMedia
-                component='img'
+                component="img"
                 image={productImage}
                 alt={product.title}
-                className='fadeIn'
+                className="fadeIn"
                 onLoad={() => setIsImageLoaded(true)}
               />
             </CardActionArea>
@@ -52,9 +57,9 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product, role }) => 
 
       <Box
         sx={{ mt: 1, display: isImageLoaded ? 'block' : 'none' }}
-        className='fadeIn'
+        className="fadeIn"
       >
-        <Typography textAlign='center' fontWeight={700} variant='h6'>
+        <Typography textAlign="center" fontWeight={700} variant="h6">
           {product.title}
         </Typography>
       </Box>

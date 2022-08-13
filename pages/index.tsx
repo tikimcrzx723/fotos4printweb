@@ -6,11 +6,9 @@ import { ShopLayout } from '../components/layouts';
 import { useProducts } from '../hooks/useProducts';
 import { FullScreenLoading } from '../components/ui';
 import { ProductList } from '../components/products';
-import { useRole } from '../hooks';
 
 const HomePage: NextPage = () => {
   const { products, isLoading } = useProducts('products');
-  const { role } = useRole('user/rol');
 
   return (
     <ShopLayout
@@ -27,11 +25,7 @@ const HomePage: NextPage = () => {
           All Products
         </Typography>
       </Box>
-      {isLoading ? (
-        <FullScreenLoading />
-      ) : (
-        <ProductList products={products} role={role.message} />
-      )}
+      {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   );
 };

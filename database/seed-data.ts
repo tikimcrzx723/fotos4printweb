@@ -4,15 +4,17 @@ interface SeedUser {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'client';
+  role: 'admin' | 'client' | 'federal' | 'frequent';
 }
 
 interface SeedData {
   users: SeedUser[];
 }
 
-const password00 = bcryptjs.hashSync('Co$$ett3.es@ad');
-const password01 = bcryptjs.hashSync('Eutiquiano');
+const password00 = bcryptjs.hashSync('Tikio123.es$');
+const password01 = bcryptjs.hashSync('Tikio123.es$');
+const password02 = bcryptjs.hashSync('Tikio123.es$');
+const password03 = bcryptjs.hashSync('Tikio123.es$');
 
 export const initialData: SeedData = {
   users: [
@@ -27,6 +29,18 @@ export const initialData: SeedData = {
       email: 'tikimioo@gmail.com',
       password: password01,
       role: 'client',
+    },
+    {
+      name: 'Salomen Delgado',
+      email: 'salomen@gmail.com',
+      password: password02,
+      role: 'federal',
+    },
+    {
+      name: 'Delfino Urgado',
+      email: 'delfino@hotmail.com',
+      password: password03,
+      role: 'frequent',
     },
   ],
 };

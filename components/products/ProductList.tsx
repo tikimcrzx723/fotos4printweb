@@ -5,17 +5,13 @@ import { ProductCard } from '.';
 
 interface Props {
   products: IProduct[];
-  role: string;
 }
 
-export const ProductList: FC<PropsWithChildren<Props>> = ({
-  products,
-  role,
-}) => {
+export const ProductList: FC<PropsWithChildren<Props>> = ({ products }) => {
   return (
     <Grid container spacing={4}>
       {products.map((product) => (
-        <ProductCard key={product.slug} product={product} role={role} />
+        <ProductCard key={product.slug} product={product} />
       ))}
     </Grid>
   );
