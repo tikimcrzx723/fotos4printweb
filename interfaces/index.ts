@@ -7,3 +7,4 @@ export * from './dashboard';
 export * from './orderUser';
 
 export * as IPaypal from './paypal';
+export * as ISquare from './square';
