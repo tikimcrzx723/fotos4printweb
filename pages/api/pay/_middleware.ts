@@ -9,21 +9,29 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!session) {
     try {
-      return NextResponse.redirect(`/`);
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
     } catch (error) {
-      const url = req.nextUrl.clone();
-      return NextResponse.redirect(`${url.origin}`);
+      console.log(error);
     }
   }
 
-  const validRoles = ['federal', 'admin'];
+  const validRoles = ['admin', 'super-user', 'SEO'];
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      return NextResponse.redirect('/');
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
     } catch (error) {
-      const url = req.nextUrl.clone();
-      return NextResponse.redirect(`${url.origin}/`);
+      console.log(error);
     }
   }
 

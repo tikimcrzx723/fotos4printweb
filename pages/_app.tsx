@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           'client-id':
             process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.toString() || '',
           currency: 'USD',
+          'disable-funding': 'card',
         }}
       >
         <SWRConfig

@@ -33,7 +33,6 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FormData>({
     defaultValues: address,
   });
@@ -41,6 +40,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
   const onSubmitAddress = (data: FormData) => {
     if (address === null) addAdress(data);
     else updateAddress(data);
+    router.reload();
   };
 
   return (
@@ -171,7 +171,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session: any = await getSession({ req });
-  let address: IAddress | null = await dbUsers.findAddress(session.user._id);
+  const address: IAddress | null = await dbUsers.findAddress(session.user._id);
 
   return {
     props: {

@@ -14,6 +14,7 @@ export interface IOrder {
 
   isPaid: boolean;
   paidAt?: string;
+  paidMetod?: 'paypal' | 'square';
 
   transactionId?: string;
 

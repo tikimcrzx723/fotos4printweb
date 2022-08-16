@@ -23,6 +23,7 @@ import { getSession } from 'next-auth/react';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { appApi } from '../../api';
+import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk';
 
 export type OrderResponseBody = {
   id: string;
@@ -44,7 +45,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
   const { shippingAddress } = order;
   const [isPaying, setIsPaying] = useState(false);
 
-  const onOrderCompleted = async (details: OrderResponseBody) => {
+  const onOrderCompletedPayPal = async (details: OrderResponseBody) => {
     if (details.status !== 'COMPLETED') {
       return alert('No Paypal payment');
     }
@@ -52,7 +53,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
     setIsPaying(true);
 
     try {
-      const { data } = await appApi.post(`/orders/pay`, {
+      const { data } = await appApi.post(`/payments/paypal/pay`, {
         transactionId: details.id,
         orderId: order._id,
       });
@@ -65,43 +66,53 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
     }
   };
 
+  const onOrderCompleted = async () => {
+    //details: OrderResponseBody
+    // if (details.status !== 'COMPLETED') {
+    //   return alert('No Paypal payment');
+    // }
+
+    setIsPaying(true);
+    router.reload();
+  };
+
   return (
-    <ShopLayout title='Order summary' pageDescription='Order summary'>
-      <Typography variant='h1' component='h1'>
+    <ShopLayout title="Order summary" pageDescription="Order summary">
+      <Typography variant="h1" component="h1">
         Order: {order._id}
       </Typography>
       {order.isPaid ? (
         <Chip
           sx={{ my: 2 }}
-          label='Order has been paid'
-          variant='outlined'
-          color='success'
+          label="Order has been paid"
+          variant="outlined"
+          color="success"
           icon={<CreditScoreOutlined />}
         />
       ) : (
         <Chip
           sx={{ my: 2 }}
-          label='Pending payment'
-          variant='outlined'
-          color='error'
+          label="Pending payment"
+          variant="outlined"
+          color="error"
           icon={<CreditCardOffOutlined />}
         />
       )}
 
-      <Grid container className='fadeIn'>
+      <Grid container className="fadeIn">
         <Grid item xs={12} sm={7}>
           <CartList products={order.orderItems} />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Card className='summary-card'>
+          <Card className="summary-card">
             <CardContent>
-              <Typography variant='h2'>
+              <Typography variant="h2">
                 Summary ({order.numberOfItems} product
                 {order.numberOfItems > 1 ? 's' : ''})
               </Typography>
               <Divider sx={{ my: 1 }} />
 
-              <Typography variant='subtitle1'>Delivery Address</Typography>
+              <Typography variant="subtitle1">Delivery Address</Typography>
               <Typography>
                 {shippingAddress.firstName} {shippingAddress.lastName}
               </Typography>
@@ -127,46 +138,68 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                   tax: order.tax,
                 }}
               />
-              <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Box
-                  display='flex'
-                  justifyContent='center'
-                  className='fadeIn'
+                  display="flex"
+                  justifyContent="center"
+                  className="fadeIn"
                   sx={{ display: isPaying ? 'flex' : 'none' }}
                 >
                   <CircularProgress />
                 </Box>
                 <Box
-                  flexDirection='column'
+                  flexDirection="column"
                   sx={{ display: isPaying ? 'none' : 'flex', flex: 1 }}
                 >
                   {order.isPaid ? (
                     <Chip
                       sx={{ my: 2 }}
-                      label='Order has been paid'
-                      variant='outlined'
-                      color='success'
+                      label="Order has been paid"
+                      variant="outlined"
+                      color="success"
                       icon={<CreditScoreOutlined />}
                     />
                   ) : (
-                    <PayPalButtons
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                value: order.total.toString(),
+                    <>
+                      <PayPalButtons
+                        createOrder={(data, actions) => {
+                          return actions.order.create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  value: order.total.toString(),
+                                },
                               },
-                            },
-                          ],
-                        });
-                      }}
-                      onApprove={(data, actions) => {
-                        return actions.order!.capture().then((details) => {
-                          onOrderCompleted(details);
-                        });
-                      }}
-                    />
+                            ],
+                          });
+                        }}
+                        onApprove={(data, actions) => {
+                          return actions.order!.capture().then((details) => {
+                            onOrderCompletedPayPal(details);
+                          });
+                        }}
+                      />
+                      <PaymentForm
+                        applicationId={
+                          process.env.NEXT_PUBLIC_APPLICATION_ID || ''
+                        }
+                        locationId={process.env.NEXT_PUBLIC_LOCATION || ''}
+                        // createPaymentRequest={}
+                        cardTokenizeResponseReceived={async (token, buyer) => {
+                          const { data } = await appApi.post(
+                            '/payments/square/pay',
+                            {
+                              sourceId: token.token,
+                              amount: order.total,
+                              orderId: order._id,
+                            }
+                          );
+                          onOrderCompleted();
+                        }}
+                      >
+                        <CreditCard lang="us" />
+                      </PaymentForm>
+                    </>
                   )}
                 </Box>
               </Box>

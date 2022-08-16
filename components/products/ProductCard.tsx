@@ -22,6 +22,7 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
   const [isHovered, setisHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { role } = useRole('user/rol');
+  const rol = role.message === 'admin' ? 'federal' : role.message;
 
   const productImage = useMemo(() => {
     return isHovered ? product.images[1] : product.images[0];
@@ -37,7 +38,7 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
     >
       <Card>
         <NextLink
-          href={`/product/${role.message}/${product.slug}`}
+          href={`/product/${rol}/${product.slug}`}
           passHref
           prefetch={false}
         >

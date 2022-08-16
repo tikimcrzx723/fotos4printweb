@@ -1,8 +1,6 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { v2 as cloudinary } from 'cloudinary';
-
 import { db } from '../../../database';
 import { IProduct } from '../../../interfaces';
 import { Product } from '../../../models';
