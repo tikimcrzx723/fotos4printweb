@@ -42,10 +42,13 @@ import { converters } from '../../../libs';
 import { ShowListImages } from '../../../components/uploads';
 
 const validTypes = ['photo', 'press', 'gift'];
+const validNeedImages = [true, false];
 
 interface FormData {
   _id?: string;
   description: string;
+  needImages?: boolean;
+  minIMages?: number;
   images: string[];
   price: {
     size: string;
@@ -82,9 +85,10 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
 
   const { control } = useForm();
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    { control, name: 'price' }
-  );
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'price',
+  });
 
   useEffect(() => {
     getValues('price').map(() => {
@@ -238,6 +242,40 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               error={!!errors.description}
               helperText={errors.description?.message}
             />
+            <FormControl sx={{ mt: 5 }}>
+              <FormLabel>
+                <Typography variant="h5">Need Images</Typography>
+              </FormLabel>
+              <RadioGroup
+                row
+                value={getValues('needImages')}
+                onChange={({ target }) =>
+                  setValue('needImages', target.value as any, {
+                    shouldValidate: true,
+                  })
+                }
+              >
+                {validNeedImages.map((option) => (
+                  <FormControlLabel
+                    key={option ? 'Yes' : 'No'}
+                    value={option}
+                    control={<Radio color="secondary" />}
+                    label={capitalize(option ? 'Yes' : 'No')}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+            <TextField
+              label="Min Images"
+              type="number"
+              variant="filled"
+              fullWidth
+              sx={{ mb: 1 }}
+              {...register(`minIMages`, {})}
+              error={!!errors.price}
+              helperText={errors.title?.message}
+            />
+
             <Divider sx={{ my: 1 }} />
           </Grid>
 
@@ -252,7 +290,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                 required: 'This field is required',
                 validate: (val) =>
                   val.trim().includes(' ')
-                    ? 'No se puede tener espacios en blanco'
+                    ? 'You cannot have blank spaces'
                     : undefined,
               })}
               error={!!errors.slug}
@@ -380,6 +418,9 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                   <TextField
                     label="Price Client"
                     type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10', step: '0.05' },
+                    }}
                     variant="filled"
                     fullWidth
                     sx={{ mb: 1 }}
@@ -398,6 +439,9 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                   <TextField
                     label="Price Frequnt"
                     type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10', step: '0.05' },
+                    }}
                     variant="filled"
                     fullWidth
                     sx={{ mb: 1 }}
@@ -416,6 +460,9 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                   <TextField
                     label="Price Federal"
                     type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10', step: '0.05' },
+                    }}
                     variant="filled"
                     fullWidth
                     sx={{ mb: 1 }}
@@ -450,7 +497,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
             sx={{
               width: '150px',
               display: 'flex',
-              flexDirection: 'row-reverse',
+              marginRight: 2,
             }}
             type="submit"
             onClick={() => append({ size: '24x35in', price: 25 })}

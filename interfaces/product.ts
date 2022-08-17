@@ -7,6 +7,8 @@ export interface IProduct {
   tags: string[];
   title: string;
   type: string;
+  minIMages?: number;
+  needImages?: boolean;
 
   // TODO: agregar createdAt y updatedAt
   createdAt: string;

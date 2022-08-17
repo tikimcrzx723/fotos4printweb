@@ -81,17 +81,6 @@ const updateProducts = async (
       return res.status(400).json({ message: 'is not a valid ObjectId' });
     }
 
-    // TODO: eliminar las imagenes en Cloudinary
-    // product.images.forEach(async (image) => {
-    //   if (!images.includes(image)) {
-    //     // Delete for cloudinary
-    //     const [fileId, extension] = image
-    //       .substring(image.lastIndexOf('/') + 1)
-    //       .split('.');
-    //     await cloudinary.uploader.destroy(fileId);
-    //   }
-    // });
-
     await product.update(req.body);
     await db.disconnect();
 
@@ -107,7 +96,7 @@ const createProduct = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  const { images = [] } = req.body as IProduct;
+  const { images = [], price } = req.body as IProduct;
 
   if (images.length < 2) {
     return res.status(400).json({ message: 'At least 2 images are required' });
@@ -123,7 +112,26 @@ const createProduct = async (
         .json({ message: 'A product with this slug already exists' });
     }
 
-    const product = new Product(req.body);
+    const priceInput = price.filter(
+      (p) =>
+        p.priceClient !== 0 ||
+        p.priceFerderal !== 0 ||
+        p.priceFrequnt !== 0 ||
+        p.size !== null ||
+        p.size !== undefined ||
+        p.size !== '' ||
+        p.priceClient !== null ||
+        p.priceFerderal !== null ||
+        p.priceFrequnt !== null ||
+        p.priceClient !== undefined ||
+        p.priceFerderal !== undefined ||
+        p.priceFrequnt !== undefined ||
+        p.priceClient > 0 ||
+        p.priceFerderal > 0 ||
+        p.priceFrequnt > 0
+    );
+
+    const product = new Product(...req.body, { price: priceInput });
     await product.save();
     await db.disconnect();
 

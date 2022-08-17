@@ -14,9 +14,8 @@ const productSchema = new Schema(
         priceFrequnt: { type: Number },
       },
     ],
-    minQuantity: { type: Number },
-    needImages: { type: Boolean, default: true },
-    quantityNeedImage: { type: Number },
+    needImages: { type: Boolean },
+    minIMages: { type: Number },
     slug: { type: String, required: true, unique: true },
     tags: [{ type: String }],
     type: {
