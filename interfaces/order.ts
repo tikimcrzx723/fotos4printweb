@@ -16,11 +16,18 @@ export interface IOrder {
   paidAt?: string;
   paidMetod?: 'paypal' | 'square';
 
+  delivery?: IDelivery;
+
   transactionId?: string;
 
   createdAt?: string;
   updatedAt?: string;
   orderState?: 'pending' | 'processing' | 'completed';
+}
+
+export interface IDelivery {
+  price: number;
+  required: boolean;
 }
 
 export interface IOrderItem {
@@ -33,6 +40,8 @@ export interface IOrderItem {
   price: number;
   userImages?: IUserImages[];
   tempImages?: string[];
+  minIMages?: number;
+  needImages?: boolean;
 }
 
 interface IUserImages {

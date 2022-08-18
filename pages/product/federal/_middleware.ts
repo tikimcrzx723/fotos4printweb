@@ -9,21 +9,34 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!session) {
     try {
-      return NextResponse.redirect(`/`);
+      const requestedPage = req.page.name;
+      return NextResponse.redirect(`/product/client/${req.page.params.slug}`);
     } catch (error) {
       const url = req.nextUrl.clone();
-      return NextResponse.redirect(`${url.origin}`);
+      return NextResponse.redirect(
+        `${url.origin}/product/client/${req.page.params.slug}`
+      );
     }
   }
 
-  const validRoles = ['federal', 'admin'];
+  const validRoles = ['admin', 'federal'];
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      return NextResponse.redirect('/');
+      const param = req.page.name;
+      if (session.user.role !== 'client') {
+        return NextResponse.redirect(`/product/frequent/${param}`);
+      } else {
+        return NextResponse.redirect(`/product/client/${param}`);
+      }
     } catch (error) {
       const url = req.nextUrl.clone();
-      return NextResponse.redirect(`${url.origin}/`);
+      const param = req.page.name;
+      if (session.user.role !== 'client') {
+        return NextResponse.redirect(`${url.origin}/product/frequent/${param}`);
+      } else {
+        return NextResponse.redirect(`${url.origin}/product/client/${param}`);
+      }
     }
   }
 

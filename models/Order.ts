@@ -29,7 +29,10 @@ const orderSchema = new Schema(
       phone: { type: String, required: true },
     },
     numberOfItems: { type: Number, required: true },
-    delivery: { type: Number, default: 15 },
+    delivery: {
+      price: { type: Number, default: 15 },
+      required: { type: Boolean, default: true },
+    },
     subTotal: { type: Number, required: true },
     tax: { type: Number, required: true },
     total: { type: Number, required: true },

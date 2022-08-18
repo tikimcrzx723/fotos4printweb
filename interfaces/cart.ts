@@ -9,6 +9,8 @@ export interface ICartProduct {
   quantity: number;
   userImages?: IUserImage[];
   tempImages?: string[];
+  minIMages?: number;
+  needImages?: boolean;
 }
 
 export interface IUserImage {

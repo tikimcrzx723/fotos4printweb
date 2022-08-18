@@ -18,7 +18,7 @@ interface ContextProps {
   updateAddress: (address: IShippingAddress) => void;
 
   // Orders
-  createOrder: () => Promise<{
+  createOrder: (delivery: boolean) => Promise<{
     hasError: boolean;
     message: string;
   }>;

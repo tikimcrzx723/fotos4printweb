@@ -19,8 +19,6 @@ import { Box, Card, CardActions, CardMedia, Grid } from '@mui/material';
 import { CartContext } from '../../context';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { converters } from '../../libs';
-import { CircularStatict } from './CircularStatict';
-import Loader from './Loader';
 
 interface Props {
   product: IOrderItem | ICartProduct;

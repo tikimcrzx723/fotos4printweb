@@ -96,7 +96,16 @@ const createProduct = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  const { images = [], price } = req.body as IProduct;
+  const {
+    title,
+    description,
+    images = [],
+    price,
+    needImages,
+    minIMages,
+    slug,
+    type,
+  } = req.body as IProduct;
 
   if (images.length < 2) {
     return res.status(400).json({ message: 'At least 2 images are required' });
@@ -114,24 +123,52 @@ const createProduct = async (
 
     const priceInput = price.filter(
       (p) =>
-        p.priceClient !== 0 ||
-        p.priceFerderal !== 0 ||
-        p.priceFrequnt !== 0 ||
-        p.size !== null ||
-        p.size !== undefined ||
-        p.size !== '' ||
-        p.priceClient !== null ||
-        p.priceFerderal !== null ||
-        p.priceFrequnt !== null ||
-        p.priceClient !== undefined ||
-        p.priceFerderal !== undefined ||
-        p.priceFrequnt !== undefined ||
-        p.priceClient > 0 ||
-        p.priceFerderal > 0 ||
+        p.priceClient !== 0 &&
+        p.priceFerderal !== 0 &&
+        p.priceFrequnt !== 0 &&
+        p.size !== null &&
+        p.size !== undefined &&
+        p.size !== '' &&
+        p.priceClient !== null &&
+        p.priceFerderal !== null &&
+        p.priceFrequnt !== null &&
+        p.priceClient !== undefined &&
+        p.priceFerderal !== undefined &&
+        p.priceFrequnt !== undefined &&
+        p.priceClient > 0 &&
+        p.priceFerderal > 0 &&
         p.priceFrequnt > 0
     );
 
-    const product = new Product(...req.body, { price: priceInput });
+    const inpPriceMap = priceInput.map((p) => {
+      return {
+        size: p.size,
+        priceClient: Number(p.priceClient),
+        priceFrequnt: Number(p.priceFrequnt),
+        priceFerderal: Number(p.priceFerderal),
+      };
+    });
+
+    const body = {
+      title,
+      description,
+      images,
+      price: inpPriceMap,
+      needImages: Boolean(needImages),
+      minIMages,
+      slug,
+      type,
+    };
+
+    console.log(body);
+
+    if (body.needImages === false) {
+      console.log('udemy');
+
+      delete body.minIMages;
+    }
+
+    const product = new Product(body);
     await product.save();
     await db.disconnect();
 

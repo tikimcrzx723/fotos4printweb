@@ -12,6 +12,7 @@ import {
   Grid,
   Typography,
   Chip,
+  Switch,
 } from '@mui/material';
 
 import { CartContext } from '../../context';
@@ -22,6 +23,7 @@ import { useAddress } from '../../hooks';
 const SummaryPage = () => {
   const router = useRouter();
   const { numberOfItems, createOrder } = useContext(CartContext);
+  const [checked, setChecked] = useState(false);
 
   const { adrress } = useAddress('user/address');
 
@@ -30,7 +32,7 @@ const SummaryPage = () => {
 
   const onCreateOrder = async () => {
     setIsPosting(true);
-    const { hasError, message } = await createOrder();
+    const { hasError, message } = await createOrder(false);
 
     if (hasError) {
       setIsPosting(false);
@@ -39,6 +41,10 @@ const SummaryPage = () => {
     }
 
     router.replace(`/orders/${message}`);
+  };
+
+  const addDelivery = () => {
+    setChecked(!checked);
   };
 
   return (
@@ -55,16 +61,21 @@ const SummaryPage = () => {
           <Card className="summary-card">
             <CardContent>
               <Typography variant="h2">
-                Summary ({numberOfItems}{' '}
-                {numberOfItems === 1 ? 'product' : 'products'})
+               Summary ({numberOfItems} {numberOfItems === 1 ? 'product' : 'products'})
               </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="subtitle1">Delivery Address</Typography>
-                <NextLink href="/checkout/address" passHref>
-                  <Link underline="always">Edit</Link>
-                </NextLink>
+                <Typography variant="subtitle1">
+                  {checked ? 'Delivery' : 'Store'} Address
+                </Typography>
+                {checked ? (
+                  <NextLink href="/checkout/address" passHref>
+                    <Link underline="always">Edit</Link>
+                  </NextLink>
+                ) : (
+                  <></>
+                )}
               </Box>
 
               <Typography>
@@ -89,7 +100,7 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <OrderSummary />
+              <OrderSummary delivery />
 
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Button

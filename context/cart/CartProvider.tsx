@@ -218,11 +218,28 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     }
   };
 
-  const createOrder = async (): Promise<{
+  const createOrder = async (
+    delivery = true
+  ): Promise<{
     hasError: boolean;
     message: string;
   }> => {
-    const { data } = await appApi.get('/user/address');
+    let address = null;
+    if (delivery) {
+      const { data } = await appApi.get('/user/address');
+      address = data;
+    } else {
+      address = {
+        firstName: 'Le Portrait de',
+        lastName: 'Petit Cossette',
+        address: '347 N Front st',
+        address2: '',
+        zip: '97071',
+        city: 'Woodburn',
+        country: 'OR',
+        phone: '503-990-4525',
+      };
+    }
 
     const body: any = {
       orderItems: state.cart.map((p) => ({
@@ -234,7 +251,11 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       tax: state.tax,
       total: state.total,
       isPaid: false,
-      shippingAddress: data,
+      shippingAddress: address,
+      delivery: {
+        price: delivery ? (Number(state.total) >= 100 ? 0 : 10) : 0,
+        required: delivery,
+      },
     };
 
     try {

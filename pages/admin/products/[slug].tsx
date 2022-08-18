@@ -42,7 +42,7 @@ import { converters } from '../../../libs';
 import { ShowListImages } from '../../../components/uploads';
 
 const validTypes = ['photo', 'press', 'gift'];
-const validNeedImages = [true, false];
+const validNeedImages = ['yes', 'no'];
 
 interface FormData {
   _id?: string;
@@ -257,10 +257,10 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               >
                 {validNeedImages.map((option) => (
                   <FormControlLabel
-                    key={option ? 'Yes' : 'No'}
-                    value={option}
+                    key={option}
+                    value={option === 'yes' ? true : false}
                     control={<Radio color="secondary" />}
-                    label={capitalize(option ? 'Yes' : 'No')}
+                    label={capitalize(option)}
                   />
                 ))}
               </RadioGroup>
@@ -270,7 +270,10 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               type="number"
               variant="filled"
               fullWidth
-              sx={{ mb: 1 }}
+              sx={{
+                mb: 1,
+                display: getValues('needImages') == true ? '' : 'none',
+              }}
               {...register(`minIMages`, {})}
               error={!!errors.price}
               helperText={errors.title?.message}
@@ -419,7 +422,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Client"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
                     }}
                     variant="filled"
                     fullWidth
@@ -440,7 +443,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Frequnt"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
                     }}
                     variant="filled"
                     fullWidth
@@ -461,7 +464,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Federal"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
                     }}
                     variant="filled"
                     fullWidth

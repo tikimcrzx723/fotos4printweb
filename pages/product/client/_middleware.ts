@@ -8,12 +8,15 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
+  console.log(req.page.params.slug);
+
+  if (!session) {
+    return NextResponse.next();
+  }
+
   const validRoles = ['client'];
 
-  if (session === null) {
-    console.log(session);
-    return NextResponse.next();
-  } else if (!validRoles.includes(session.user.role)) {
+  if (!validRoles.includes(session.user.role)) {
     try {
       return NextResponse.redirect('/');
     } catch (error) {

@@ -81,13 +81,15 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   try {
     const { orderId, amount, sourceId } = req.body;
+    const amountInput = Math.round(amount * 100);
+
     const body = {
-      amount_money: { amount, currency: 'USD' },
+      amount_money: { amount: amountInput, currency: 'USD' },
       idempotency_key: randomUUID(),
       source_id: sourceId,
     };
 
-    const { data } = await axios.post('${process.env.SQUARE_URL}', body, {
+    const { data } = await axios.post(`${process.env.SQUARE_URL}`, body, {
       headers,
     });
 
@@ -111,7 +113,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         .json({ message: 'Order does not exist in our database' });
     }
 
-    if (dbOrder.total !== payment.total_money.amount) {
+    if (Math.round(dbOrder.total * 100) !== payment.total_money.amount) {
       await db.disconnect();
       return res
         .status(400)
@@ -127,8 +129,9 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     await db.disconnect();
 
-    res.status(200).json({ message: 'Order has been paid' });
+    res.status(200).json(data);
   } catch (error) {
     res.status(200).json(error as any);
+    console.log(error);
   }
 };

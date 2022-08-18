@@ -14,6 +14,8 @@ import { CartContext } from '../../context/cart';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
+import { ItemCounter } from '../ui';
+import { IProduct } from '../../interfaces';
 
 interface Props {
   editable?: boolean;
@@ -26,8 +28,14 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
 }) => {
   const { cart, removeCartProduct } = useContext(CartContext);
   const { role } = useRole('user/rol');
+  const rol = role.message === 'admin' ? 'federal' : role.message;
+  const { updateCartQuantity } = useContext(CartContext);
 
   const productToShow = products ? products : cart;
+
+  const updatedQuantity = (quantity: number, product: ICartProduct) => {
+    
+  };
 
   return (
     <>
@@ -40,10 +48,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
         >
           <Grid item xs={3}>
             {/* Llevar a la pagina del producto */}
-            <NextLink
-              href={`/product/${role.message}/${product.slug}`}
-              passHref
-            >
+            <NextLink href={`/product/${rol}/${product.slug}`} passHref>
               <Link>
                 <CardActionArea>
                   <CardMedia
@@ -63,7 +68,13 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               </Typography>
               {/* Conditional */}
               {editable ? (
-                <UploadImageByCart product={product} />
+                <>
+                  {product.needImages ? (
+                    <UploadImageByCart product={product} />
+                  ) : (
+                    <Typography>Worker</Typography>
+                  )}
+                </>
               ) : (
                 <Typography variant="h5">
                   {product.quantity} {product.title}

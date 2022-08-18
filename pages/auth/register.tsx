@@ -16,7 +16,6 @@ import {
 import { AuthLayout } from '../../components/layouts';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
-import { appApi } from '../../api';
 import { ErrorOutline } from '@mui/icons-material';
 import { AuthContext } from '../../context/auth/AuthContext';
 

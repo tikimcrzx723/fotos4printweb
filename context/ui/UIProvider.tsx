@@ -3,10 +3,12 @@ import { UIContext, uiReducer } from './';
 
 export interface UIState {
   isMenuOpen: boolean;
+  isDelivery: boolean;
 }
 
 const UI_INITIAL_STATE: UIState = {
   isMenuOpen: false,
+  isDelivery: false,
 };
 
 interface Props {}
@@ -18,13 +20,18 @@ export const UIProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     dispatch({ type: '[UI] - ToggleMenu' });
   };
 
+  const deliveryOrStore = () => {
+    dispatch({ type: '[UI] - Delivery' });
+  };
+
   return (
     <UIContext.Provider
       value={{
         ...state,
 
         // Methods
-        toggleSideMenu
+        toggleSideMenu,
+        deliveryOrStore,
       }}
     >
       {children}

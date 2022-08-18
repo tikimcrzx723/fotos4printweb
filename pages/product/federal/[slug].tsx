@@ -29,7 +29,9 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     size: product.price[0].size,
     slug: product.slug,
     title: product.title,
-    quantity: 0,
+    needImages: product.needImages,
+    minIMages: product.minIMages,
+    quantity: product.needImages ? 0 : 1,
   });
 
   const onSelectedSize = async (size: string) => {

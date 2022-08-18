@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { CartContext } from '../../context';
+import { CartContext, UIContext } from '../../context';
 
 import {
   Box,
@@ -9,16 +9,23 @@ import {
   CardContent,
   Divider,
   Grid,
+  Switch,
   Typography,
 } from '@mui/material';
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
-import { AddPhotoAlternateOutlined } from '@mui/icons-material';
+import {
+  AddPhotoAlternateOutlined,
+  LocalShippingOutlined,
+} from '@mui/icons-material';
+import { useAddress } from '../../hooks';
 
 const CartPage = () => {
   const { isLoaded, cart } = useContext(CartContext);
+  const { isDelivery, deliveryOrStore } = useContext(UIContext);
   const [isCheckBuy, setIsCheckBuy] = useState(false);
   const router = useRouter();
+  const { adrress } = useAddress('user/address');
 
   useEffect(() => {
     if (isLoaded && cart.length === 0) {
@@ -39,7 +46,15 @@ const CartPage = () => {
   }, [cart]);
 
   const onCreateOrder = async () => {
-    router.push('/checkout/summary');
+    if (isDelivery) {
+      if (adrress === null || adrress === undefined) {
+        router.replace('/perfil/address');
+      } else {
+        router.push('/checkout/summary');
+      }
+    } else {
+      router.push('/checkout/summary');
+    }
   };
 
   if (!isLoaded || cart.length === 0) {
@@ -55,7 +70,17 @@ const CartPage = () => {
         <Grid item xs={12} sm={5} marginBottom={5}>
           <Card className="summary-card">
             <CardContent>
-              <Typography variant="h2">Order</Typography>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h2">Order</Typography>
+                <Box>
+                  <Switch
+                    color="secondary"
+                    checked={isDelivery}
+                    onChange={deliveryOrStore}
+                  />
+                  {isDelivery ? 'Send to Home' : 'Pick Up In Store'}
+                </Box>
+              </Box>
               <Divider sx={{ my: 1 }} />
               <OrderSummary />
               <Box sx={{ mt: 3 }}>
@@ -67,7 +92,7 @@ const CartPage = () => {
                     onClick={onCreateOrder}
                     // href='/checkout/address'
                   >
-                    Checkout
+                    <Typography>Checkout</Typography>
                   </Button>
                 ) : (
                   <>
