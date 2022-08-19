@@ -272,7 +272,8 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               fullWidth
               sx={{
                 mb: 1,
-                display: getValues('needImages') == true ? '' : 'none',
+                display:
+                  Boolean(getValues('needImages')) === true ? '' : 'none',
               }}
               {...register(`minIMages`, {})}
               error={!!errors.price}

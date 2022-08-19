@@ -21,7 +21,7 @@ export default function handler(
 }
 
 const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { orderItems, total } = req.body as IOrder;
+  const { orderItems, total, delivery } = req.body as IOrder;
 
   // Verify that we have a user
   const session: any = await getSession({ req });
@@ -70,7 +70,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }, 0);
 
     const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
-    const backendTotal = subTotal * (taxRate + 1);
+    const backendTotal = (subTotal + delivery?.price!) * (taxRate + 1);
 
     if (total !== backendTotal) {
       throw new Error('The total does not match the amount');

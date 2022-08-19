@@ -17,6 +17,7 @@ import {
 import {
   AccountCircleOutlined,
   AdminPanelSettings,
+  ApartmentOutlined,
   CardGiftcardOutlined,
   CategoryOutlined,
   ColorLensOutlined,
@@ -53,7 +54,7 @@ export const SideMenu = () => {
   return (
     <Drawer
       open={isMenuOpen}
-      anchor='right'
+      anchor="right"
       onClose={toggleSideMenu}
       sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.5s ease-out' }}
     >
@@ -65,10 +66,10 @@ export const SideMenu = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => (e.key === 'Enter' ? onSearchTerm() : null)}
-              type='text'
-              placeholder='Buscar...'
+              type="text"
+              placeholder="Buscar..."
               endAdornment={
-                <InputAdornment position='end'>
+                <InputAdornment position="end">
                   <IconButton onClick={onSearchTerm}>
                     <SearchOutlined />
                   </IconButton>
@@ -183,6 +184,15 @@ export const SideMenu = () => {
                   <AdminPanelSettings />
                 </ListItemIcon>
                 <ListItemText primary={'Users'} />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => navigateTo('/admin/address/store')}
+              >
+                <ListItemIcon>
+                  <ApartmentOutlined />
+                </ListItemIcon>
+                <ListItemText primary={'Store Address'} />
               </ListItem>
             </>
           )}

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IUser } from '../../interfaces';
+import { ICompany, IUser } from '../../interfaces';
 
 interface ContextProps {
   isLoggedIn: boolean;
@@ -16,6 +16,7 @@ interface ContextProps {
     message?: string;
   }>;
   logout: () => void;
+  createCompany: (company: ICompany) => void;
 }
 
 export const AuthContext = createContext({} as ContextProps);

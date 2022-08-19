@@ -4,6 +4,7 @@ import { currency } from '../../utils';
 import { CartContext, UIContext } from '../../context';
 
 interface Props {
+  delivery?: number;
   orderValues?: {
     numberOfItems: number;
     subTotal: number;
@@ -12,9 +13,11 @@ interface Props {
   };
 }
 
-export const OrderSummary: FC<PropsWithChildren<Props>> = ({ orderValues }) => {
+export const OrderSummary: FC<PropsWithChildren<Props>> = ({
+  orderValues,
+  delivery = 0,
+}) => {
   const { numberOfItems, subTotal, total, tax } = useContext(CartContext);
-  const { isDelivery } = useContext(UIContext);
 
   const summaryValues = orderValues
     ? orderValues
@@ -38,13 +41,13 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({ orderValues }) => {
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>{currency.format(summaryValues.subTotal)}</Typography>
       </Grid>
-      {isDelivery ? (
+      {delivery > 0 ? (
         <>
           <Grid item xs={6}>
             <Typography>Delivery</Typography>
           </Grid>
           <Grid item xs={6} display="flex" justifyContent="end">
-            <Typography>{currency.format(15)}</Typography>
+            <Typography>{currency.format(delivery)}</Typography>
           </Grid>
         </>
       ) : (
@@ -65,7 +68,7 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({ orderValues }) => {
       </Grid>
       <Grid item xs={6} sx={{ mt: 2 }} display="flex" justifyContent="end">
         <Typography variant="subtitle1">
-          {currency.format(summaryValues.total + (isDelivery ? 15 : 0))}
+          {currency.format(summaryValues.total)}
         </Typography>
       </Grid>
     </Grid>

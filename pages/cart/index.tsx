@@ -14,10 +14,7 @@ import {
 } from '@mui/material';
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
-import {
-  AddPhotoAlternateOutlined,
-  LocalShippingOutlined,
-} from '@mui/icons-material';
+import { AddPhotoAlternateOutlined } from '@mui/icons-material';
 import { useAddress } from '../../hooks';
 
 const CartPage = () => {

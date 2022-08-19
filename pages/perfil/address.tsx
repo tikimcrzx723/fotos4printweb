@@ -17,7 +17,7 @@ type FormData = {
   address2?: string;
   zip: string;
   city: string;
-  country: string;
+  state: string;
   phone: string;
 };
 
@@ -133,11 +133,11 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
               label="Country"
               fullWidth
               // defaultValue={ Cookies.get('country') || countries[0].code }
-              {...register('country', {
+              {...register('state', {
                 required: 'This field is required',
               })}
-              error={!!errors.country}
-              helperText={errors.country?.message}
+              error={!!errors.state}
+              helperText={errors.state?.message}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

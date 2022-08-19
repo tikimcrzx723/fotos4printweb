@@ -89,7 +89,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         address2: Cookies.get('address2') || '',
         zip: Cookies.get('zip') || '',
         city: Cookies.get('city') || '',
-        country: Cookies.get('country') || '',
+        state: Cookies.get('country') || '',
         phone: Cookies.get('phone') || '',
       };
 
@@ -154,7 +154,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       address2: address.address2,
       zip: address.zip,
       city: address.city,
-      country: address.country,
+      state: address.state,
       phone: address.phone,
     };
 
@@ -190,7 +190,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       address2: address.address2,
       zip: address.zip,
       city: address.city,
-      country: address.country,
+      state: address.state,
       phone: address.phone,
     };
 
@@ -225,19 +225,27 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     message: string;
   }> => {
     let address = null;
+    let priceDelivery = 0;
+    const { data } = await appApi.get('/perfil/company');
+    const company = data;
+
     if (delivery) {
+      priceDelivery =
+        state.total >= Number(company.minFreeDelivery)
+          ? 0
+          : Number(company.deliveryPrice);
       const { data } = await appApi.get('/user/address');
       address = data;
     } else {
       address = {
-        firstName: 'Le Portrait de',
-        lastName: 'Petit Cossette',
-        address: '347 N Front st',
-        address2: '',
-        zip: '97071',
-        city: 'Woodburn',
-        country: 'OR',
-        phone: '503-990-4525',
+        firstName: company.name,
+        lastName: 'name',
+        address: company.address,
+        address2: company.address2,
+        zip: company.zip,
+        city: company.city,
+        state: company.state,
+        phone: company.phone,
       };
     }
 
@@ -249,11 +257,11 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       numberOfItems: state.numberOfItems,
       subTotal: state.subTotal,
       tax: state.tax,
-      total: state.total,
+      total: state.total + priceDelivery,
       isPaid: false,
       shippingAddress: address,
       delivery: {
-        price: delivery ? (Number(state.total) >= 100 ? 0 : 10) : 0,
+        price: priceDelivery,
         required: delivery,
       },
     };

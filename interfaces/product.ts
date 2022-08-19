@@ -1,14 +1,14 @@
 export interface IProduct {
   _id: string;
+  title: string;
   description: string;
   images: string[];
   price: IPrice[];
+  needImages?: boolean;
+  minIMages?: number;
   slug: string;
   tags: string[];
-  title: string;
   type: string;
-  minIMages?: number;
-  needImages?: boolean;
 
   // TODO: agregar createdAt y updatedAt
   createdAt: string;

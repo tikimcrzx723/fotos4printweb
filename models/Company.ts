@@ -1,10 +1,11 @@
 import mongoose, { Schema, Model, model } from 'mongoose';
-import { IShippingAddress } from '../interfaces';
+import { ICompany } from '../interfaces';
 
-const addressSchema = new Schema(
+const CompanySchema = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    name: { type: String, required: true },
+    deliveryPrice: { type: Number, required: true },
+    minFreeDelivery: { type: Number, required: true },
     address: { type: String, required: true },
     address2: { type: String },
     zip: { type: String, required: true },
@@ -15,7 +16,7 @@ const addressSchema = new Schema(
   { timestamps: true }
 );
 
-const Address: Model<IShippingAddress> =
-  mongoose.models.Address || model('Address', addressSchema);
+const Company: Model<ICompany> =
+  mongoose.models.Company || model('Company', CompanySchema);
 
-export default Address;
+export default Company;

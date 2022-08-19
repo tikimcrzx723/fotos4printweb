@@ -57,6 +57,6 @@ export interface IShippingAddress {
   address2?: string;
   zip: string;
   city: string;
-  country: string;
+  state: string;
   phone: string;
 }

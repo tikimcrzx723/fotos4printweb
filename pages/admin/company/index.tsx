@@ -1,88 +1,52 @@
-import { useContext, useEffect } from 'react';
+import { useContext, PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from '@mui/material';
-import Cookies from 'js-cookie';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import { ShopLayout } from '../../components/layouts';
-import { countries } from '../../utils';
-import { CartContext } from '../../context';
+import { ShopLayout } from '../../../components/layouts';
+import { AuthContext } from '../../../context';
+import { GetServerSideProps, NextPage } from 'next';
+import { ICompany } from '../../../interfaces';
+import { dbUsers } from '../../../database';
 
 type FormData = {
-  firstName: string;
-  lastName: string;
+  name: string;
+  deliveryPrice: number;
+  minFreeDelivery: number;
   address: string;
-  address2?: string;
+  address2: string;
   zip: string;
   city: string;
-  country: string;
+  state: string;
   phone: string;
 };
 
-const getAddressFromCookies = (): FormData => {
-  return {
-    firstName: Cookies.get('firstName') || '',
-    lastName: Cookies.get('lastName') || '',
-    address: Cookies.get('address') || '',
-    address2: Cookies.get('address2') || '',
-    zip: Cookies.get('zip') || '',
-    city: Cookies.get('city') || '',
-    country: Cookies.get('country') || '',
-    phone: Cookies.get('phone') || '',
-  };
-};
+interface Props {
+  company: ICompany;
+}
 
-const AddressPage = () => {
+const AddressPage: NextPage<PropsWithChildren<Props>> = ({ company }) => {
   const router = useRouter();
-  const { updateAddress } = useContext(CartContext);
+  const { createCompany } = useContext(AuthContext);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FormData>({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      address: '',
-      address2: '',
-      zip: '',
-      city: '',
-      country: countries[0].code,
-      phone: '',
-    },
+    defaultValues: company,
   });
 
-  useEffect(() => {
-    reset(getAddressFromCookies());
-  }, [reset]);
-
   const onSubmitAddress = (data: FormData) => {
-    console.log(data);
-
-    updateAddress(data);
-    router.push('/checkout/summary');
+    createCompany(data);
+    router.reload();
   };
 
   return (
-    <ShopLayout
-      title="Dirección"
-      pageDescription="Confirmar dirección del destino"
-    >
+    <ShopLayout title="Company Name" pageDescription="Company Name">
       <form onSubmit={handleSubmit(onSubmitAddress)}>
         <Typography variant="h1" component="h1">
-          Dirección
+          Company Name
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -91,26 +55,40 @@ const AddressPage = () => {
               label="Name"
               variant="filled"
               fullWidth
-              {...register('firstName', {
+              {...register('name', {
                 required: 'This field is required',
               })}
-              error={!!errors.firstName}
-              helperText={errors.firstName?.message}
+              error={!!errors.name}
+              helperText={errors.name?.message}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={3}>
             <TextField
-              label="Last Name"
+              label="Delivery Price"
               variant="filled"
+              type="number"
               fullWidth
-              {...register('lastName', {
+              {...register('deliveryPrice', {
                 required: 'This field is required',
               })}
-              error={!!errors.lastName}
-              helperText={errors.lastName?.message}
+              error={!!errors.deliveryPrice}
+              helperText={errors.deliveryPrice?.message}
             />
           </Grid>
 
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Min Delivery Price"
+              variant="filled"
+              type="number"
+              fullWidth
+              {...register('minFreeDelivery', {
+                required: 'This field is required',
+              })}
+              error={!!errors.minFreeDelivery}
+              helperText={errors.minFreeDelivery?.message}
+            />
+          </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Address"
@@ -162,14 +140,14 @@ const AddressPage = () => {
             <TextField
               // select
               variant="filled"
-              label="Country"
+              label="State"
               fullWidth
               // defaultValue={ Cookies.get('country') || countries[0].code }
-              {...register('country', {
+              {...register('state', {
                 required: 'This field is required',
               })}
-              error={!!errors.country}
-              helperText={errors.country?.message}
+              error={!!errors.state}
+              helperText={errors.state?.message}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -193,12 +171,22 @@ const AddressPage = () => {
             className="circular-btn"
             size="large"
           >
-            Review Order
+            {company ? 'Update ' : 'Save '}Company
           </Button>
         </Box>
       </form>
     </ShopLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const company: ICompany | null = await dbUsers.findCompany();
+
+  return {
+    props: {
+      company,
+    },
+  };
 };
 
 export default AddressPage;

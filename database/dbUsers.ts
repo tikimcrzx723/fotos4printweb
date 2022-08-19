@@ -1,5 +1,5 @@
 import { db } from '.';
-import { User } from '../models';
+import { Company, User } from '../models';
 import bcryptjs from 'bcryptjs';
 
 export const checkUserEmailPassword = async (
@@ -51,11 +51,32 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
 export const findAddress = async (userId: string) => {
   await db.connect();
   const user = await User.findById(userId).populate('address').lean();
-  console.log(user?.address);
 
   await db.disconnect();
 
   if (user?.address !== null && user?.address !== undefined)
     return JSON.parse(JSON.stringify(user?.address));
   else return null;
+};
+
+export const findCompany = async () => {
+  await db.connect();
+  const company = await Company.find().lean();
+  await db.disconnect();
+
+  if (company.length === 0) return null;
+  else return JSON.parse(JSON.stringify(company[0]));
+};
+
+export const returnDelivery = async () => {
+  await db.connect();
+  const company = await Company.find().lean();
+  await db.disconnect();
+  const dataDelivery = {
+    deliveryPrice: company[0].deliveryPrice,
+    minFreeDelivery: company[0].minFreeDelivery,
+  };
+
+  if (company.length === 0) return null;
+  else return dataDelivery;
 };

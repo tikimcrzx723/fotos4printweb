@@ -2,7 +2,7 @@ import { FC, useReducer, PropsWithChildren, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 
-import { IUser } from '../../interfaces';
+import { ICompany, IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
 import { appApi } from '../../api';
 import Cookies from 'js-cookie';
@@ -97,6 +97,11 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     signOut();
   };
 
+  const createCompany = async (company: ICompany) => {
+    const { data } = await appApi.post<ICompany>('/admin/company', company);
+    console.log(data);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -106,6 +111,7 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         loginUser,
         registerUser,
         logout,
+        createCompany,
       }}
     >
       {children}

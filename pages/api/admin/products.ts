@@ -23,19 +23,15 @@ export default function handler(
   switch (req.method) {
     case 'GET':
       return getProducts(req, res);
-      break;
 
     case 'PUT':
       return updateProducts(req, res);
-      break;
 
     case 'POST':
       return createProduct(req, res);
-      break;
 
     default:
       return res.status(400).json({ message: 'Bad request' });
-      break;
   }
 }
 
@@ -46,17 +42,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   await db.disconnect();
 
-  const updatedProducts = products.map((product) => {
-    product.images = product.images.map((image) => {
-      return image.includes('http')
-        ? image
-        : `${process.env.HOST_NAME}products/${image}`;
-    });
-
-    return product;
-  });
-
-  return res.status(200).json(updatedProducts);
+  return res.status(200).json(products);
 };
 
 const updateProducts = async (
@@ -106,6 +92,7 @@ const createProduct = async (
     slug,
     type,
   } = req.body as IProduct;
+  console.log(req.body);
 
   if (images.length < 2) {
     return res.status(400).json({ message: 'At least 2 images are required' });
@@ -154,17 +141,13 @@ const createProduct = async (
       description,
       images,
       price: inpPriceMap,
-      needImages: Boolean(needImages),
+      needImages,
       minIMages,
       slug,
       type,
     };
 
-    console.log(body);
-
-    if (body.needImages === false) {
-      console.log('udemy');
-
+    if (needImages === false || (needImages as any) === 'false') {
       delete body.minIMages;
     }
 

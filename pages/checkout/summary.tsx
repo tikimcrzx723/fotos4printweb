@@ -15,7 +15,7 @@ import {
   Switch,
 } from '@mui/material';
 
-import { CartContext } from '../../context';
+import { CartContext, UIContext } from '../../context';
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
 import { useAddress } from '../../hooks';
@@ -23,7 +23,7 @@ import { useAddress } from '../../hooks';
 const SummaryPage = () => {
   const router = useRouter();
   const { numberOfItems, createOrder } = useContext(CartContext);
-  const [checked, setChecked] = useState(false);
+  const { isDelivery } = useContext(UIContext);
 
   const { adrress } = useAddress('user/address');
 
@@ -32,7 +32,7 @@ const SummaryPage = () => {
 
   const onCreateOrder = async () => {
     setIsPosting(true);
-    const { hasError, message } = await createOrder(false);
+    const { hasError, message } = await createOrder(isDelivery);
 
     if (hasError) {
       setIsPosting(false);
@@ -41,10 +41,6 @@ const SummaryPage = () => {
     }
 
     router.replace(`/orders/${message}`);
-  };
-
-  const addDelivery = () => {
-    setChecked(!checked);
   };
 
   return (
@@ -61,15 +57,16 @@ const SummaryPage = () => {
           <Card className="summary-card">
             <CardContent>
               <Typography variant="h2">
-               Summary ({numberOfItems} {numberOfItems === 1 ? 'product' : 'products'})
+                Summary ({numberOfItems}{' '}
+                {numberOfItems === 1 ? 'product' : 'products'})
               </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="subtitle1">
-                  {checked ? 'Delivery' : 'Store'} Address
+                  {isDelivery ? 'Delivery' : 'Store'} Address
                 </Typography>
-                {checked ? (
+                {isDelivery ? (
                   <NextLink href="/checkout/address" passHref>
                     <Link underline="always">Edit</Link>
                   </NextLink>
@@ -88,8 +85,7 @@ const SummaryPage = () => {
               <Typography>
                 {adrress?.city}, {adrress?.zip}
               </Typography>
-              {/* <Typography>{ countries.find( c => c.code === country )?.name }</Typography> */}
-              <Typography>{adrress?.country}</Typography>
+              <Typography>{adrress?.state}</Typography>
               <Typography>{adrress?.phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
@@ -100,7 +96,7 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <OrderSummary delivery />
+              <OrderSummary />
 
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Button

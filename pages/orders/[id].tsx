@@ -112,7 +112,11 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               </Typography>
               <Divider sx={{ my: 1 }} />
 
-              <Typography variant="subtitle1">Delivery Address</Typography>
+              <Typography variant="subtitle1">
+                {order.delivery?.required === false
+                  ? 'Pick Up In Store'
+                  : 'Delivery'}
+              </Typography>
               <Typography>
                 {shippingAddress.firstName} {shippingAddress.lastName}
               </Typography>
@@ -123,14 +127,15 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                   : ''}
               </Typography>
               <Typography>
-                {shippingAddress.city}, {shippingAddress.zip}
+                {shippingAddress.city}, {shippingAddress.zip},{' '}
+                {shippingAddress.state}
               </Typography>
-              <Typography>{shippingAddress.country}</Typography>
               <Typography>{shippingAddress.phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 
               <OrderSummary
+                delivery={order.delivery?.price}
                 orderValues={{
                   numberOfItems: order.numberOfItems,
                   subTotal: order.subTotal,
