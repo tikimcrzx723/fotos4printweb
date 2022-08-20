@@ -1,5 +1,5 @@
 export interface IProduct {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
   images: string[];
@@ -11,8 +11,8 @@ export interface IProduct {
   type: string;
 
   // TODO: agregar createdAt y updatedAt
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IPrice {

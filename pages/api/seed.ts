@@ -18,6 +18,7 @@ export default async function handler(
   await User.deleteMany();
   await User.insertMany(seedDatabase.initialData.users);
   await Product.deleteMany();
+  await Product.insertMany(seedDatabase.initialData.products);
   await Order.deleteMany();
   await db.disconnect();
 

@@ -53,14 +53,14 @@ export const Navbar = () => {
           }}
           className="fadeIn"
         >
-          <NextLink href="/category/photos" passHref>
+          <NextLink href="/category/photo" passHref>
             <Link>
               <Button color={asPath === '/category/photo' ? 'primary' : 'info'}>
                 Photos
               </Button>
             </Link>
           </NextLink>
-          <NextLink href="/category/gifts" passHref>
+          <NextLink href="/category/gift" passHref>
             <Link>
               <Button color={asPath === '/category/gift' ? 'primary' : 'info'}>
                 Gifts
@@ -127,7 +127,7 @@ export const Navbar = () => {
         </NextLink>
 
         <Button onClick={toggleSideMenu}>
-          <Typography variant="body1">Menu</Typography>{' '}
+          <Typography variant="body1">Menu</Typography>
         </Button>
       </Toolbar>
     </AppBar>

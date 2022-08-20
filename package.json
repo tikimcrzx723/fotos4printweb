@@ -31,6 +31,7 @@
     "react-hook-form": "^7.31.3",
     "react-slideshow-image": "^3.7.5",
     "react-square-web-payments-sdk": "^3.2.1",
+    "redis-om": "^0.3.6",
     "sharp": "^0.30.7",
     "square": "^20.1.0",
     "styled-components": "^5.3.5",

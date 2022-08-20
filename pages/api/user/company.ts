@@ -65,10 +65,10 @@ const createCompany = async (
 
 const getCompany = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   await db.connect();
-  const dbCompany = await Company.find();
+  const company = await Company.find();
   await db.disconnect();
 
-  return res.status(201).json(dbCompany[0]);
+  return res.status(201).json(company[0]);
 };
 
 const updateCompany = async (

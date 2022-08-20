@@ -134,7 +134,8 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               <Divider sx={{ my: 1 }} />
 
               <OrderSummary
-                complete={true}
+                deliveryPrice={order.delivery?.price}
+                complete={order.delivery?.required}
                 orderValues={{
                   numberOfItems: order.numberOfItems,
                   subTotal: order.subTotal,

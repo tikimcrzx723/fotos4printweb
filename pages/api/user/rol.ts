@@ -12,10 +12,9 @@ export default function handler(
   switch (req.method) {
     case 'GET':
       return getRoleUser(req, res);
-      break;
 
     default:
-      break;
+      return res.status(400).json({ message: 'Bad Request.' });
   }
 }
 

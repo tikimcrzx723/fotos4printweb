@@ -5,6 +5,7 @@ import { CartContext, UIContext } from '../../context';
 import { useCompany } from '../../hooks';
 
 interface Props {
+  deliveryPrice?: number;
   complete?: boolean;
   orderValues?: {
     numberOfItems: number;
@@ -17,6 +18,7 @@ interface Props {
 export const OrderSummary: FC<PropsWithChildren<Props>> = ({
   orderValues,
   complete = false,
+  deliveryPrice = 15,
 }) => {
   const { numberOfItems, subTotal, total, tax } = useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
@@ -25,6 +27,8 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
   const summaryValues = orderValues
     ? orderValues
     : { numberOfItems, subTotal, total, tax };
+
+  // console.log(company);
 
   return (
     <Grid container>
@@ -50,9 +54,7 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
             <Typography>Delivery</Typography>
           </Grid>
           <Grid item xs={6} display="flex" justifyContent="end">
-            <Typography>
-              {currency.format(company!.deliveryPrice)}
-            </Typography>
+            <Typography>{currency.format(deliveryPrice!)}</Typography>
           </Grid>
         </>
       ) : (
