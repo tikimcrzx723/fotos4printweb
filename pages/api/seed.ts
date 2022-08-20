@@ -21,5 +21,5 @@ export default async function handler(
   await Order.deleteMany();
   await db.disconnect();
 
-  res.status(200).json({ message: 'Correct insertion process' });
+  res.status(200).json({ message: 'Correct Insertion Process' });
 }

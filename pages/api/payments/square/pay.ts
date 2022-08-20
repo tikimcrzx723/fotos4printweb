@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Client, Environment, CompletePaymentRequest } from 'square';
 import { randomUUID } from 'crypto';
 import { ISquare } from '../../../../interfaces';
 import { getSession } from 'next-auth/react';

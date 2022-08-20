@@ -1,4 +1,6 @@
 import {
+  Box,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -12,12 +14,19 @@ import { IOrder } from '../../interfaces';
 import { RowUserTable } from '.';
 
 interface Props {
+  limitPage?: number;
   orders: IOrder[];
 }
 
-export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({ orders }) => {
-  const onClick = async () => {
-    console.log('hola');
+export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({
+  orders,
+  limitPage = 6,
+}) => {
+  const [pageClick, setPageClick] = useState(1);
+  let counter = 1;
+  const onClick = async (e: any) => {
+    counter += 1;
+    setPageClick(counter);
   };
   return (
     <>
@@ -40,6 +49,16 @@ export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({ orders }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box marginTop={5} display="flex" justifyContent="center">
+        <Pagination
+          page={pageClick}
+          variant="text"
+          count={limitPage}
+          size="large"
+          color="secondary"
+          onChange={onClick}
+        />
+      </Box>
     </>
   );
 };

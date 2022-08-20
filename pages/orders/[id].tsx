@@ -23,7 +23,11 @@ import { getSession } from 'next-auth/react';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { appApi } from '../../api';
-import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk';
+import {
+  CreditCard,
+  GooglePay,
+  PaymentForm,
+} from 'react-square-web-payments-sdk';
 
 export type OrderResponseBody = {
   id: string;
@@ -67,11 +71,6 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
   };
 
   const onOrderCompleted = async () => {
-    //details: OrderResponseBody
-    // if (details.status !== 'COMPLETED') {
-    //   return alert('No Paypal payment');
-    // }
-
     setIsPaying(true);
     router.reload();
   };
@@ -135,7 +134,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               <Divider sx={{ my: 1 }} />
 
               <OrderSummary
-                delivery={order.delivery?.price}
+                complete={true}
                 orderValues={{
                   numberOfItems: order.numberOfItems,
                   subTotal: order.subTotal,
@@ -185,6 +184,17 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                         }}
                       />
                       <PaymentForm
+                        createPaymentRequest={() => ({
+                          requestShippingAddress: true,
+                          requestBillingInfo: true,
+                          currencyCode: 'USD',
+                          countryCode: 'US',
+                          total: {
+                            label: 'MERCHANT NAME',
+                            amount: order.total.toString(),
+                            pending: false,
+                          },
+                        })}
                         applicationId={
                           process.env.NEXT_PUBLIC_APPLICATION_ID || ''
                         }
@@ -202,6 +212,8 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           onOrderCompleted();
                         }}
                       >
+                        <GooglePay />
+                        <Box marginBottom={2}></Box>
                         <CreditCard lang="us" />
                       </PaymentForm>
                     </>

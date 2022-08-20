@@ -1,4 +1,5 @@
 export interface ICompany {
+  _id?: string;
   name: string;
   deliveryPrice: number;
   minFreeDelivery: number;

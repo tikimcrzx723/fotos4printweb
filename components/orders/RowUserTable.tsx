@@ -16,7 +16,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Image from 'next/image';
 import { currency } from '../../utils';
-import { DownloadForOfflineOutlined } from '@mui/icons-material';
+import {
+  CreditCardOffOutlined,
+  CreditCardOutlined,
+  DownloadForOfflineOutlined,
+} from '@mui/icons-material';
 import { IUserImage } from '../../interfaces';
 import { appApi } from '../../api';
 
@@ -35,8 +39,8 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
         )
         .replaceAll('/', '+');
 
-        const arrFile = image.image.toString().split('/')
-        const file = arrFile[arrFile.length - 1]
+      const arrFile = image.image.toString().split('/');
+      const file = arrFile[arrFile.length - 1];
 
       // const { data } = await appApi.get('/orders/user/' + url);
       appApi({
@@ -72,7 +76,13 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
         <TableCell align="right">{order.orderState}</TableCell>
         <TableCell align="right">{order.numberOfItems}</TableCell>
         <TableCell align="right">{currency.format(order.total)}</TableCell>
-        <TableCell align="right">{order.isPaid ? 'Ok' : 'Bad'}</TableCell>
+        <TableCell align="right">
+          {order.isPaid ? (
+            <CreditCardOutlined />
+          ) : (
+            <CreditCardOffOutlined color="error" sx={{ fontSize: 35 }} />
+          )}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -113,6 +123,7 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                       </TableCell>
                       <TableCell>
                         <IconButton
+                          sx={{ display: item.needImages ? '' : 'none' }}
                           color="secondary"
                           onClick={() => onDownloadImage(item.userImages!)}
                         >

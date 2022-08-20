@@ -2,7 +2,7 @@ import { NextPage, GetServerSideProps } from 'next';
 import { AdminLayout } from '../../../../components/layouts';
 import { IOrder } from '../../../../interfaces';
 import { dbOrders } from '../../../../database';
-import { TableOrderByUser } from '../../../../components/orders/TableOrdersByUser';
+import { TableOrderByUser } from '../../../../components/orders';
 
 interface Props {
   orders: IOrder[];

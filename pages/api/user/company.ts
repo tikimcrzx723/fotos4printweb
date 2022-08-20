@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '../../../../database';
-import { ICompany } from '../../../../interfaces';
-import { Company } from '../../../../models';
+import { db } from '../../../database';
+import { ICompany } from '../../../interfaces';
+import { Company } from '../../../models';
 
 type Data =
   | {
@@ -68,7 +68,7 @@ const getCompany = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const dbCompany = await Company.find();
   await db.disconnect();
 
-  return res.status(201).json(dbCompany);
+  return res.status(201).json(dbCompany[0]);
 };
 
 const updateCompany = async (

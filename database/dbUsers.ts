@@ -67,16 +67,3 @@ export const findCompany = async () => {
   if (company.length === 0) return null;
   else return JSON.parse(JSON.stringify(company[0]));
 };
-
-export const returnDelivery = async () => {
-  await db.connect();
-  const company = await Company.find().lean();
-  await db.disconnect();
-  const dataDelivery = {
-    deliveryPrice: company[0].deliveryPrice,
-    minFreeDelivery: company[0].minFreeDelivery,
-  };
-
-  if (company.length === 0) return null;
-  else return dataDelivery;
-};

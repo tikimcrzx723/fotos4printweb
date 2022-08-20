@@ -17,6 +17,7 @@ interface ContextProps {
   }>;
   logout: () => void;
   createCompany: (company: ICompany) => void;
+  updateCompany: (company: ICompany) => void;
 }
 
 export const AuthContext = createContext({} as ContextProps);

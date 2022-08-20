@@ -12,20 +12,21 @@ import {
   Grid,
   Typography,
   Chip,
-  Switch,
 } from '@mui/material';
 
 import { CartContext, UIContext } from '../../context';
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
-import { useAddress } from '../../hooks';
+import { Delivery, PickUp } from '../../components/address';
+import { useCompany } from '../../hooks';
+import { useAddress } from '../../hooks/useAddress';
 
 const SummaryPage = () => {
   const router = useRouter();
+  // const { company } = useCompany('user/company');
+  // const { adrress } = useAddress('user/address');
   const { numberOfItems, createOrder } = useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
-
-  const { adrress } = useAddress('user/address');
 
   const [isPosting, setIsPosting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -62,31 +63,7 @@ const SummaryPage = () => {
               </Typography>
               <Divider sx={{ my: 1 }} />
 
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="subtitle1">
-                  {isDelivery ? 'Delivery' : 'Store'} Address
-                </Typography>
-                {isDelivery ? (
-                  <NextLink href="/checkout/address" passHref>
-                    <Link underline="always">Edit</Link>
-                  </NextLink>
-                ) : (
-                  <></>
-                )}
-              </Box>
-
-              <Typography>
-                {adrress?.firstName} {adrress?.lastName}
-              </Typography>
-              <Typography>
-                {adrress?.address}
-                {adrress?.address2 ? `, ${adrress?.address2}` : ''}{' '}
-              </Typography>
-              <Typography>
-                {adrress?.city}, {adrress?.zip}
-              </Typography>
-              <Typography>{adrress?.state}</Typography>
-              <Typography>{adrress?.phone}</Typography>
+              {isDelivery ? <Delivery /> : <PickUp />}
 
               <Divider sx={{ my: 1 }} />
 

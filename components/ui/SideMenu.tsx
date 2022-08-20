@@ -187,7 +187,7 @@ export const SideMenu = () => {
               </ListItem>
               <ListItem
                 button
-                onClick={() => navigateTo('/admin/address/store')}
+                onClick={() => navigateTo('/admin/company')}
               >
                 <ListItemIcon>
                   <ApartmentOutlined />

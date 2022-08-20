@@ -2,7 +2,6 @@ import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
 import { Footer, Navbar, SideMenu } from '../ui';
-import { Alert, Grid, Typography } from '@mui/material';
 
 interface Props {
   title: string;

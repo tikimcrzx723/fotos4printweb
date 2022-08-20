@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import { ShopLayout } from '../../../components/layouts';
+import { AdminLayout, ShopLayout } from '../../../components/layouts';
 import { AuthContext } from '../../../context';
 import { GetServerSideProps, NextPage } from 'next';
 import { ICompany } from '../../../interfaces';
@@ -27,7 +27,7 @@ interface Props {
 
 const AddressPage: NextPage<PropsWithChildren<Props>> = ({ company }) => {
   const router = useRouter();
-  const { createCompany } = useContext(AuthContext);
+  const { createCompany, updateCompany } = useContext(AuthContext);
 
   const {
     register,
@@ -38,17 +38,14 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ company }) => {
   });
 
   const onSubmitAddress = (data: FormData) => {
-    createCompany(data);
+    if (company === null) createCompany(data);
+    else updateCompany(data);
     router.reload();
   };
 
   return (
-    <ShopLayout title="Company Name" pageDescription="Company Name">
+    <AdminLayout title="Company Name" subTitle="Data">
       <form onSubmit={handleSubmit(onSubmitAddress)}>
-        <Typography variant="h1" component="h1">
-          Company Name
-        </Typography>
-
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -175,7 +172,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ company }) => {
           </Button>
         </Box>
       </form>
-    </ShopLayout>
+    </AdminLayout>
   );
 };
 

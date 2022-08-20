@@ -99,7 +99,10 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
 
   const createCompany = async (company: ICompany) => {
     const { data } = await appApi.post<ICompany>('/admin/company', company);
-    console.log(data);
+  };
+
+  const updateCompany = async (company: ICompany) => {
+    const { data } = await appApi.put<ICompany>('/admin/company', company);
   };
 
   return (
@@ -112,6 +115,7 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         registerUser,
         logout,
         createCompany,
+        updateCompany,
       }}
     >
       {children}

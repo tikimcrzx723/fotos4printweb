@@ -2,9 +2,10 @@ import { FC, PropsWithChildren, useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { currency } from '../../utils';
 import { CartContext, UIContext } from '../../context';
+import { useCompany } from '../../hooks';
 
 interface Props {
-  delivery?: number;
+  complete?: boolean;
   orderValues?: {
     numberOfItems: number;
     subTotal: number;
@@ -15,9 +16,11 @@ interface Props {
 
 export const OrderSummary: FC<PropsWithChildren<Props>> = ({
   orderValues,
-  delivery = 0,
+  complete = false,
 }) => {
   const { numberOfItems, subTotal, total, tax } = useContext(CartContext);
+  const { isDelivery } = useContext(UIContext);
+  const { company } = useCompany('user/company');
 
   const summaryValues = orderValues
     ? orderValues
@@ -41,13 +44,15 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>{currency.format(summaryValues.subTotal)}</Typography>
       </Grid>
-      {delivery > 0 ? (
+      {isDelivery || complete ? (
         <>
           <Grid item xs={6}>
             <Typography>Delivery</Typography>
           </Grid>
           <Grid item xs={6} display="flex" justifyContent="end">
-            <Typography>{currency.format(delivery)}</Typography>
+            <Typography>
+              {currency.format(company!.deliveryPrice)}
+            </Typography>
           </Grid>
         </>
       ) : (
@@ -68,7 +73,17 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
       </Grid>
       <Grid item xs={6} sx={{ mt: 2 }} display="flex" justifyContent="end">
         <Typography variant="subtitle1">
-          {currency.format(summaryValues.total)}
+          {currency.format(
+            complete
+              ? summaryValues.total
+              : isDelivery
+              ? summaryValues.total >= company!.minFreeDelivery
+                ? summaryValues.total
+                : isDelivery
+                ? summaryValues.total + company!.deliveryPrice
+                : summaryValues.total
+              : summaryValues.total
+          )}
         </Typography>
       </Grid>
     </Grid>
