@@ -7,26 +7,17 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (!session) {
+  if (session) {
     try {
       const params = req.page.name;
-      return NextResponse.redirect(`/product/client/${params}`);
-    } catch (error) {
-      const url = req.nextUrl.clone();
-      const params = req.page.name;
-      return NextResponse.redirect(`${url.origin}/product/client/${params}`);
-    }
-  }
-
-  const validRoles = ['client'];
-
-  if (!validRoles.includes(session.user.role)) {
-    try {
-      const params = req.page.name;
+      console.log(params);
+      
       if (session.user.role === 'federal' || session.user.role === 'admin') {
         return NextResponse.redirect(`/product/federal/${params}`);
-      } else {
+      } else if (session.user.role === 'frequent') {
         return NextResponse.redirect(`/product/frequent/${params}`);
+      } else {
+        return NextResponse.redirect(`/product/client/${params}`);
       }
     } catch (error) {
       const url = req.nextUrl.clone();

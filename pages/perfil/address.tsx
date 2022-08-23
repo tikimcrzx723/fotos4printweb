@@ -26,6 +26,7 @@ interface Props {
 }
 
 const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
+  
   const router = useRouter();
   const { updateAddress, addAdress } = useContext(CartContext);
 
