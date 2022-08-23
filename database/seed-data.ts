@@ -674,7 +674,7 @@ export const initialData: SeedData = {
       minIMages: 100,
       slug: 'string178',
       tags: ['tag00', 'tag01', 'tag02'],
-      type: 'canva',
+      type: 'press',
     },
     {
       title: 'title18',
@@ -709,7 +709,7 @@ export const initialData: SeedData = {
       minIMages: 100,
       slug: 'string14598',
       tags: ['tag00', 'tag01', 'tag02'],
-      type: 'canva',
+      type: 'press',
     },
     {
       title: 'title19',

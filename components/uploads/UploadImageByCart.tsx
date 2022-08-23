@@ -32,8 +32,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [disabledButton, setDisabledButton] = useState(true);
-  const { updateCartQuantity } = useContext(CartContext);
+  const { updateCartQuantity, addProductToCart } = useContext(CartContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -49,7 +48,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
     }
 
     try {
-      const images = [];
+      const images = product.userImages?.length === 0 ? [] : product.userImages;
       for (const file of target.files) {
         const base64: any = await converters.returnBase64(file);
         const fileType = file.type.split('/')[0];
@@ -64,24 +63,31 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           '/uploaders/clients/images/upload',
           uploadImage
         );
-        images.push({
+        images!.push({
           image: data.message,
           quantity: 1,
         });
       }
       product.userImages = images;
-      product.quantity = images.length;
+      product.quantity = images!.length;
       updateCartQuantity(product as ICartProduct);
     } catch (error) {
       console.log({ error });
     }
   };
 
-  const onDeleteImage = async (image: string) => {};
+  const onDeleteImage = async (image: string) => {
+    const images = product.userImages?.filter((img) => img.image !== image);
+    product.userImages = images;
+    product.quantity = images?.length as any;
+    updateCartQuantity(product as any);
+    addProductToCart(product as ICartProduct);
+    await appApi.post('/uploaders/clients/images/delete', { url: image });
+    console.log(product.userImages);
+  };
 
   const onNewCartQuantityValue = async (product: ICartProduct) => {
     updateCartQuantity(product);
-    // const {data} = appApi.post('');
     handleClose();
   };
 
@@ -152,7 +158,6 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           <Button
             color="primary"
             onClick={() => onNewCartQuantityValue(product as ICartProduct)}
-            disabled={disabledButton}
             autoFocus
           >
             Save

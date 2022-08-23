@@ -14,13 +14,11 @@ import { IOrder } from '../../interfaces';
 import { RowUserTable } from '.';
 
 interface Props {
-  limitPage?: number;
   orders: IOrder[];
 }
 
 export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({
   orders,
-  limitPage = 6,
 }) => {
   const [pageClick, setPageClick] = useState(1);
   let counter = 1;
@@ -34,7 +32,7 @@ export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({
         <Table aria-label="collapse table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell />
               <TableCell>OrderId</TableCell>
               <TableCell align="right">Status</TableCell>
               <TableCell align="right">No. Items</TableCell>
@@ -53,7 +51,6 @@ export const TableOrderByUser: FC<PropsWithChildren<Props>> = ({
         <Pagination
           page={pageClick}
           variant="text"
-          count={limitPage}
           size="large"
           color="secondary"
           onChange={onClick}

@@ -12,6 +12,7 @@ const orderSchema = new Schema(
         quantity: { type: Number, required: true },
         slug: { type: String, required: true },
         image: { type: String, required: true },
+        needImages: { type: Boolean, required: true },
         price: { type: Number, required: true },
         userImages: [
           { image: { type: String }, quantity: { type: Number, default: 1 } },

@@ -11,8 +11,8 @@ import axios from 'axios';
 };
 
 const headers = {
-  'Square-Version': process.env.SQUARE_VERSION!,
-  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN!}`,
+  'Square-Version': process.env.SQUARE_VERSION_PRODUCTION!,
+  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN_PRODUCTION!}`,
   'Content-Type': 'application/json',
 };
 
@@ -37,9 +37,12 @@ export default function handler(
 
 const getPayOrder = async (paymentId: string) => {
   try {
-    const { data } = await axios.get(`${process.env.SQUARE_URL}/${paymentId}`, {
-      headers,
-    });
+    const { data } = await axios.get(
+      `${process.env.SQUARE_URL_PRODUCTION}/${paymentId}`,
+      {
+        headers,
+      }
+    );
     return data;
   } catch (error) {}
 };
@@ -50,7 +53,7 @@ const completeOrder = async (paymentId: string, versionToken: string) => {
   };
   try {
     const { data } = await axios.post(
-      `${process.env.SQUARE_URL}/${paymentId}/complete`,
+      `${process.env.SQUARE_URL_PRODUCTION}/${paymentId}/complete`,
       body,
       {
         headers,
@@ -81,6 +84,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     const { orderId, amount, sourceId } = req.body;
     const amountInput = Math.round(amount * 100);
+    console.log(amountInput);
 
     const body = {
       amount_money: { amount: amountInput, currency: 'USD' },
@@ -88,9 +92,13 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       source_id: sourceId,
     };
 
-    const { data } = await axios.post(`${process.env.SQUARE_URL}`, body, {
-      headers,
-    });
+    const { data } = await axios.post(
+      `${process.env.SQUARE_URL_PRODUCTION}`,
+      body,
+      {
+        headers,
+      }
+    );
 
     const paymentId = data.payment.id;
     const versionToken = data.payment.version_token;

@@ -91,7 +91,7 @@ const DashboardPage = () => {
 
         <SummaryTile
           title={productsWithNoInventory}
-          subTitle='Sin Existencia'
+          subTitle='No Existence'
           icon={
             <CancelPresentationOutlined color='error' sx={{ fontSize: 40 }} />
           }
@@ -99,7 +99,7 @@ const DashboardPage = () => {
 
         <SummaryTile
           title={lowInventory}
-          subTitle='Bajo Inventario'
+          subTitle='Low Inventory'
           icon={
             <ProductionQuantityLimitsOutlined
               color='warning'

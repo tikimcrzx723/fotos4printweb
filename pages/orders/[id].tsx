@@ -191,15 +191,15 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           currencyCode: 'USD',
                           countryCode: 'US',
                           total: {
-                            label: 'MERCHANT NAME',
+                            label: 'FOTOSTUDIO EL SUENO',
                             amount: order.total.toString(),
                             pending: false,
                           },
                         })}
                         applicationId={
-                          process.env.NEXT_PUBLIC_APPLICATION_ID || ''
+                          process.env.NEXT_PUBLIC_APPLICATION_ID_PRODUCTION || ''
                         }
-                        locationId={process.env.NEXT_PUBLIC_LOCATION || ''}
+                        locationId={process.env.NEXT_PUBLIC_LOCATION_PRODUCTION || ''}
                         // createPaymentRequest={}
                         cardTokenizeResponseReceived={async (token, buyer) => {
                           const { data } = await appApi.post(

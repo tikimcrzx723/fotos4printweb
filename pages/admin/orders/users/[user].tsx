@@ -11,7 +11,7 @@ interface Props {
 const OrderForUser: NextPage<Props> = ({ orders }) => {
   return (
     <AdminLayout title="User" subTitle={orders[0].user?.email || ''}>
-      <TableOrderByUser orders={orders} />
+      <TableOrderByUser key={orders[0]._id} orders={orders} />
     </AdminLayout>
   );
 };

@@ -8,5 +8,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(400).json({ message: 'Debe de especificar el query de búsqueda' });
+  res.status(400).json({ message: 'You must specify the search query.' });
 }

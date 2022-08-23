@@ -130,7 +130,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
             <TextField
               // select
               variant="filled"
-              label="Country"
+              label="State"
               fullWidth
               // defaultValue={ Cookies.get('country') || countries[0].code }
               {...register('state', {

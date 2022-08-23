@@ -32,20 +32,19 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
   const [open, setOpen] = useState(false);
   const onDownloadImage = async (images: IUserImage[]) => {
     images.map(async (image) => {
-      const url = image.image
-        .replaceAll(
-          'https://fotos4printmedia.us-southeast-1.linodeobjects.com/',
-          ''
-        )
-        .replaceAll('/', '+');
+      const url = image.image;
+      // .replaceAll('/', '+');
+      console.log(url);
 
       const arrFile = image.image.toString().split('/');
       const file = arrFile[arrFile.length - 1];
 
       // const { data } = await appApi.get('/orders/user/' + url);
       appApi({
-        url: '/orders/user/' + url,
-        method: 'GET',
+        url: '/admin/orders/download',
+        data: { url },
+        // url: '/orders/user/' + url,
+        method: 'POST',
         responseType: 'blob',
       }).then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -78,7 +77,7 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
         <TableCell align="right">{currency.format(order.total)}</TableCell>
         <TableCell align="right">
           {order.isPaid ? (
-            <CreditCardOutlined />
+            <CreditCardOutlined color="success" sx={{ fontSize: 35 }} />
           ) : (
             <CreditCardOffOutlined color="error" sx={{ fontSize: 35 }} />
           )}
@@ -106,7 +105,9 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                   {order.orderItems.map((item) => (
                     <TableRow key={item._id + item.size}>
                       <TableCell>
-                        {item.title} [{item.size}]
+                        <Typography>
+                          {item.title} [{item.size}]
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Image
@@ -117,7 +118,9 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                         />
                       </TableCell>
                       <TableCell>{currency.format(item.price)}</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>
+                        {item.quantity} {item.needImages}
+                      </TableCell>
                       <TableCell>
                         {currency.format(item.quantity * item.price)}
                       </TableCell>
@@ -127,7 +130,9 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                           color="secondary"
                           onClick={() => onDownloadImage(item.userImages!)}
                         >
-                          <DownloadForOfflineOutlined sx={{ fontSize: 40 }} />
+                          <>
+                            <DownloadForOfflineOutlined sx={{ fontSize: 40 }} />
+                          </>
                         </IconButton>
                       </TableCell>
                     </TableRow>

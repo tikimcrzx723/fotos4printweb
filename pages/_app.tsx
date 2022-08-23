@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <PayPalScriptProvider
         options={{
           'client-id':
-            process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.toString() || '',
+            process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION?.toString() || '',
           currency: 'USD',
           'enable-funding':'paypal',
           'disable-funding': 'card',

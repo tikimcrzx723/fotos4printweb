@@ -1,6 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-// import { jwt } from '../../utils';
 
 export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
   const session: any = await getToken({
@@ -8,20 +7,35 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  console.log(req.page.params.slug);
-
   if (!session) {
-    return NextResponse.next();
+    try {
+      const params = req.page.name;
+      return NextResponse.redirect(`/product/client/${params}`);
+    } catch (error) {
+      const url = req.nextUrl.clone();
+      const params = req.page.name;
+      return NextResponse.redirect(`${url.origin}/product/client/${params}`);
+    }
   }
 
   const validRoles = ['client'];
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      return NextResponse.redirect('/');
+      const params = req.page.name;
+      if (session.user.role === 'federal' || session.user.role === 'admin') {
+        return NextResponse.redirect(`/product/federal/${params}`);
+      } else {
+        return NextResponse.redirect(`/product/frequent/${params}`);
+      }
     } catch (error) {
       const url = req.nextUrl.clone();
-      return NextResponse.redirect(`${url.origin}/`);
+      const params = req.page.name;
+      if (session.user.role === 'federal' || session.user.role === 'admin') {
+        return NextResponse.redirect(`${url.origin}/product/federal/${params}`);
+      } else {
+        return NextResponse.redirect(`${url.origin}/product/frequent/${params}`);
+      }
     }
   }
 

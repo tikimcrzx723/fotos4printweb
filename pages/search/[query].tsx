@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSideProps } from 'next';
 
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 
 import { ProductList } from '../../components/products';
@@ -19,21 +19,21 @@ const SearchPage: NextPage<Props> = ({ products, foundProducts, query }) => {
       title={'Studio-Sueno - Search'}
       pageDescription={'Find the best photos'}
     >
-      <Typography textAlign='center' variant='h1' component='h1'>
+      <Typography textAlign="center" variant="h1" component="h1">
         Find Products
       </Typography>
       {foundProducts ? (
         <Typography
-          variant='h2'
+          variant="h2"
           sx={{ mb: 1 }}
           fontSize={20}
-          textTransform='capitalize'
+          textTransform="capitalize"
         >
           Parameter: {query}
         </Typography>
       ) : (
         <>
-          <Typography textAlign='center' variant='h2' sx={{ mb: 1 }}>
+          <Typography textAlign="center" variant="h2" sx={{ mb: 1 }}>
             We did not find any product with this description {query}
           </Typography>
         </>

@@ -21,7 +21,7 @@ const productSchema = new Schema(
     type: {
       type: String,
       enum: {
-        values: ['photo', 'press', 'canva', 'gift'],
+        values: ['photo', 'press', 'gift'],
         message: '{VALUE} is not a valid type',
       },
       default: 'photo',

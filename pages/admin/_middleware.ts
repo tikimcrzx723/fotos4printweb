@@ -1,6 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-// import { jwt } from '../../utils';
 
 export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
   const session: any = await getToken({
