@@ -4,7 +4,7 @@ import { Address, User } from '../../../models';
 import { db } from '../../../database';
 import { IShippingAddress } from '../../../interfaces';
 
-type Data = { message: string } | IShippingAddress;
+type Data = { message: string } | IShippingAddress | null;
 
 export default function handler(
   req: NextApiRequest,
@@ -79,5 +79,6 @@ const getAddress = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   await db.disconnect();
 
-  return res.status(201).json(address?.address as any);
+  if (address?.address === undefined) return res.status(200).json(null);
+  else return res.status(201).json(address?.address as any);
 };

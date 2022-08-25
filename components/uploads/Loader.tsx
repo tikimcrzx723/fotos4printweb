@@ -1,38 +1,50 @@
-import * as React from 'react';
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import { FC, PropsWithChildren, useContext } from 'react';
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material';
+
+interface IProp {
+  counterCharger: number;
+  quantityImages: number;
 }
 
-export default function Loader() {
-  const [progress, setProgress] = React.useState(10);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+export const Loader: FC<PropsWithChildren<IProp>> = ({
+  counterCharger,
+  quantityImages,
+}) => {
+  const progress = Math.round(counterCharger * (100 / quantityImages));
 
   return (
-    <Box sx={{ width: '100%', height:20 }}>
-      <LinearProgressWithLabel value={progress} />
-    </Box>
+    <>
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}></Box>
+      <CircularProgress color='secondary' variant="determinate" size={250} value={progress} />
+      <Box
+        sx={{
+          top: 12,
+          left: 0,
+          bottom: 0,
+          right: 9,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography
+          variant="caption"
+          component="div"
+          fontSize={40}
+          color="text.secondary"
+        >
+          {counterCharger} of {quantityImages}
+        </Typography>
+      </Box>
+      <Box />
+    </>
   );
-}
+};

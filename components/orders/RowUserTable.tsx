@@ -31,19 +31,13 @@ interface Props {
 export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
   const [open, setOpen] = useState(false);
   const onDownloadImage = async (images: IUserImage[]) => {
-    images.map(async (image) => {
-      const url = image.image;
-      // .replaceAll('/', '+');
-      console.log(url);
-
-      const arrFile = image.image.toString().split('/');
-      const file = arrFile[arrFile.length - 1];
-
-      // const { data } = await appApi.get('/orders/user/' + url);
+    images.map(async ({ image, quantity }) => {
+      const url = image;
+      const arrFile = image.toString().split('/');
+      const file = `${quantity}-qty-${arrFile[arrFile.length - 1]}`;
       appApi({
         url: '/admin/orders/download',
         data: { url },
-        // url: '/orders/user/' + url,
         method: 'POST',
         responseType: 'blob',
       }).then((response) => {
@@ -130,9 +124,7 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                           color="secondary"
                           onClick={() => onDownloadImage(item.userImages!)}
                         >
-                          <>
-                            <DownloadForOfflineOutlined sx={{ fontSize: 40 }} />
-                          </>
+                          <DownloadForOfflineOutlined sx={{ fontSize: 40 }} />
                         </IconButton>
                       </TableCell>
                     </TableRow>

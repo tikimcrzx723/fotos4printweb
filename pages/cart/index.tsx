@@ -38,9 +38,12 @@ const CartPage = () => {
 
     if (cart.length === counter) setIsCheckBuy(true);
     else setIsCheckBuy(false);
-    console.log(counter);
-    console.log(cart.length);
   }, [cart]);
+  
+  useEffect(() => {
+    if (adrress === null)
+      router.replace('/perfil/address');
+  }, [adrress, router]);
 
   const onCreateOrder = async () => {
     if (isDelivery) {

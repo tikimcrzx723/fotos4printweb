@@ -2,33 +2,30 @@ import { FC, PropsWithChildren } from 'react';
 
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
-import { ICartProduct} from '../../interfaces';
 
 interface Props {
   currentValue: number;
   maxValue: number;
-  product: ICartProduct;
 
   // Methods
-  updatedQuantity: (newValue: number, product: ICartProduct) => void;
+  updatedQuantity: (newValue: number) => void;
 }
 
 export const ItemCounter: FC<PropsWithChildren<Props>> = ({
   currentValue,
   maxValue,
-  product,
   updatedQuantity,
 }) => {
   const addOrRemove = (value: number) => {
     if (value === -1) {
       if (currentValue === 1) return;
 
-      return updatedQuantity(currentValue - 1, product);
+      return updatedQuantity(currentValue - 1);
     }
 
     if (currentValue >= maxValue) return;
 
-    updatedQuantity(currentValue + 1, product);
+    updatedQuantity(currentValue + 1);
   };
   return (
     <Box marginLeft={3} display="flex" alignItems="center">

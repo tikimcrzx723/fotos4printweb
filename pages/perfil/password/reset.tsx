@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
-import { ShopLayout } from '../../components/layouts';
-import { CartContext } from '../../context';
+import { ShopLayout } from '../../../components/layouts';
+import { CartContext } from '../../../context';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
-import { dbUsers } from '../../database';
-import { IAddress } from '../../interfaces';
+import { dbUsers } from '../../../database';
+import { IAddress } from '../../../interfaces';
 
 type FormData = {
   firstName: string;
@@ -25,8 +25,7 @@ interface Props {
   address: IAddress;
 }
 
-const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
-  
+const ResetPassword: NextPage<PropsWithChildren<Props>> = ({ address }) => {
   const router = useRouter();
   const { updateAddress, addAdress } = useContext(CartContext);
 
@@ -181,4 +180,4 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   };
 };
 
-export default AddressPage;
+export default ResetPassword;

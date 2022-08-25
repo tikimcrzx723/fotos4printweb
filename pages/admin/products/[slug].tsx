@@ -97,7 +97,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
   }, [append, getValues]);
 
   useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
+    const subscription = watch((value, { name }) => {
       if (name === 'title') {
         const newSlug =
           value.title
@@ -152,7 +152,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
         i++;
 
         const { data } = await appApi.post<{ message: string }>(
-          `/uploaders/admin/images`,
+          `/uploaders/admin/images/upload`,
           sendDataFile
         );
         setValue('images', [...getValues('images'), data.message], {
@@ -164,16 +164,17 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
     }
   };
 
-  const onDeleteImage = (image: string) => {
+  const onDeleteImage = async (image: string) => {
     setValue(
       'images',
       getValues('images').filter((img) => img !== image),
       { shouldValidate: true }
     );
+    await appApi.post('/uploaders/admin/images/delete', { url: image });
   };
 
   const onSubmit = async (form: FormData) => {
-    if (form.images.length < 2) return alert('Mínimo 2 imagenes');
+    if (form.images.length < 1) return alert('Mínimo 2 imagenes');
     setIsSaving(true);
 
     try {
@@ -361,11 +362,11 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               />
 
               <Chip
-                label="It is necessary to 2 images"
+                label="It is necessary to 1 images"
                 color="error"
                 variant="outlined"
                 sx={{
-                  display: getValues('images').length < 2 ? 'flex' : 'none',
+                  display: getValues('images').length < 1 ? 'flex' : 'none',
                 }}
               />
             </Box>
@@ -376,6 +377,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
           spacing={2}
           sm={3}
           xs={4}
+          onDeleteImage={onDeleteImage}
         />
         <FormControl sx={{ mt: 5 }}>
           <FormLabel>

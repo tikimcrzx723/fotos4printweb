@@ -9,13 +9,12 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!session) {
     try {
-      const requestedPage = req.page.name;
-      return NextResponse.redirect(`/product/client/${req.page.params.slug}`);
+      const slug = req.page.params.slug;
+      return NextResponse.redirect(`/product/client/${slug}`);
     } catch (error) {
       const url = req.nextUrl.clone();
-      return NextResponse.redirect(
-        `${url.origin}/product/client/${req.page.params.slug}`
-      );
+      const slug = req.page.params.slug;
+      return NextResponse.redirect(`${url.origin}/product/client/${slug}`);
     }
   }
 
@@ -23,19 +22,19 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      const param = req.page.name;
+      const slug = req.page.params.slug;
       if (session.user.role === 'federal' || session.user.role === 'admin') {
-        return NextResponse.redirect(`/product/federal/${param}`);
+        return NextResponse.redirect(`/product/federal/${slug}`);
       } else {
-        return NextResponse.redirect(`/product/client/${param}`);
+        return NextResponse.redirect(`/product/client/${slug}`);
       }
     } catch (error) {
       const url = req.nextUrl.clone();
-      const param = req.page.name;
+      const slug = req.page.params.slug;
       if (session.user.role === 'federal' || session.user.role === 'admin') {
-        return NextResponse.redirect(`${url.origin}/product/federal/${param}`);
+        return NextResponse.redirect(`${url.origin}/product/federal/${slug}`);
       } else {
-        return NextResponse.redirect(`${url.origin}/product/client/${param}`);
+        return NextResponse.redirect(`${url.origin}/product/client/${slug}`);
       }
     }
   }

@@ -6,6 +6,7 @@ interface IProp {
   spacing: number;
   sm: number;
   xs: number;
+  onDeleteImage: (image: string) => void;
 }
 
 export const ShowListImages: FC<PropsWithChildren<IProp>> = ({
@@ -13,6 +14,7 @@ export const ShowListImages: FC<PropsWithChildren<IProp>> = ({
   spacing,
   sm,
   xs,
+  onDeleteImage,
 }) => {
   return (
     <Grid container spacing={spacing}>
@@ -26,7 +28,11 @@ export const ShowListImages: FC<PropsWithChildren<IProp>> = ({
               alt={img}
             />
             <CardActions>
-              <Button fullWidth color="error">
+              <Button
+                onClick={() => onDeleteImage(img)}
+                fullWidth
+                color="error"
+              >
                 Delete
               </Button>
             </CardActions>

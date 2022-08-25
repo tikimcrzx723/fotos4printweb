@@ -2,6 +2,14 @@ import { db } from '.';
 import { Company, User } from '../models';
 import bcryptjs from 'bcryptjs';
 
+export const activeUser = async (id: string) => {
+  await db.connect();
+  const user = await User.findByIdAndUpdate(id, { isActive: true });
+  await db.disconnect();
+  if (!user) return false;
+  else return true;
+};
+
 export const checkUserEmailPassword = async (
   email: string,
   password: string
@@ -11,7 +19,8 @@ export const checkUserEmailPassword = async (
   await db.disconnect();
 
   if (!user) return null;
-  if (!bcryptjs.compareSync(password, user.password!)) return null;
+  // if (!user.isActive) return null;
+  if (await !bcryptjs.compareSync(password, user.password!)) return null;
 
   const { role, name, _id } = user;
   return {
@@ -24,7 +33,7 @@ export const checkUserEmailPassword = async (
 
 // check user from OAuth
 export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
-  const defaultPassword = process.env.DEFAULT_NEW_PASSWORD || '@';
+  const defaultPassword = '@!#';
 
   await db.connect();
   const user = await User.findOne({ email: oAuthEmail });
@@ -40,6 +49,7 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
     name: oAuthName,
     password: bcryptjs.hashSync(defaultPassword),
     role: 'client',
+    isActive: true,
   });
   await newUser.save();
   await db.disconnect();

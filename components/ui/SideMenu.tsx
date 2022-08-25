@@ -15,12 +15,10 @@ import {
   ListSubheader,
 } from '@mui/material';
 import {
-  AccountCircleOutlined,
   AdminPanelSettings,
   ApartmentOutlined,
   CardGiftcardOutlined,
   CategoryOutlined,
-  ColorLensOutlined,
   ConfirmationNumberOutlined,
   DashboardOutlined,
   DomainOutlined,
@@ -98,7 +96,7 @@ export const SideMenu = () => {
           <ListItem
             button
             sx={{ display: { xs: '', sm: 'none' } }}
-            onClick={() => navigateTo('/category/photos')}
+            onClick={() => navigateTo('/category/photo')}
           >
             <ListItemIcon>
               <PhotoCameraOutlined />
@@ -109,7 +107,7 @@ export const SideMenu = () => {
           <ListItem
             button
             sx={{ display: { xs: '', sm: 'none' } }}
-            onClick={() => navigateTo('/category/gifts')}
+            onClick={() => navigateTo('/category/gift')}
           >
             <ListItemIcon>
               <CardGiftcardOutlined />

@@ -23,7 +23,6 @@ const getOrdersByUsers = async (
   res: NextApiResponse<any>
 ) => {
   const { user } = req.query;
-  console.log(user);
   
   await db.connect();
   const orders = await Order.aggregate([

@@ -1,5 +1,4 @@
 import { FC, useReducer, PropsWithChildren, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 
 import { ICompany, IUser } from '../../interfaces';
@@ -23,7 +22,6 @@ interface Props {}
 export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const { data, status } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -39,6 +37,7 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       const { data } = await appApi.post('/user/login', { email, password });
       const { token, user } = data;
       Cookies.set('token', token);
+
       dispatch({ type: '[Auth] - Login', payload: user });
       return true;
     } catch (error) {
@@ -75,7 +74,7 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
 
       return {
         hasError: true,
-        message: 'No se pudo crear el usuario - intente de nuevo',
+        message: 'Could not create user - try again',
       };
     }
   };
@@ -84,7 +83,6 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     Cookies.remove('token');
     Cookies.remove('cart');
     signOut();
-    router.reload();
   };
 
   const createCompany = async (company: ICompany) => {

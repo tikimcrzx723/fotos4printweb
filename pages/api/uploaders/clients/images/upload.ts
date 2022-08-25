@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { imageUpload } from '../../../../../libs';
-import { uuid } from 'uuidv4';
 import { Order } from '../../../../../models';
 import { db } from '../../../../../database';
 
@@ -36,7 +36,8 @@ const uploadImageUser = async (req: NextApiRequest, res: NextApiResponse) => {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const { base64, fileType, extension, path } = req.body;
-  const basecv = Buffer.from(base64, 'base64');
+  const base64Clean = base64.replace('data', '').replace(/^.+,/, '');
+  const basecv = Buffer.from(base64Clean, 'base64');
   await db.connect();
   const numOfOrders = await Order.find({ user: session.user._id }).count();
   await db.disconnect();
@@ -44,7 +45,7 @@ const uploadImageUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const absolutePath = `orders/${session.email.split('@')[0]}-${session.email
     .split('@')[1]
     .replaceAll('.com', '')}/order-${numOfOrders + 1}/${path}`;
-  const fileName = uuid();
+  const fileName = randomUUID();
 
   const image = await imageUpload.uploadFilesToStorage(
     basecv,

@@ -9,5 +9,5 @@ const coverterBase64 = (file: File) => {
 
 export const returnBase64 = async (file: File) => {
   const base64: any = await coverterBase64(file);
-  return base64.replace('data', '').replace(/^.+,/, '');
+  return base64; //.replace('data', '').replace(/^.+,/, '');
 };

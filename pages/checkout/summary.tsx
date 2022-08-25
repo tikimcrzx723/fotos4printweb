@@ -18,13 +18,9 @@ import { CartContext, UIContext } from '../../context';
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
 import { Delivery, PickUp } from '../../components/address';
-import { useCompany } from '../../hooks';
-import { useAddress } from '../../hooks/useAddress';
 
 const SummaryPage = () => {
   const router = useRouter();
-  // const { company } = useCompany('user/company');
-  // const { adrress } = useAddress('user/address');
   const { numberOfItems, createOrder } = useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
 

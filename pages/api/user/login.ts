@@ -6,7 +6,15 @@ import { jwt } from '../../../utils';
 
 type Data =
   | { message: string }
-  | { token: string; user: { email: string; role: string; name: string } };
+  | {
+      token: string;
+      user: {
+        email: string;
+        role: string;
+        name: string;
+        isActive: boolean | undefined;
+      };
+    };
 
 export default function handler(
   req: NextApiRequest,
@@ -36,7 +44,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: 'Correo o contraseña no válidos' });
   }
 
-  const { _id, role, name } = user;
+  const { _id, role, name, isActive } = user;
 
   const token = jwt.signToken(_id, email);
 
@@ -46,6 +54,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       email,
       role,
       name,
+      isActive,
     },
   });
 };

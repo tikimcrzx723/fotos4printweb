@@ -22,10 +22,19 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
   const [isHovered, setisHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { role } = useRole('user/rol');
-  const rol = role.message === 'admin' ? 'federal' : role.message;
+  const rol =
+    role.message === undefined || null
+      ? 'client'
+      : role.message === 'admin'
+      ? 'federal'
+      : role.message;
 
   const productImage = useMemo(() => {
-    return isHovered ? product.images[1] : product.images[0];
+    return isHovered
+      ? product.images.length === 1
+        ? product.images[0]
+        : product.images[1]
+      : product.images[0];
   }, [isHovered, product.images]);
 
   return (

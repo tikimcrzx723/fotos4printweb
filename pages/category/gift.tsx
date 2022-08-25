@@ -14,10 +14,7 @@ const MenPage: NextPage = () => {
     >
       <Box sx={{ textAlign: 'center' }}>
         <Typography variant='h1' component='h1'>
-          Store
-        </Typography>
-        <Typography variant='h2' sx={{ mb: 1 }} fontSize={20}>
-          All Gifts
+          Gifts
         </Typography>
       </Box>
       {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}

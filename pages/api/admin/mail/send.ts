@@ -2,26 +2,26 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import sgMail from '@sendgrid/mail';
 
-sgMail.setApiKey(process.env.SG_API_KEY!);
-
 type Data = {
-  name: string;
+  message: string;
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { name, email, message } = req.body;
+  await sgMail.setApiKey(
+    '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'
+  );
 
   const msg = {
-    to: email,
-    from: process.env.FROM_EMAIL_SERVICE!,
-    subject: 'Fotos4Print Data',
-    html: `<p><strong>Name: </strong>${name}</p>
-    <p><strong>Email: </strong>${email}</p>
-    <p><strong>Message: </strong>${message}</p>`,
+    to: 'tikimcrzx723@gmail.com',
+    from: 'no-reply@fotos4print.com', // Use the email address or domain you verified above
+    subject: 'Fotos4Print',
+    text: 'Paga Wey',
+    html: '<strong>Ya paga</strong>',
   };
 
   await sgMail.send(msg);
+  return res.status(200).json({ message: 'ok' });
 }

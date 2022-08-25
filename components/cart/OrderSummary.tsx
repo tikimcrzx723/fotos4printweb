@@ -28,8 +28,6 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
     ? orderValues
     : { numberOfItems, subTotal, total, tax };
 
-  // console.log(company);
-
   return (
     <Grid container>
       <Grid item xs={6}>

@@ -56,7 +56,6 @@ const getOrdersByUsers = async (
       },
     },
   ]);
-  console.log(orders);
 
   await db.disconnect();
 

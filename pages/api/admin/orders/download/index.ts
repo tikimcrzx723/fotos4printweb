@@ -37,7 +37,6 @@ export default function handler(
 
 const DownloadFile = (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { url } = req.body;
-  console.log(url);
 
   res.setHeader('Content-Type', 'image/jpeg');
   res.setHeader('Content-Type', 'image/jpg');
@@ -52,7 +51,6 @@ const DownloadFile = (req: NextApiRequest, res: NextApiResponse<Data>) => {
     .replaceAll('http://', '')
     .replaceAll('fotos4printmedia.us-southeast-1.linodeobjects.com/', '')
     .replaceAll('us-southeast-1.linodeobjects.com/', '');
-  console.log(urlClean);
 
   res.setHeader('Content-Disposition', `attachment; filename=${image}`);
 

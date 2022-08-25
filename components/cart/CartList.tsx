@@ -14,8 +14,6 @@ import { CartContext } from '../../context/cart';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
-import { ItemCounter } from '../ui';
-import { IProduct } from '../../interfaces';
 
 interface Props {
   editable?: boolean;
@@ -29,13 +27,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
   const { cart, removeCartProduct } = useContext(CartContext);
   const { role } = useRole('user/rol');
   const rol = role.message === 'admin' ? 'federal' : role.message;
-  const { updateCartQuantity } = useContext(CartContext);
 
   const productToShow = products ? products : cart;
-
-  const updatedQuantity = (quantity: number, product: ICartProduct) => {
-    
-  };
 
   return (
     <>

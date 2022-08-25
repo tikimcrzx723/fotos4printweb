@@ -5,6 +5,7 @@ export interface IUser {
   email: string;
   password?: string;
   role: string;
+  isActive?: boolean;
   address?: string | moongose.Types.ObjectId;
 
   // TODO: agregar createdAt y updatedAt

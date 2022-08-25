@@ -15,10 +15,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { AddToPhotosOutlined, UploadOutlined } from '@mui/icons-material';
 import { appApi } from '../../api';
-import { Box, Card, CardActions, CardMedia, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { CartContext } from '../../context';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { converters } from '../../libs';
+import { ShowListCartImage, Loader } from './';
 
 interface Props {
   product: IOrderItem | ICartProduct;
@@ -31,14 +32,18 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
   const [open, setOpen] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [counterImagesAdd, setCounterImagesAdd] = useState(0);
+  const [imagesLengt, setImagesLengt] = useState(0);
+  const [chargerImages, setChargerImages] = useState(false);
 
-  const { updateCartQuantity, addProductToCart } = useContext(CartContext);
+  const { updateCartQuantity } = useContext(CartContext);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    updateCartQuantity(product as ICartProduct);
     setOpen(false);
   };
 
@@ -46,9 +51,12 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
     if (!target.files || target.files.length === 0) {
       return;
     }
+    setImagesLengt(target.files.length);
+    setChargerImages(true);
 
     try {
       const images = product.userImages?.length === 0 ? [] : product.userImages;
+      let i = 0;
       for (const file of target.files) {
         const base64: any = await converters.returnBase64(file);
         const fileType = file.type.split('/')[0];
@@ -67,26 +75,36 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           image: data.message,
           quantity: 1,
         });
+        i++;
+        setCounterImagesAdd(i);
       }
       product.userImages = images;
       product.quantity = images!.length;
       updateCartQuantity(product as ICartProduct);
+      setChargerImages(false);
     } catch (error) {
       console.log({ error });
     }
   };
 
   const onDeleteImage = async (image: string) => {
-    const images = product.userImages?.filter((img) => img.image !== image);
-    product.userImages = images;
-    product.quantity = images?.length as any;
     updateCartQuantity(product as any);
-    addProductToCart(product as ICartProduct);
+    const images = product.userImages?.filter((img) => img.image !== image);
+    const qty = product.userImages?.find(
+      (img) => img.image === image
+    )?.quantity;
+    product.userImages = images;
+    product.quantity = product.quantity - qty!;
     await appApi.post('/uploaders/clients/images/delete', { url: image });
-    console.log(product.userImages);
+    updateCartQuantity(product as any);
   };
 
-  const onNewCartQuantityValue = async (product: ICartProduct) => {
+  const onNewCartQuantityValue = (product: ICartProduct) => {
+    let qty = 0;
+    product.userImages?.map((img) => {
+      qty += img.quantity;
+    });
+    product.quantity = qty;
     updateCartQuantity(product);
     handleClose();
   };
@@ -109,15 +127,23 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
         </DialogTitle>
         <DialogContent>
           <Box className="fadeIn">
-            <Button
-              color="secondary"
-              fullWidth
-              startIcon={<UploadOutlined />}
-              onClick={() => fileInputRef.current?.click()}
-              sx={{ mb: 3 }}
-            >
-              Upload Images
-            </Button>
+            {chargerImages === false ? (
+              <Button
+                color="secondary"
+                fullWidth
+                startIcon={<UploadOutlined />}
+                onClick={() => fileInputRef.current?.click()}
+                sx={{ mb: 3 }}
+              >
+                Upload Images
+              </Button>
+            ) : (
+              <Loader
+                key={product._id}
+                counterCharger={counterImagesAdd}
+                quantityImages={imagesLengt}
+              />
+            )}
             <input
               ref={fileInputRef}
               type="file"
@@ -127,41 +153,39 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
               style={{ display: 'none' }}
             />
             <Grid container spacing={3}>
-              {product.userImages!.map((img) => (
-                <Grid item key={img.image} xs={12} sm={4}>
-                  <Card>
-                    <CardMedia
-                      component="img"
-                      className="fadeIn"
-                      image={`https://afbrcpedgr.cloudimg.io/${img.image}?width=400`}
-                      alt={img.image}
-                    />
-                    <CardActions>
-                      <Button
-                        fullWidth
-                        color="error"
-                        onClick={() => onDeleteImage(img.image)}
-                      >
-                        Delete
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
+              {!chargerImages ? (
+                product.userImages!.map((img, index) => (
+                  <ShowListCartImage
+                    key={img.image}
+                    product={product as ICartProduct}
+                    img={img}
+                    index={index}
+                    onDeleteImage={onDeleteImage}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
             </Grid>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button color="error" autoFocus onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => onNewCartQuantityValue(product as ICartProduct)}
-            autoFocus
-          >
-            Save
-          </Button>
+          {!chargerImages ? (
+            <>
+              <Button color="error" autoFocus onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                onClick={() => onNewCartQuantityValue(product as ICartProduct)}
+                autoFocus
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
         </DialogActions>
       </Dialog>
     </div>

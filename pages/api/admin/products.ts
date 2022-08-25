@@ -55,7 +55,7 @@ const updateProducts = async (
     return res.status(400).json({ message: 'is not a valid ObjectId' });
   }
 
-  if (images.length < 2) {
+  if (images.length < 1) {
     return res.status(400).json({ message: 'At least 2 images are required' });
   }
 
@@ -94,7 +94,7 @@ const createProduct = async (
   } = req.body as IProduct;
   console.log(req.body);
 
-  if (images.length < 2) {
+  if (images.length < 1) {
     return res.status(400).json({ message: 'At least 2 images are required' });
   }
 

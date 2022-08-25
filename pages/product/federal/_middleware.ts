@@ -9,12 +9,12 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!session) {
     try {
-      const params = req.page.params.slug;
-      return NextResponse.redirect(`/product/client/${params}`);
+      const slug = req.page.params.slug;
+      return NextResponse.redirect(`/product/client/${slug}`);
     } catch (error) {
       const url = req.nextUrl.clone();
-      const params = req.page.params.slug;
-      return NextResponse.redirect(`${url.origin}/product/client/${params}`);
+      const slug = req.page.params.slug;
+      return NextResponse.redirect(`${url.origin}/product/client/${slug}`);
     }
   }
 
@@ -22,19 +22,19 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      const params = req.page.name;
+      const slug = req.page.params.slug;
       if (session.user.role === 'frequent') {
-        return NextResponse.redirect(`/product/frequent/${params}`);
+        return NextResponse.redirect(`/product/frequent/${slug}`);
       } else {
-        return NextResponse.redirect(`/product/client/${params}`);
+        return NextResponse.redirect(`/product/client/${slug}`);
       }
     } catch (error) {
       const url = req.nextUrl.clone();
-      const params = req.page.name;
+      const slug = req.page.params.slug;
       if (session.user.role === 'frequent') {
-        return NextResponse.redirect(`${url.origin}/product/frequent/${params}`);
+        return NextResponse.redirect(`${url.origin}/product/frequent/${slug}`);
       } else {
-        return NextResponse.redirect(`${url.origin}/product/client/${params}`);
+        return NextResponse.redirect(`${url.origin}/product/client/${slug}`);
       }
     }
   }

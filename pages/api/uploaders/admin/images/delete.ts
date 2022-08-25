@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { imageUpload } from '../../libs';
+import { imageUpload } from '../../../../../libs';
 
 type Data = {
   message: string;
@@ -22,5 +22,5 @@ export default function handler(
 const deleteImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { url = '' } = req.body;
   const deleted = await imageUpload.deleteFileFromObjectStorage(url);
-  return res.status(200).json({ message: 'Deleteled' });
+  return res.status(201).json({message:'Deleted Images'});
 };

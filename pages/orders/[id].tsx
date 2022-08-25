@@ -24,6 +24,7 @@ import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { appApi } from '../../api';
 import {
+  ApplePay,
   CreditCard,
   GooglePay,
   PaymentForm,
@@ -191,15 +192,18 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           currencyCode: 'USD',
                           countryCode: 'US',
                           total: {
-                            label: 'FOTOSTUDIO EL SUENO',
+                            label: 'FOTO STUDIO EL SUENO',
                             amount: order.total.toString(),
                             pending: false,
                           },
                         })}
                         applicationId={
-                          process.env.NEXT_PUBLIC_APPLICATION_ID_PRODUCTION || ''
+                          process.env.NEXT_PUBLIC_APPLICATION_ID_PRODUCTION ||
+                          ''
                         }
-                        locationId={process.env.NEXT_PUBLIC_LOCATION_PRODUCTION || ''}
+                        locationId={
+                          process.env.NEXT_PUBLIC_LOCATION_PRODUCTION || ''
+                        }
                         // createPaymentRequest={}
                         cardTokenizeResponseReceived={async (token, buyer) => {
                           const { data } = await appApi.post(
@@ -213,6 +217,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           onOrderCompleted();
                         }}
                       >
+                        {/* <ApplePay /> */}
                         <GooglePay />
                         <Box marginBottom={2}></Box>
                         <CreditCard lang="us" />

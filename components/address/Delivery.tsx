@@ -1,8 +1,6 @@
-import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
 import { Box, Link, Typography } from '@mui/material';
-import { IShippingAddress } from '../../interfaces';
 import { useAddress } from '../../hooks';
 
 export const Delivery = () => {

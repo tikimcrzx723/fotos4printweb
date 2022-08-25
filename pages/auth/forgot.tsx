@@ -25,7 +25,7 @@ type FormData = {
   password: string;
 };
 
-const LoginPage = () => {
+const ForgotPage = () => {
   const router = useRouter();
   const {
     register,
@@ -183,4 +183,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 };
 
-export default LoginPage;
+export default ForgotPage;

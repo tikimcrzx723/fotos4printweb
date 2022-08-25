@@ -84,7 +84,6 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     const { orderId, amount, sourceId } = req.body;
     const amountInput = Math.round(amount * 100);
-    console.log(amountInput);
 
     const body = {
       amount_money: { amount: amountInput, currency: 'USD' },
