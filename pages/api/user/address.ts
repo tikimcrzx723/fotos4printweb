@@ -72,11 +72,9 @@ const getAddress = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   });
 
   await db.connect();
-
   const address = await User.findById(session.user._id)
     .populate('address')
     .lean();
-
   await db.disconnect();
 
   if (address?.address === undefined) return res.status(200).json(null);

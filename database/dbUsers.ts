@@ -61,7 +61,6 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
 export const findAddress = async (userId: string) => {
   await db.connect();
   const user = await User.findById(userId).populate('address').lean();
-
   await db.disconnect();
 
   if (user?.address !== null && user?.address !== undefined)
