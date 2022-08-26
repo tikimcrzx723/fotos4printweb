@@ -33,9 +33,10 @@ const addAddress = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   await db.connect();
 
-  const user:any = await User.findById(session.user._id);
   const address = new Address({ ...req.body });
   await address.save();
+
+  const user: any = await User.findOne({ _id: session.user._id });
   user.address = address._id;
   await user?.save();
 
