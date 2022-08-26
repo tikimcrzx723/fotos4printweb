@@ -50,6 +50,7 @@ interface IUserImages {
 }
 
 export interface IShippingAddress {
+  _id?: string;
   user?: string;
   firstName: string;
   lastName: string;

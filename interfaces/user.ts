@@ -6,7 +6,7 @@ export interface IUser {
   password?: string;
   role: string;
   isActive?: boolean;
-  address?: string | moongose.Types.ObjectId;
+  address?: string | moongose.Types.ObjectId | null | undefined;
 
   // TODO: agregar createdAt y updatedAt
   createdAt?: string;
