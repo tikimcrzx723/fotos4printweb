@@ -18,6 +18,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 import { dbUsers } from '../../../database';
 import { IAddress } from '../../../interfaces';
+import { appApi } from '../../../api';
 
 type FormData = {
   firstName: string;
@@ -163,7 +164,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
                 onChange={({ target }) => {
                   setValue('state', target.value, { shouldValidate: true });
                 }}
-                defaultValue={getValues('state')}
+                defaultValue={getValues('state') || 'OR'}
                 inputProps={{
                   name: 'age',
                   id: 'uncontrolled-native',
