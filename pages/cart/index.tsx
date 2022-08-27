@@ -19,6 +19,7 @@ import { useAddress } from '../../hooks';
 
 const CartPage = () => {
   const { isLoaded, cart } = useContext(CartContext);
+  const [messageError, setMessageError] = useState('Please Upload Image');
   const { isDelivery, deliveryOrStore } = useContext(UIContext);
   const [isCheckBuy, setIsCheckBuy] = useState(false);
   const router = useRouter();
@@ -33,16 +34,38 @@ const CartPage = () => {
   useEffect(() => {
     let counter = 0;
     cart.map((product) => {
-      if (product.quantity > 0) counter++;
+      if (product.quantity > 0) {
+        if (
+          product.title.includes('Event') ||
+          product.title.includes('event') ||
+          product.title.includes('Tickets') ||
+          product.title.includes('tickets')
+        ) {
+          setMessageError('Please Add Ticket Price');
+          if (product.hasOwnProperty('information')) {
+            if (product.information.price > 0) {
+              counter++;
+            }
+          }
+        } else {
+          counter++;
+        }
+      }
+      // if (product.hasOwnProperty('information')) {
+      //   if (product.information.price >= 0) {
+      //     counter++;
+      //   }
+      // } else {
+      //   if (product.quantity > 0) counter++;
+      // }
     });
 
     if (cart.length === counter) setIsCheckBuy(true);
     else setIsCheckBuy(false);
   }, [cart]);
-  
+
   useEffect(() => {
-    if (adrress === null)
-      router.replace('/perfil/address');
+    if (adrress === null) router.replace('/perfil/address');
   }, [adrress, router]);
 
   const onCreateOrder = async () => {
@@ -102,7 +125,7 @@ const CartPage = () => {
                       sx={{ alignItems: 'center' }}
                     >
                       <AddPhotoAlternateOutlined />
-                      <Typography ml={2}>Please Upload Images</Typography>
+                      <Typography ml={2}>{messageError}</Typography>
                     </Grid>
                   </>
                 )}

@@ -17,6 +17,7 @@ const orderSchema = new Schema(
         userImages: [
           { image: { type: String }, quantity: { type: Number, default: 1 } },
         ],
+        information: { type: Object },
       },
     ],
     shippingAddress: {

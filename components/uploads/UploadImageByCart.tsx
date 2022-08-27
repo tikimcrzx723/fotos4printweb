@@ -15,7 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { AddToPhotosOutlined, UploadOutlined } from '@mui/icons-material';
 import { appApi } from '../../api';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, NativeSelect, Typography } from '@mui/material';
 import { CartContext } from '../../context';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { converters } from '../../libs';
@@ -28,6 +28,7 @@ interface Props {
 export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
   product,
 }) => {
+  const [addOrRemoveQty, setAddOrRemoveQty] = useState(1);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -123,7 +124,31 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          {'Upload your images'}
+          <Box display='flex' justifyContent='space-between'>
+            <Typography>Upload your images</Typography>
+            <NativeSelect
+              defaultValue={1}
+              onChange={({ target }) => {
+                setAddOrRemoveQty(Number(target.value));
+              }}
+            >
+              <option key={1} value={1}>
+                1
+              </option>
+              <option key={5} value={5}>
+                5
+              </option>
+              <option key={10} value={10}>
+                10
+              </option>
+              <option key={20} value={20}>
+                20
+              </option>
+              <option key={50} value={50}>
+                50
+              </option>
+            </NativeSelect>
+          </Box>
         </DialogTitle>
         <DialogContent>
           <Box className="fadeIn">
@@ -161,6 +186,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
                     img={img}
                     index={index}
                     onDeleteImage={onDeleteImage}
+                    addOrRemoveValue={addOrRemoveQty}
                   />
                 ))
               ) : (

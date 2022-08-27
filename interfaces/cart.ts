@@ -11,6 +11,7 @@ export interface ICartProduct {
   tempImages?: string[];
   minIMages?: number;
   needImages?: boolean;
+  information?: any;
 }
 
 export interface IUserImage {

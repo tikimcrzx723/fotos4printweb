@@ -89,6 +89,7 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                   <TableRow>
                     <TableCell>title</TableCell>
                     <TableCell>image</TableCell>
+                    <TableCell>Tickect Price</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>QTY</TableCell>
                     <TableCell>Amount</TableCell>
@@ -110,6 +111,11 @@ export const RowUserTable: FC<PropsWithChildren<Props>> = ({ order }) => {
                           width={100}
                           height={100}
                         />
+                      </TableCell>
+                      <TableCell>
+                        {item.hasOwnProperty('information')
+                          ? item.information.price
+                          : 0}
                       </TableCell>
                       <TableCell>{currency.format(item.price)}</TableCell>
                       <TableCell>

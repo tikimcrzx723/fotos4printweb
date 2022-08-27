@@ -14,6 +14,7 @@ import { CartContext } from '../../context/cart';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
+import { AddInfo } from '../orders/AddInfo';
 
 interface Props {
   editable?: boolean;
@@ -63,7 +64,15 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               {editable ? (
                 <>
                   {product.needImages ? (
-                    <UploadImageByCart product={product} />
+                    <>
+                      <UploadImageByCart product={product} />
+                      {product.title.includes('Event') ||
+                      product.title.includes('event') ? (
+                        <AddInfo product={product} />
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   ) : (
                     <Typography>Worker</Typography>
                   )}

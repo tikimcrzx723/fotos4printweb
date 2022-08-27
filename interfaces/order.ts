@@ -42,6 +42,7 @@ export interface IOrderItem {
   tempImages?: string[];
   minIMages?: number;
   needImages?: boolean;
+  information?: any;
 }
 
 interface IUserImages {

@@ -8,7 +8,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ['fotos4printmedia.us-southeast-1.linodeobjects.com', 'getwallpapers.com'],
+    domains: ['fotos4printmedia.us-southeast-1.linodeobjects.com'],
   },
 };
 

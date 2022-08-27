@@ -164,7 +164,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
                 onChange={({ target }) => {
                   setValue('state', target.value, { shouldValidate: true });
                 }}
-                defaultValue={getValues('state') || 'OR'}
+                defaultValue='OR'
                 inputProps={{
                   name: 'age',
                   id: 'uncontrolled-native',
