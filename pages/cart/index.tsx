@@ -64,9 +64,9 @@ const CartPage = () => {
     else setIsCheckBuy(false);
   }, [cart]);
 
-  useEffect(() => {
-    if (adrress === null) router.replace('/perfil/address');
-  }, [adrress, router]);
+  // useEffect(() => {
+  //   if (adrress === null) router.replace('/perfil/address');
+  // }, [adrress, router]);
 
   const onCreateOrder = async () => {
     if (isDelivery) {
@@ -95,14 +95,18 @@ const CartPage = () => {
             <CardContent>
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="h2">Order</Typography>
-                <Box>
-                  <Switch
-                    color="secondary"
-                    checked={isDelivery}
-                    onChange={deliveryOrStore}
-                  />
-                  {isDelivery ? 'Send to Home' : 'Pick Up In Store'}
-                </Box>
+                {adrress === null ? (
+                  <></>
+                ) : (
+                  <Box>
+                    <Switch
+                      color="secondary"
+                      checked={isDelivery}
+                      onChange={deliveryOrStore}
+                    />
+                    {isDelivery ? 'Send to Home' : 'Pick Up In Store'}
+                  </Box>
+                )}
               </Box>
               <Divider sx={{ my: 1 }} />
               <OrderSummary />
