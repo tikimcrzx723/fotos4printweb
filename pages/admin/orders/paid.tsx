@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import { IOrder } from '../../../interfaces';
 import moment from 'moment';
 import { appApi } from '../../../api';
-import { IAddress } from '../../../interfaces';
 
 const PaidOrdersPage = () => {
   const { data, error } = useSWR<IOrder[]>(
@@ -29,14 +28,18 @@ const PaidOrdersPage = () => {
     if (status === 'completed') {
       const order = data?.find((ord) => ord._id === orderId);
       const address = await appApi.get(`/admin/users/address/${order?.user}`);
+      console.log(address);
+
       if (address !== null) {
-        const body = {
-          phone: address.data.phone,
-          msn: order?.delivery?.required
-            ? `Your order has Your Has Shipped - Order #${orderId}`
-            : `Your order is ready for pick up #${orderId}`,
-        };
-        await appApi.post('/admin/users/sendOrderMSN', body);
+        if (address.data.phone.length === 10) {
+          const body = {
+            phone: address.data.phone,
+            msn: order?.delivery?.required
+              ? `Your order has Your Has Shipped - Order #${orderId}`
+              : `Your order is ready for pick up #${orderId}`,
+          };
+          await appApi.post('/admin/users/sendOrderMSN', body);
+        }
       }
     }
     const previosOrders = orders.map((order) => ({ ...order }));
