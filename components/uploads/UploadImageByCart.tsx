@@ -150,7 +150,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
               type="file"
               multiple
               onChange={onFilesSelected}
-              accept=".png, .jpg, .jpge, .JPGE, .pdf"
+              accept=".png, .jpg, .jpeg, .JPEG, .pdf"
               style={{ display: 'none' }}
             />
             <Grid container spacing={3}>
