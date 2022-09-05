@@ -9,6 +9,7 @@ import {
   CreditCardOutlined,
   DashboardOutlined,
   GroupOutlined,
+  InventoryOutlined,
   ProductionQuantityLimitsOutlined,
 } from '@mui/icons-material';
 import { Grid, Typography } from '@mui/material';
@@ -44,6 +45,7 @@ const DashboardPage = () => {
 
   const {
     numberOfOrders,
+    completedOrders,
     paidOrders,
     numberOfClients,
     numberOfProducts,
@@ -53,68 +55,125 @@ const DashboardPage = () => {
   } = data!;
 
   return (
-    <AdminLayout
-      title='Dashboard'
-      subTitle='General statistics'
-      icon={<DashboardOutlined />}
-    >
-      <Grid container spacing={4}>
-        <SummaryTile
-          title={numberOfOrders}
-          subTitle='Total Orders'
-          icon={<CreditCardOutlined color='secondary' sx={{ fontSize: 40 }} />}
-        />
+    <>
+      <AdminLayout
+        title="Dashboard"
+        subTitle="General statistics"
+        icon={<DashboardOutlined />}
+      >
+        <Grid container spacing={3}>
+          <SummaryTile
+            title={numberOfOrders}
+            subTitle="Total Orders"
+            icon={
+              <CreditCardOutlined color="secondary" sx={{ fontSize: 60 }} />
+            }
+            text={
+              <a
+                href={`/admin/orders/all`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Typography variant="body1">Total Orders</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={paidOrders}
-          subTitle='Paid Orders'
-          icon={<AttachMoneyOutlined color='success' sx={{ fontSize: 40 }} />}
-        />
+          <SummaryTile
+            title={completedOrders}
+            subTitle="Completed Orders"
+            icon={<InventoryOutlined color="success" sx={{ fontSize: 60 }} />}
+            text={
+              <a
+                href={`/admin/orders/completed`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Typography variant="body1">Completed Orders</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={notPaidOrders}
-          subTitle='Pending Orders'
-          icon={<CreditCardOffOutlined color='error' sx={{ fontSize: 40 }} />}
-        />
+          <SummaryTile
+            title={paidOrders}
+            subTitle="Paid Orders"
+            icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 60 }} />}
+            text={
+              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Paid Orders</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={numberOfClients}
-          subTitle='Clients'
-          icon={<GroupOutlined color='primary' sx={{ fontSize: 40 }} />}
-        />
+          <SummaryTile
+            title={notPaidOrders}
+            subTitle="No Paid Orders"
+            icon={<CreditCardOffOutlined color="error" sx={{ fontSize: 60 }} />}
+            text={
+              <a
+                href={`/admin/orders/notpaid`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Typography variant="body1">No Paid Orders</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={numberOfProducts}
-          subTitle='Products'
-          icon={<CategoryOutlined color='warning' sx={{ fontSize: 40 }} />}
-        />
+          <SummaryTile
+            title={numberOfClients}
+            subTitle="Clients"
+            icon={<GroupOutlined color="primary" sx={{ fontSize: 60 }} />}
+            text={
+              <a href={`/admin/users`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Clients</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={productsWithNoInventory}
-          subTitle='No Existence'
-          icon={
-            <CancelPresentationOutlined color='error' sx={{ fontSize: 40 }} />
-          }
-        />
+          <SummaryTile
+            title={numberOfProducts}
+            subTitle="Products"
+            icon={<CategoryOutlined color="warning" sx={{ fontSize: 60 }} />}
+            text={
+              <a href={`/admin/products`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Products</Typography>
+              </a>
+            }
+          />
 
-        <SummaryTile
-          title={lowInventory}
-          subTitle='Low Inventory'
-          icon={
-            <ProductionQuantityLimitsOutlined
-              color='warning'
-              sx={{ fontSize: 40 }}
-            />
-          }
-        />
+          <SummaryTile
+            title={productsWithNoInventory}
+            subTitle="No Existence"
+            icon={
+              <CancelPresentationOutlined color="error" sx={{ fontSize: 60 }} />
+            }
+            text={<Typography variant="body1">No Existence</Typography>}
+          />
 
-        <SummaryTile
-          title={refreshIn}
-          subTitle='Updating in:'
-          icon={<AccessTimeOutlined color='secondary' sx={{ fontSize: 40 }} />}
-        />
-      </Grid>
-    </AdminLayout>
+          <SummaryTile
+            title={lowInventory}
+            subTitle="Low Inventory"
+            icon={
+              <ProductionQuantityLimitsOutlined
+                color="warning"
+                sx={{ fontSize: 60 }}
+              />
+            }
+            text={<Typography variant="body1">Low Inventory</Typography>}
+          />
+
+          <SummaryTile
+            title={refreshIn}
+            subTitle="Updating in:"
+            icon={
+              <AccessTimeOutlined color="secondary" sx={{ fontSize: 60 }} />
+            }
+            text={<Typography variant="body1">RefreshIn</Typography>}
+          />
+        </Grid>
+      </AdminLayout>
+    </>
   );
 };
 

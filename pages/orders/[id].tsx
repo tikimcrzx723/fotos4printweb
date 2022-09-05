@@ -198,11 +198,11 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           },
                         })}
                         applicationId={
-                          process.env.NEXT_PUBLIC_APPLICATION_ID_PRODUCTION ||
+                          process.env.NEXT_PUBLIC_APPLICATION_ID ||
                           ''
                         }
                         locationId={
-                          process.env.NEXT_PUBLIC_LOCATION_PRODUCTION || ''
+                          process.env.NEXT_PUBLIC_LOCATION || ''
                         }
                         // createPaymentRequest={}
                         cardTokenizeResponseReceived={async (token, buyer) => {

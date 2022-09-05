@@ -1,4 +1,10 @@
-import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
+import {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useReducer,
+  useContext,
+} from 'react';
 
 import {
   IAddress,
@@ -35,7 +41,7 @@ interface Props {}
 
 export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
-
+  
   useEffect(() => {
     try {
       const cookieProducts = Cookies.get('cart')
@@ -140,6 +146,10 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
 
   const updateCartQuantity = (product: ICartProduct) => {
     dispatch({ type: '[Cart] - Change cart quantity', payload: product });
+  };
+
+  const updateCartProductsByCache = (products: ICartProduct[]) => {
+    dispatch({ type: '[Cart] - Update products in cart', payload: products });
   };
 
   const removeCartProduct = (product: ICartProduct) => {
@@ -298,6 +308,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         updateCartQuantity,
         removeCartProduct,
         updateAddress,
+        updateCartProductsByCache,
 
         // Orders
         createOrder,

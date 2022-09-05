@@ -2,9 +2,9 @@ import {
   FC,
   useState,
   PropsWithChildren,
+  useContext,
   useRef,
   ChangeEvent,
-  useContext,
 } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -25,12 +25,14 @@ interface Props {
 }
 
 type FormData = {
-  price: number;
+  name: string;
+  quantity: number;
 };
 
-export const AddInfo: FC<PropsWithChildren<Props>> = ({ product }) => {
+export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {
     register,
@@ -39,7 +41,8 @@ export const AddInfo: FC<PropsWithChildren<Props>> = ({ product }) => {
     reset,
   } = useForm<FormData>({
     defaultValues: {
-      price: 100,
+      name: '',
+      quantity: 1,
     },
   });
 
@@ -55,10 +58,9 @@ export const AddInfo: FC<PropsWithChildren<Props>> = ({ product }) => {
   };
 
   const onSaveInfo = (data: FormData) => {
-    console.log(data);
-    data.price = Number(data.price);
-
-    product.information = data;
+    const information = { name: data.name, quantity: Number(data.quantity) };
+    product.quantity = Number(information.quantity);
+    product.information = information;
     updateCartQuantity(product as ICartProduct);
     handleClose();
   };
@@ -67,7 +69,7 @@ export const AddInfo: FC<PropsWithChildren<Props>> = ({ product }) => {
     <div>
       <Box marginBottom={2} marginTop={2}>
         <Button color="secondary" onClick={handleClickOpen}>
-          <AddToPhotosOutlined /> Add Ticket Price
+          <AddToPhotosOutlined /> Add Info
         </Button>
       </Box>
       <Dialog
@@ -86,19 +88,30 @@ export const AddInfo: FC<PropsWithChildren<Props>> = ({ product }) => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Price"
+                  label="Name"
+                  variant="filled"
+                  fullWidth
+                  sx={{ mb: 1 }}
+                  {...register('name', {
+                    required: 'This a required',
+                  })}
+                  helperText={errors.name?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Quantity"
                   type="number"
                   variant="filled"
                   fullWidth
                   sx={{ mb: 1 }}
-                  {...register('price', {
+                  {...register('quantity', {
                     required: 'This a required',
-                    min: 10,
+                    min: 1,
                   })}
-                  helperText={errors.price?.message}
+                  helperText={errors.name?.message}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}></Grid>
             </Grid>
           </DialogContent>
           <DialogActions>

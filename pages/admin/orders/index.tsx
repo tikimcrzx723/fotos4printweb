@@ -1,54 +1,137 @@
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import {
+  AccessTimeOutlined,
+  AttachMoneyOutlined,
   CreditCardOffOutlined,
   CreditCardOutlined,
+  DashboardOutlined,
   GroupOutlined,
   InventoryOutlined,
 } from '@mui/icons-material';
-import { Button, Grid, Link } from '@mui/material';
-import { SummaryTile } from '../../../components/admin';
+import { Grid, Typography } from '@mui/material';
+import { DashboardSummaryResponse } from '../../../interfaces';
 import { AdminLayout } from '../../../components/layouts';
+import { SummaryTile } from '../../../components/admin';
 
-const OrderDashboardPage = () => {
-  const router = useRouter();
-  const navigateTo = (url: string) => {
-    router.push(url);
-  };
+const DashboardOrders = () => {
+  const { data, error } = useSWR<DashboardSummaryResponse>(
+    '/api/admin/dashboard',
+    {
+      refreshInterval: 30 * 1000,
+    }
+  );
+
+  const [refreshIn, setRefreshIn] = useState(30);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshIn((refreshIn) => (refreshIn > 0 ? refreshIn - 1 : 30));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!error && !data) {
+    return <></>;
+  }
+
+  if (error) {
+    console.log(error);
+    return <Typography>Error loading information</Typography>;
+  }
+
+  const {
+    numberOfOrders,
+    completedOrders,
+    paidOrders,
+    notPaidOrders,
+    userOrders,
+  } = data!;
+
   return (
-    <AdminLayout title="Orders Dashboard" subTitle="Generaral Summary Orders">
-      <Grid container spacing={4}>
-        <SummaryTile
-          title="All"
-          subTitle=""
-          icon={
-            <Button onClick={() => navigateTo('/admin/orders/all')}>
-              <InventoryOutlined color="primary" sx={{ fontSize: 50 }} />
-            </Button>
-          }
-        />
-        <SummaryTile
-          title="Users"
-          subTitle=""
-          icon={
-            <Button onClick={() => navigateTo('/admin/orders/users')}>
-              <GroupOutlined color="secondary" sx={{ fontSize: 50 }} />
-            </Button>
-          }
-        />
-        <SummaryTile
-          title="Paid"
-          subTitle=""
-          icon={<CreditCardOutlined color="success" sx={{ fontSize: 50 }} />}
-        />
-        <SummaryTile
-          title="Un Paid"
-          subTitle=""
-          icon={<CreditCardOffOutlined color="error" sx={{ fontSize: 50 }} />}
-        />
-      </Grid>
-    </AdminLayout>
+    <>
+      <AdminLayout
+        title="Dashboard"
+        subTitle="Orders"
+        icon={<DashboardOutlined />}
+      >
+        <Grid container spacing={3}>
+          <SummaryTile
+            title={numberOfOrders}
+            subTitle="Total Orders"
+            icon={
+              <CreditCardOutlined color="secondary" sx={{ fontSize: 60 }} />
+            }
+            text={
+              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Total Orders</Typography>
+              </a>
+            }
+          />
+
+          <SummaryTile
+            title={completedOrders}
+            subTitle="Completed Orders"
+            icon={<InventoryOutlined color="success" sx={{ fontSize: 60 }} />}
+            text={
+              <a
+                href={`/admin/orders/completed`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Typography variant="body1">Completed Orders</Typography>
+              </a>
+            }
+          />
+
+          <SummaryTile
+            title={paidOrders}
+            subTitle="Paid Orders"
+            icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 60 }} />}
+            text={
+              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Paid Orders</Typography>
+              </a>
+            }
+          />
+
+          <SummaryTile
+            title={notPaidOrders}
+            subTitle="No Paid Orders"
+            icon={<CreditCardOffOutlined color="error" sx={{ fontSize: 60 }} />}
+            text={
+              <a
+                href={`/admin/orders/notpaid`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Typography variant="body1">No Paid Orders</Typography>
+              </a>
+            }
+          />
+
+          <SummaryTile
+            title={userOrders}
+            subTitle="Clients Orders"
+            icon={<GroupOutlined color="primary" sx={{ fontSize: 60 }} />}
+            text={
+              <a href={`/admin/users`} target="_blank" rel="noreferrer">
+                <Typography variant="body1">Clients Orders</Typography>
+              </a>
+            }
+          />
+          <SummaryTile
+            title={refreshIn}
+            subTitle="Updating in:"
+            icon={
+              <AccessTimeOutlined color="secondary" sx={{ fontSize: 60 }} />
+            }
+            text={<Typography variant="body1">RefreshIn</Typography>}
+          />
+        </Grid>
+      </AdminLayout>
+    </>
   );
 };
 
-export default OrderDashboardPage;
+export default DashboardOrders;

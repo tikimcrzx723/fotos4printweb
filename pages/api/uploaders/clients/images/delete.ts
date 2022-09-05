@@ -16,11 +16,15 @@ export default function handler(
     default:
       break;
   }
-  res.status(200).json({ message: 'Example' });
 }
 
 const deleteImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { url = '' } = req.body;
-  const deleted = await imageUpload.deleteFileFromObjectStorage(url);
-  return res.status(201).json({message:'Deleted Images'});
+  try {
+    const deleted = await imageUpload.deleteFileFromObjectStorage(url);
+    return res.status(201).json({ message: 'Deleted Images' });
+  } catch (error) {
+    console.log(error);
+    return res.status(201).json({ message: 'Error By deleted Image' });
+  }
 };

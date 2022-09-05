@@ -6,13 +6,12 @@ import { isValidObjectId } from 'mongoose';
 import { db } from '../../../../database';
 import Order from '../../../../models/Order';
 import axios from 'axios';
-(BigInt.prototype as any).toJSON = function () {
-  return this.toString();
-};
+import { sendOrder } from '../../../../libs/mails';
+import { sendOrderMessage } from '../../../../msn';
 
 const headers = {
-  'Square-Version': process.env.SQUARE_VERSION_PRODUCTION!,
-  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN_PRODUCTION!}`,
+  'Square-Version': process.env.SQUARE_VERSION!,
+  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN!}`,
   'Content-Type': 'application/json',
 };
 
@@ -37,12 +36,9 @@ export default function handler(
 
 const getPayOrder = async (paymentId: string) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.SQUARE_URL_PRODUCTION}/${paymentId}`,
-      {
-        headers,
-      }
-    );
+    const { data } = await axios.get(`${process.env.SQUARE_URL}/${paymentId}`, {
+      headers,
+    });
     return data;
   } catch (error) {}
 };
@@ -53,7 +49,7 @@ const completeOrder = async (paymentId: string, versionToken: string) => {
   };
   try {
     const { data } = await axios.post(
-      `${process.env.SQUARE_URL_PRODUCTION}/${paymentId}/complete`,
+      `${process.env.SQUARE_URL}/${paymentId}/complete`,
       body,
       {
         headers,
@@ -91,13 +87,9 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       source_id: sourceId,
     };
 
-    const { data } = await axios.post(
-      `${process.env.SQUARE_URL_PRODUCTION}`,
-      body,
-      {
-        headers,
-      }
-    );
+    const { data } = await axios.post(`${process.env.SQUARE_URL}`, body, {
+      headers,
+    });
 
     const paymentId = data.payment.id;
     const versionToken = data.payment.version_token;
@@ -126,18 +118,35 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         .json({ message: 'Square amounts and our order are not the same.' });
     }
 
-    await Order.findByIdAndUpdate(orderId, {
+    const ordCompleted = await Order.findByIdAndUpdate(orderId, {
       transactionId: payment.id,
       isPaid: true,
       paidMetod: 'square',
       orderState: 'processing',
     });
 
+    const sendOrderMail = await sendOrder(
+      session.user.email,
+      'no-reply@fotos4print.com',
+      'Order Ticket',
+      'Its a ticket no invoice',
+      ordCompleted?._id!,
+      ordCompleted?.orderItems!,
+      session.user.name,
+      ordCompleted?.total!
+    );
+
+    const message = `New Order by ${session.user.email} and order id ${ordCompleted?._id}`;
+
+    await sendOrderMessage('+15039904525', message);
+    await sendOrderMessage('+15595072896', message);
+    await sendOrderMessage('+15418623584', message);
+
     await db.disconnect();
 
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(200).json(error as any);
     console.log(error);
+    return res.status(200).json(error as any);
   }
 };

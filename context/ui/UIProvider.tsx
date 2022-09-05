@@ -4,11 +4,13 @@ import { UIContext, uiReducer } from './';
 export interface UIState {
   isMenuOpen: boolean;
   isDelivery: boolean;
+  freeDelivery: boolean;
 }
 
 const UI_INITIAL_STATE: UIState = {
   isMenuOpen: false,
   isDelivery: false,
+  freeDelivery: true,
 };
 
 interface Props {}
@@ -24,6 +26,10 @@ export const UIProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     dispatch({ type: '[UI] - Delivery' });
   };
 
+  const closeDelivery = () => {
+    dispatch({ type: '[UI] - Show Delivery' });
+  };
+
   return (
     <UIContext.Provider
       value={{
@@ -32,6 +38,7 @@ export const UIProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         // Methods
         toggleSideMenu,
         deliveryOrStore,
+        closeDelivery,
       }}
     >
       {children}

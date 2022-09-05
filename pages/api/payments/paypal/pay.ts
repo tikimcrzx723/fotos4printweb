@@ -5,6 +5,8 @@ import { isValidObjectId } from 'mongoose';
 import { IPaypal } from '../../../../interfaces';
 import { db } from '../../../../database';
 import { Order } from '../../../../models';
+import { sendOrder } from '../../../../libs/mails';
+import { sendOrderMessage } from '../../../../msn';
 
 type Data = {
   message: string;
@@ -111,12 +113,29 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .json({ message: 'Paypal amounts and our order are not the same.' });
   }
 
-  await Order.findByIdAndUpdate(orderId, {
+  const ordCompleted = await Order.findByIdAndUpdate(orderId, {
     transactionId,
     isPaid: true,
     paidMetod: 'paypal',
     orderState: 'processing',
   });
+
+  const sendOrderMail = await sendOrder(
+    session.user.email,
+    'no-reply@fotos4print.com',
+    'Order Ticket',
+    'Its a ticket no invoice',
+    ordCompleted?._id!,
+    ordCompleted?.orderItems!,
+    session.user.name,
+    ordCompleted?.total!
+  );
+
+  const message = `New Order by ${session.user.email} and order id ${ordCompleted?._id}`;
+
+  await sendOrderMessage('+15039904525', message);
+  await sendOrderMessage('+15595072896', message);
+  await sendOrderMessage('+15418623584', message);
 
   await db.disconnect();
 

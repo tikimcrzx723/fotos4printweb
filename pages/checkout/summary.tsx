@@ -18,10 +18,11 @@ import { CartContext, UIContext } from '../../context';
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { CartList, OrderSummary } from '../../components/cart';
 import { Delivery, PickUp } from '../../components/address';
+import { appApi } from '../../api';
 
 const SummaryPage = () => {
   const router = useRouter();
-  const { numberOfItems, createOrder } = useContext(CartContext);
+  const { numberOfItems, createOrder, updateCartProductsByCache } = useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
 
   const [isPosting, setIsPosting] = useState(false);
@@ -30,6 +31,7 @@ const SummaryPage = () => {
   const onCreateOrder = async () => {
     setIsPosting(true);
     const { hasError, message } = await createOrder(isDelivery);
+    await appApi.delete('/orders/cart');
 
     if (hasError) {
       setIsPosting(false);

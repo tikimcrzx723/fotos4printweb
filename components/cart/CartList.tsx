@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext, useState } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 import NextLink from 'next/link';
 
 import {
@@ -8,26 +8,47 @@ import {
   CardMedia,
   Grid,
   Link,
+  TextField,
   Typography,
 } from '@mui/material';
 import { CartContext } from '../../context/cart';
-import { ICartProduct, IOrderItem } from '../../interfaces';
+import { ICartProduct, IOrderItem, IUserImage } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
-import { AddInfo } from '../orders/AddInfo';
+import { AddInfoTickets } from '../orders/AddInfoTickets';
+import appApi from '../../api/appApi';
+import { AddInfoGifts } from '../orders';
 
 interface Props {
   editable?: boolean;
+  admin?: boolean;
   products?: IOrderItem[];
+  onDownloadImage?: (images: IUserImage[], name: string) => void;
 }
 
 export const CartList: FC<PropsWithChildren<Props>> = ({
   editable = false,
+  admin = false,
   products,
+  onDownloadImage,
 }) => {
-  const { cart, removeCartProduct } = useContext(CartContext);
+  const { cart, removeCartProduct, updateCartQuantity } =
+    useContext(CartContext);
   const { role } = useRole('user/rol');
   const rol = role.message === 'admin' ? 'federal' : role.message;
+
+  const onRemoveCartProduct = async (product: ICartProduct) => {
+    removeCartProduct(product);
+    if (product.userImages !== null) {
+      if (product.userImages!.length > 0) {
+        product.userImages!.map(async ({ image }) => {
+          await appApi.post('/uploaders/clients/images/delete', { url: image });
+        });
+      }
+    }
+    const auxProducts = cart.filter((p) => p !== product);
+    await appApi.post('/orders/cart', auxProducts);
+  };
 
   const productToShow = products ? products : cart;
 
@@ -56,9 +77,11 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
           </Grid>
           <Grid item xs={6}>
             <Box display="7" flexDirection="column">
-              <Typography variant="body2">{product.title}</Typography>
               <Typography variant="body1">
-                Size: <strong>{product.size}</strong>
+                {product.title.toLocaleLowerCase().includes('event')
+                  ? 'No Tickets'
+                  : 'size'}{' '}
+                : <strong>{product.size}</strong>
               </Typography>
               {/* Conditional */}
               {editable ? (
@@ -68,13 +91,13 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                       <UploadImageByCart product={product} />
                       {product.title.includes('Event') ||
                       product.title.includes('event') ? (
-                        <AddInfo product={product} />
+                        <AddInfoTickets product={product} />
                       ) : (
                         <></>
                       )}
                     </>
                   ) : (
-                    <Typography>Worker</Typography>
+                    <AddInfoGifts product={product}/>
                   )}
                 </>
               ) : (
@@ -93,11 +116,24 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             flexDirection="column"
           >
             <Typography variant="subtitle1">${product.price}</Typography>
+            {admin ? (
+              <Button
+                color="secondary"
+                className="circular-btn"
+                onClick={() =>
+                  onDownloadImage!(product.userImages!, product.title)
+                }
+              >
+                Download
+              </Button>
+            ) : (
+              <></>
+            )}
             {editable && (
               <Button
                 variant="text"
                 color="secondary"
-                onClick={() => removeCartProduct(product as ICartProduct)}
+                onClick={() => onRemoveCartProduct(product as ICartProduct)}
               >
                 Remove
               </Button>

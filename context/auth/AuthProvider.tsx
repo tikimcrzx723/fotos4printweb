@@ -93,6 +93,13 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     const { data } = await appApi.put<ICompany>('/admin/company', company);
   };
 
+  const changePassword = async (newPassword: string, userId: string) => {
+    const { data } = await appApi.put('/user/password/change', {
+      newPassword,
+      userId,
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -104,6 +111,7 @@ export const AuthProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         logout,
         createCompany,
         updateCompany,
+        changePassword,
       }}
     >
       {children}

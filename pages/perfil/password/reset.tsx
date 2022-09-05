@@ -1,155 +1,93 @@
-import { useContext, useEffect, PropsWithChildren } from 'react';
+import { useContext, useEffect, PropsWithChildren, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import { ShopLayout } from '../../../components/layouts';
-import { CartContext } from '../../../context';
 import { GetServerSideProps, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import { dbUsers } from '../../../database';
-import { IAddress } from '../../../interfaces';
+import { IRecover } from '../../../interfaces';
+import { Recover } from '../../../models';
+import moment from 'moment';
+import bcryptjs from 'bcryptjs';
+import mongoose from 'mongoose';
+import { AuthContext } from '../../../context';
 
 type FormData = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  address2?: string;
-  zip: string;
-  city: string;
-  state: string;
-  phone: string;
+  tempPassword: string;
+  newPassword: string;
+  userId: string;
+  repeatNewPassword: string;
 };
 
 interface Props {
-  address: IAddress;
+  recover: IRecover;
 }
 
-const ResetPassword: NextPage<PropsWithChildren<Props>> = ({ address }) => {
+const ChangePassword: NextPage<PropsWithChildren<Props>> = ({ recover }) => {
   const router = useRouter();
-  const { updateAddress, addAdress } = useContext(CartContext);
+  const [checkPassword, setcheckPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: address,
+  } = useForm({
+    defaultValues: {
+      newPassword: '',
+      repeatNewPassword: '',
+      tempPassword: recover.tempPassword,
+      userId: recover.user,
+    },
   });
 
-  const onSubmitAddress = (data: FormData) => {
-    if (address === null) addAdress(data);
-    else updateAddress(data);
-    router.reload();
+  const { changePassword } = useContext(AuthContext);
+
+  const onResetPassword = (data: FormData) => {
+    changePassword(data.newPassword, data.userId);
+    router.replace('/auth/login');
   };
 
   return (
     <ShopLayout
-      title="Address"
+      title="Recover Password"
       pageDescription="confirm address of destination"
     >
-      <form onSubmit={handleSubmit(onSubmitAddress)}>
+      <form onSubmit={handleSubmit(onResetPassword)}>
         <Typography variant="h1" component="h1">
-          Address
+          Recover Password
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Name"
+              label="New Password"
+              type="password"
               variant="filled"
               fullWidth
-              {...register('firstName', {
-                required: 'This field is required',
+              {...register('newPassword', {
+                required: true,
+                min: 6,
               })}
-              error={!!errors.firstName}
-              helperText={errors.firstName?.message}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Last Name"
+              label="Repeat Password"
+              type="password"
               variant="filled"
               fullWidth
-              {...register('lastName', {
-                required: 'This field is required',
+              {...register('repeatNewPassword', {
+                required: true,
+                onChange: ({ target }) => {
+                  if (target.value === getValues('newPassword')) {
+                    setcheckPassword(true);
+                  } else {
+                    setcheckPassword(false);
+                  }
+                },
+                min: 6,
               })}
-              error={!!errors.lastName}
-              helperText={errors.lastName?.message}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Address"
-              variant="filled"
-              fullWidth
-              {...register('address', {
-                required: 'This field is required',
-              })}
-              error={!!errors.address}
-              helperText={errors.address?.message}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Address 2 (optional)"
-              variant="filled"
-              fullWidth
-              {...register('address2')}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Zip Code"
-              variant="filled"
-              fullWidth
-              {...register('zip', {
-                required: 'This field is required',
-              })}
-              error={!!errors.zip}
-              helperText={errors.zip?.message}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="City"
-              variant="filled"
-              fullWidth
-              {...register('city', {
-                required: 'This field is required',
-              })}
-              error={!!errors.city}
-              helperText={errors.city?.message}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            {/* <FormControl fullWidth> */}
-            <TextField
-              // select
-              variant="filled"
-              label="State"
-              fullWidth
-              // defaultValue={ Cookies.get('country') || countries[0].code }
-              {...register('state', {
-                required: 'This field is required',
-              })}
-              error={!!errors.state}
-              helperText={errors.state?.message}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Phone"
-              variant="filled"
-              fullWidth
-              {...register('phone', {
-                required: 'This field is required',
-              })}
-              error={!!errors.phone}
-              helperText={errors.phone?.message}
             />
           </Grid>
         </Grid>
@@ -157,11 +95,14 @@ const ResetPassword: NextPage<PropsWithChildren<Props>> = ({ address }) => {
         <Box sx={{ mt: 5 }} display="flex" justifyContent="center">
           <Button
             type="submit"
+            disabled={!checkPassword}
             color="secondary"
             className="circular-btn"
             size="large"
           >
-            {address ? 'Update ' : 'Save '}Address
+            {checkPassword
+              ? 'Save a new password'
+              : 'The 2 passwords must match'}
           </Button>
         </Box>
       </form>
@@ -169,15 +110,68 @@ const ResetPassword: NextPage<PropsWithChildren<Props>> = ({ address }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const session: any = await getSession({ req });
-  const address: IAddress | null = await dbUsers.findAddress(session.user._id);
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id = '', tempPassword = '' } = query;
+  console.log(tempPassword);
+
+  if (!mongoose.isValidObjectId(id)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const recover = await Recover.findById(id);
+
+  if (!recover) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const initialRequestChangePassword: any = moment(recover?.requestedDay);
+  const dateNow: any = moment();
+  const durationTime = moment
+    .duration(dateNow - initialRequestChangePassword)
+    .asMinutes();
+
+  if (durationTime > 10) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  if (!bcryptjs.compareSync(tempPassword?.toString(), recover.tempPassword)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  if (recover.changePassword) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
-      address,
+      recover: JSON.parse(JSON.stringify(recover)),
     },
   };
 };
 
-export default ResetPassword;
+export default ChangePassword;

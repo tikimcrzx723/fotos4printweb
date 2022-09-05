@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 import { dbUsers } from '../../../database';
 
 export default NextAuth({
@@ -16,6 +17,10 @@ export default NextAuth({
           response_type: 'code',
         },
       },
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT!,
+      clientSecret: process.env.FACEBOOK_SECRET!,
     }),
     Credentials({
       name: 'Custom Login',

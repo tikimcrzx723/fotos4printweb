@@ -1,5 +1,5 @@
 import { db } from '.';
-import { Company, User } from '../models';
+import { Address, Company, User } from '../models';
 import bcryptjs from 'bcryptjs';
 
 export const activeUser = async (id: string) => {
@@ -19,10 +19,11 @@ export const checkUserEmailPassword = async (
   await db.disconnect();
 
   if (!user) return null;
-  // if (!user.isActive) return null;
+
   if (await !bcryptjs.compareSync(password, user.password!)) return null;
 
   const { role, name, _id } = user;
+
   return {
     _id,
     email: email.toLocaleLowerCase(),
@@ -73,6 +74,6 @@ export const findCompany = async () => {
   const company = await Company.find().lean();
   await db.disconnect();
 
-  if (company.length === 0) return null;
+  if (company.length === 0) return new Address();
   else return JSON.parse(JSON.stringify(company[0]));
 };

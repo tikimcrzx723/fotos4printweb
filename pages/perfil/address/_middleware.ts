@@ -9,30 +9,25 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
 
   if (!session) {
     try {
-      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const requestedPage = req.page.name;
+      return NextResponse.redirect(`/auth/login?p=${requestedPage}`);
     } catch (error) {
-      console.log(error);
+      const url = req.nextUrl.clone();
+      const requestedPage = req.page.name;
+      return NextResponse.redirect(
+        `${url.origin}/auth/login?p=${requestedPage}`
+      );
     }
   }
 
-  const validRoles = ['client', 'admin', 'federal', 'frequent'];
-  console.log(session.user.role);
+  const validRoles = ['admin', 'super-user', 'SEO', 'client'];
 
   if (!validRoles.includes(session.user.role)) {
     try {
-      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return NextResponse.redirect('/');
     } catch (error) {
-      console.log(error);
+      const url = req.nextUrl.clone();
+      return NextResponse.redirect(`${url.origin}/`);
     }
   }
 

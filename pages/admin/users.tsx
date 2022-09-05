@@ -35,7 +35,7 @@ const UsersPage = () => {
     } catch (error) {
       setUsers(previosUsers);
       console.log(error);
-      alert('No se pudo actualizar el role del usuario');
+      alert('Could not update user role');
     }
   };
 

@@ -15,15 +15,24 @@ import {
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
 import { AddPhotoAlternateOutlined } from '@mui/icons-material';
-import { useAddress } from '../../hooks';
+import { useAddress, useCartCache } from '../../hooks';
+import appApi from '../../api/appApi';
 
 const CartPage = () => {
-  const { isLoaded, cart } = useContext(CartContext);
+  const { isLoaded, cart, updateCartProductsByCache } = useContext(CartContext);
   const [messageError, setMessageError] = useState('Please Upload Image');
   const { isDelivery, deliveryOrStore } = useContext(UIContext);
   const [isCheckBuy, setIsCheckBuy] = useState(false);
   const router = useRouter();
   const { adrress } = useAddress('user/address');
+
+  const { cartCache } = useCartCache('orders/cart');
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      updateCartProductsByCache(cartCache as any);
+    }
+  },[]);
 
   useEffect(() => {
     if (isLoaded && cart.length === 0) {
@@ -51,24 +60,14 @@ const CartPage = () => {
           counter++;
         }
       }
-      // if (product.hasOwnProperty('information')) {
-      //   if (product.information.price >= 0) {
-      //     counter++;
-      //   }
-      // } else {
-      //   if (product.quantity > 0) counter++;
-      // }
     });
 
     if (cart.length === counter) setIsCheckBuy(true);
     else setIsCheckBuy(false);
   }, [cart]);
 
-  // useEffect(() => {
-  //   if (adrress === null) router.replace('/perfil/address');
-  // }, [adrress, router]);
-
   const onCreateOrder = async () => {
+    await appApi.post('/orders/cart', cart);
     if (isDelivery) {
       if (adrress === null || adrress === undefined) {
         router.replace('/perfil/address');

@@ -48,27 +48,27 @@ const LoginPage = () => {
   };
 
   return (
-    <AuthLayout title='Login'>
+    <AuthLayout title="Login">
       <form onSubmit={handleSubmit(onLoginUser)} noValidate>
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant='h1' component='h1'>
+              <Typography variant="h1" component="h1">
                 Sign in to foto4print
               </Typography>
               <Chip
-                label='We do not recognize this user / password'
-                color='error'
+                label="We do not recognize this user / password"
+                color="error"
                 icon={<ErrorOutline />}
-                className='fadeIn'
+                className="fadeIn"
                 sx={{ display: showError ? 'flex' : 'none' }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                type='mail'
-                label='Email'
-                variant='filled'
+                type="mail"
+                label="Email"
+                variant="filled"
                 fullWidth
                 {...register('email', {
                   required: 'This field is required',
@@ -80,9 +80,9 @@ const LoginPage = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label='Password'
-                type='password'
-                variant='filled'
+                label="Password"
+                type="password"
+                variant="filled"
                 fullWidth
                 {...register('password', {
                   required: 'This field is required',
@@ -95,17 +95,17 @@ const LoginPage = () => {
 
             <Grid item xs={12}>
               <Button
-                type='submit'
-                color='secondary'
-                className='circular-btn'
-                size='large'
+                type="submit"
+                color="secondary"
+                className="circular-btn"
+                size="large"
                 fullWidth
               >
                 Sign In
               </Button>
             </Grid>
 
-            <Grid item xs={12} display='flex' justifyContent='end'>
+            <Grid item xs={12} display="flex" justifyContent="end">
               <Typography>New to foto4print?</Typography>
               <NextLink
                 href={
@@ -117,10 +117,22 @@ const LoginPage = () => {
               >
                 <Link
                   sx={{ marginLeft: 1 }}
-                  underline='always'
-                  color='secondary'
+                  underline="always"
+                  color="secondary"
                 >
                   create an account
+                </Link>
+              </NextLink>
+            </Grid>
+            <Grid item xs={12} display="flex" justifyContent="end">
+              <Typography>Forgot your</Typography>
+              <NextLink href="/auth/forgot" passHref>
+                <Link
+                  sx={{ marginLeft: 1 }}
+                  underline="always"
+                  color="secondary"
+                >
+                  password?
                 </Link>
               </NextLink>
             </Grid>
@@ -128,21 +140,21 @@ const LoginPage = () => {
             <Grid
               item
               xs={12}
-              display='flex'
-              flexDirection='column'
-              justifyContent='end'
+              display="flex"
+              flexDirection="column"
+              justifyContent="end"
             >
               <Divider sx={{ width: '100%', mb: 2 }} />
               {Object.values(providers).map((provider: any) => {
                 if (provider.id === 'credentials')
-                  return <div key='credentials'></div>;
+                  return <div key="credentials"></div>;
 
                 return (
                   <Button
                     key={provider.id}
-                    variant='outlined'
+                    variant="outlined"
                     fullWidth
-                    color='primary'
+                    color="primary"
                     sx={{ mb: 1 }}
                     onClick={() => signIn(provider.id)}
                   >

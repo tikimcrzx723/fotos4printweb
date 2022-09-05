@@ -30,9 +30,10 @@ export const ShopLayout: FC<PropsWithChildren<Props>> = ({
         <Navbar />
       </nav>
       <SideMenu />
+
       <main
         style={{
-          margin: '80px auto',
+          margin: `80px auto`,
           maxWidth: '90%',
           padding: '0px 30px',
           position: 'relative',

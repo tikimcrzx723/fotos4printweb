@@ -1,4 +1,4 @@
-import { useContext, useEffect, PropsWithChildren } from 'react';
+import { useContext, PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -6,7 +6,8 @@ import {
   FormControl,
   Grid,
   InputLabel,
-  NativeSelect,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
@@ -18,7 +19,6 @@ import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 import { dbUsers } from '../../../database';
 import { IAddress } from '../../../interfaces';
-import { appApi } from '../../../api';
 
 type FormData = {
   firstName: string;
@@ -40,6 +40,8 @@ const validStates = [
   { code: 'WA', state: 'Washington' },
 ];
 
+let auxPhoneNumber = '';
+
 const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
   const router = useRouter();
   const { updateAddress, addAdress } = useContext(CartContext);
@@ -55,9 +57,13 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
   });
 
   const onSubmitAddress = (data: FormData) => {
-    if (address === null) addAdress(data);
-    else updateAddress(data);
-    router.reload();
+    if (data.phone.length < 10) {
+      alert ('Phone number need 10 digits')
+    } else {
+      if (address === null) addAdress(data);
+      else updateAddress(data);
+      router.replace('/');
+    }
   };
 
   return (
@@ -66,7 +72,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
       pageDescription="confirm address of destination"
     >
       <form onSubmit={handleSubmit(onSubmitAddress)}>
-        <Typography variant="h1" component="h1">
+        <Typography variant="h1" component="h1" alignContent="center">
           Address
         </Typography>
 
@@ -141,50 +147,59 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
               helperText={errors.city?.message}
             />
           </Grid>
-
-          {/* <Grid item xs={12} sm={6}>
-            <TextField
-              variant="filled"
-              label="State"
-              fullWidth
-              {...register('state', {
-                required: 'This field is required',
-              })}
-              error={!!errors.state}
-              helperText={errors.state?.message}
-            />
-          </Grid> */}
           <Grid item xs={12} sm={6}>
-            {/* <FormControl fullWidth> */}
             <FormControl fullWidth>
-              <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                State
-              </InputLabel>
-              <NativeSelect
+              <InputLabel>State</InputLabel>
+              <Select
+                defaultValue={getValues('state') ? getValues('state') : 'OR'}
+                label="State"
                 onChange={({ target }) => {
-                  setValue('state', target.value, { shouldValidate: true });
+                  setValue('state', target.value as any, {
+                    shouldValidate: true,
+                  });
                 }}
-                defaultValue='OR'
-                inputProps={{
-                  name: 'age',
-                  id: 'uncontrolled-native',
-                }}
+                variant="filled"
               >
                 {validStates.map(({ code, state }) => (
-                  <option key={code} value={code}>
+                  <MenuItem key={code} value={code}>
                     {state}
-                  </option>
+                  </MenuItem>
                 ))}
-              </NativeSelect>
+              </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Phone"
+              type="tel"
               variant="filled"
               fullWidth
               {...register('phone', {
                 required: 'This field is required',
+                min: 10,
+                onChange: (e) => {
+                  if (e.nativeEvent.data !== ' ') {
+                    const valueLetter = e.target.value.substring(
+                      e.target.value.length - 1,
+                      e.target.value.length
+                    );
+                    if (
+                      auxPhoneNumber.length < 10 ||
+                      e.nativeEvent.data === null
+                    ) {
+                      if (Number(valueLetter) >= 0) {
+                        auxPhoneNumber += valueLetter;
+                      }
+                      if (e.nativeEvent.data === null) {
+                        auxPhoneNumber = auxPhoneNumber.substring(
+                          0,
+                          auxPhoneNumber.length - 2
+                        );
+                      }
+                    }
+                  }
+                  setValue('phone', auxPhoneNumber, { shouldValidate: true });
+                },
               })}
               error={!!errors.phone}
               helperText={errors.phone?.message}
@@ -209,7 +224,7 @@ const AddressPage: NextPage<PropsWithChildren<Props>> = ({ address }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session: any = await getSession({ req });
-  const address: IAddress | null = await dbUsers.findAddress(session.user._id);
+  let address: IAddress = await dbUsers.findAddress(session.user._id);
 
   return {
     props: {

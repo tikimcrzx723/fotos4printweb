@@ -4,25 +4,15 @@ import NextLink from 'next/link';
 import { signIn, getSession, getProviders } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Grid,
-  Link,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from '../../components/layouts';
 import { validations } from '../../utils';
-import { ErrorOutline } from '@mui/icons-material';
+import { appApi } from '../../api';
 
 type FormData = {
   email: string;
-  password: string;
 };
 
 const ForgotPage = () => {
@@ -32,43 +22,33 @@ const ForgotPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  const [showError, setShowError] = useState(false);
 
-  const [providers, setProviders] = useState<any>({});
+  const onForgotPassword = async ({ email }: FormData) => {
+    const { data } = await appApi.post('/user/password/recover', { email });
+    console.log(data);
 
-  useEffect(() => {
-    getProviders().then((prov) => {
-      setProviders(prov);
-    });
-  }, []);
-
-  const onLoginUser = async ({ email, password }: FormData) => {
-    setShowError(false);
-    await signIn('credentials', { email, password });
+    if (data.message === 'User not found!') {
+      return alert("Email doesn't exist");
+    }
+    alert('Please check your eamil ' + email);
+    router.replace('/');
   };
 
   return (
-    <AuthLayout title='Login'>
-      <form onSubmit={handleSubmit(onLoginUser)} noValidate>
+    <AuthLayout title="Forgot Password">
+      <form onSubmit={handleSubmit(onForgotPassword)} noValidate>
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant='h1' component='h1'>
-                Sign in to foto4print
+              <Typography variant="h1" component="h1">
+                Recover Account
               </Typography>
-              <Chip
-                label='We do not recognize this user / password'
-                color='error'
-                icon={<ErrorOutline />}
-                className='fadeIn'
-                sx={{ display: showError ? 'flex' : 'none' }}
-              />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                type='mail'
-                label='Email'
-                variant='filled'
+                type="mail"
+                label="Email"
+                variant="filled"
                 fullWidth
                 {...register('email', {
                   required: 'This field is required',
@@ -78,78 +58,17 @@ const ForgotPage = () => {
                 helperText={errors.email?.message}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label='Password'
-                type='password'
-                variant='filled'
-                fullWidth
-                {...register('password', {
-                  required: 'This field is required',
-                  minLength: { value: 6, message: '6 characters minimum' },
-                })}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-              />
-            </Grid>
 
             <Grid item xs={12}>
               <Button
-                type='submit'
-                color='secondary'
-                className='circular-btn'
-                size='large'
+                type="submit"
+                color="secondary"
+                className="circular-btn"
+                size="large"
                 fullWidth
               >
-                Sign In
+                Recover
               </Button>
-            </Grid>
-
-            <Grid item xs={12} display='flex' justifyContent='end'>
-              <Typography>New to foto4print?</Typography>
-              <NextLink
-                href={
-                  router.query.p
-                    ? `/auth/register?p=${router.query.p?.toString()}`
-                    : '/auth/register'
-                }
-                passHref
-              >
-                <Link
-                  sx={{ marginLeft: 1 }}
-                  underline='always'
-                  color='secondary'
-                >
-                  create an account
-                </Link>
-              </NextLink>
-            </Grid>
-
-            <Grid
-              item
-              xs={12}
-              display='flex'
-              flexDirection='column'
-              justifyContent='end'
-            >
-              <Divider sx={{ width: '100%', mb: 2 }} />
-              {Object.values(providers).map((provider: any) => {
-                if (provider.id === 'credentials')
-                  return <div key='credentials'></div>;
-
-                return (
-                  <Button
-                    key={provider.id}
-                    variant='outlined'
-                    fullWidth
-                    color='primary'
-                    sx={{ mb: 1 }}
-                    onClick={() => signIn(provider.id)}
-                  >
-                    {provider.name}
-                  </Button>
-                );
-              })}
             </Grid>
           </Grid>
         </Box>
