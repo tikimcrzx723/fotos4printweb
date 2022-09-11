@@ -54,6 +54,9 @@ const DownloadFile = (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   res.setHeader('Content-Disposition', `attachment; filename=${image}`);
 
+  console.log(urlClean);
+  
+
   const options = {
     Bucket: process.env.LINODE_OBJECT_BUCKET!,
     Key: urlClean,

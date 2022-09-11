@@ -49,6 +49,7 @@ const orderSchema = new Schema(
       },
       default: 'pending',
     },
+    coupon: { type: Schema.Types.ObjectId, ref: 'CuponCode' },
   },
   { timestamps: true }
 );

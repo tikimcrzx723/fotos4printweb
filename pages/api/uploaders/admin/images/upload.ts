@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { imageUpload } from '../../../../../libs';
-import { Order } from '../../../../../models';
 import { db } from '../../../../../database';
 
 type Data = {
@@ -39,12 +38,9 @@ const uploadImageUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const base64Clean = base64.replace('data', '').replace(/^.+,/, '');
   const basecv = Buffer.from(base64Clean, 'base64');
   await db.connect();
-  const numOfOrders = await Order.find({ user: session.user._id }).count();
   await db.disconnect();
 
-  const absolutePath = `orders/${session.email.split('@')[0]}-${session.email
-    .split('@')[1]
-    .replaceAll('.com', '')}/order-${numOfOrders + 1}/${path}`;
+  const absolutePath = `products/${path}`;
   const fileName = randomUUID();
 
   const image = await imageUpload.uploadFilesToStorage(

@@ -1,13 +1,14 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { CartContext } from '../../../context/cart/CartContext';
+import { CartContext } from '../../context';
 
-import { Box, Button, Chip, Grid, Typography } from '@mui/material';
-import { ShopLayout } from '../../../components/layouts';
-import { ProductSlideshow, SizeSelector } from '../../../components/products';
-import { ICartProduct, IProduct } from '../../../interfaces';
-import { dbProducts } from '../../../database';
+import { ICartProduct, IProduct } from '../../interfaces';
+import { ShopLayout } from '../layouts';
+import { Grid, Box, Typography, Button, Chip } from '@mui/material';
+import { ProductSlideshow } from './ProductSlideshow';
+import { SizeSelector } from './SizeSelector';
+import { dbProducts } from '../../database';
 
 interface Props {
   product: IProduct;

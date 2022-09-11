@@ -22,7 +22,8 @@ import { appApi } from '../../api';
 
 const SummaryPage = () => {
   const router = useRouter();
-  const { numberOfItems, createOrder, updateCartProductsByCache } = useContext(CartContext);
+  const { numberOfItems, createOrder, updateCartProductsByCache } =
+    useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
 
   const [isPosting, setIsPosting] = useState(false);
@@ -38,6 +39,8 @@ const SummaryPage = () => {
       setErrorMessage(message);
       return;
     }
+
+    updateCartProductsByCache([]);
 
     router.replace(`/orders/${message}`);
   };

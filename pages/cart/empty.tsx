@@ -6,19 +6,10 @@ import { ShopLayout } from '../../components/layouts';
 import { useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { CartContext } from '../../context/cart/CartContext';
-import { useCartCache } from '../../hooks';
 
 const EmptyPage = () => {
   const router = useRouter();
-  const { cart, updateCartProductsByCache } = useContext(CartContext);
-
-  const { cartCache } = useCartCache('orders/cart');
-
-  useEffect(() => {
-    if (cart.length === 0) {
-      updateCartProductsByCache(cartCache as any);
-    }
-  }, []);
+  const { cart } = useContext(CartContext);
 
   useEffect(() => {
     if (cart.length > 0) router.push('/cart');

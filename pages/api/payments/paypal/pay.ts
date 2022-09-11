@@ -26,8 +26,8 @@ export default function handler(
 }
 
 const getPaypalBearerToken = async (): Promise<string | null> => {
-  const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION;
-  const PAYPAL_SECRET = process.env.PAYPAl_SECRET_PRODUCTION;
+  const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  const PAYPAL_SECRET = process.env.PAYPAl_SECRET;
 
   const base64Token = Buffer.from(
     `${PAYPAL_CLIENT}:${PAYPAL_SECRET}`,
@@ -37,7 +37,7 @@ const getPaypalBearerToken = async (): Promise<string | null> => {
 
   try {
     const { data } = await axios.post(
-      process.env.PAYPAL_OAUTH_URL_PRODUCTION || '',
+      process.env.PAYPAL_OAUTH_URL || '',
       body,
       {
         headers: {
@@ -84,7 +84,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { transactionId = '', orderId = '' } = req.body;
 
   const { data } = await axios.get<IPaypal.PaypalOrderStatusResponse>(
-    `${process.env.PAYPAL_ORDERS_URL_PRODUCTION}/${transactionId}`,
+    `${process.env.PAYPAL_ORDERS_URL}/${transactionId}`,
     {
       headers: {
         Authorization: `Bearer ${paypalBearerToken}`,

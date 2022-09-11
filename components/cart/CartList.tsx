@@ -8,16 +8,15 @@ import {
   CardMedia,
   Grid,
   Link,
-  TextField,
   Typography,
 } from '@mui/material';
 import { CartContext } from '../../context/cart';
 import { ICartProduct, IOrderItem, IUserImage } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
-import { AddInfoTickets } from '../orders/AddInfoTickets';
 import appApi from '../../api/appApi';
-import { AddInfoGifts } from '../orders';
+import { AddInfoBussinesCard, AddInfoGifts, AddInfoTickets } from '../orders';
+import { downLoadImage } from '../../libs';
 
 interface Props {
   editable?: boolean;
@@ -32,8 +31,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
   products,
   onDownloadImage,
 }) => {
-  const { cart, removeCartProduct, updateCartQuantity } =
-    useContext(CartContext);
+  const { cart, removeCartProduct } = useContext(CartContext);
   const { role } = useRole('user/rol');
   const rol = role.message === 'admin' ? 'federal' : role.message;
 
@@ -78,26 +76,33 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
           <Grid item xs={6}>
             <Box display="7" flexDirection="column">
               <Typography variant="body1">
-                {product.title.toLocaleLowerCase().includes('event')
-                  ? 'No Tickets'
-                  : 'size'}{' '}
-                : <strong>{product.size}</strong>
+                {product.title === 'Event Tickets 2in x 5.5in'
+                  ? `No Tickets: `
+                  : product.title.includes('Bussines')
+                  ? `${
+                      product.hasOwnProperty('information')
+                        ? `${product.information.type}:`
+                        : ''
+                    } cards`
+                  : ''}
+                <strong>{product.size}</strong>
               </Typography>
               {/* Conditional */}
               {editable ? (
                 <>
                   {product.needImages ? (
                     <>
-                      <UploadImageByCart product={product} />
-                      {product.title.includes('Event') ||
-                      product.title.includes('event') ? (
+                      {product.title.includes('Bussines') ||
+                      product.title.includes('PostCard') ? (
+                        <AddInfoBussinesCard product={product} />
+                      ) : product.title.includes('Event') ? (
                         <AddInfoTickets product={product} />
                       ) : (
-                        <></>
+                        <UploadImageByCart product={product} />
                       )}
                     </>
                   ) : (
-                    <AddInfoGifts product={product}/>
+                    <AddInfoGifts product={product} />
                   )}
                 </>
               ) : (
@@ -116,7 +121,40 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             flexDirection="column"
           >
             <Typography variant="subtitle1">${product.price}</Typography>
-            {admin ? (
+            {admin &&
+            (product.title.includes('Bussines') ||
+              product.title.includes('PostCard')) ? (
+              <>
+                <Button
+                  color="secondary"
+                  className="circular-btn"
+                  onClick={() => downLoadImage(product.information.front)}
+                >
+                  Front
+                </Button>
+                {product.information.hasOwnProperty('back') ? (
+                  <Button
+                    sx={{ marginTop: 1 }}
+                    color="secondary"
+                    className="circular-btn"
+                    onClick={() => downLoadImage(product.information.back)}
+                  >
+                    Back
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : admin && product.title.includes('Event') ? (
+              <Button
+                sx={{ marginTop: 1 }}
+                color="secondary"
+                className="circular-btn"
+                onClick={() => downLoadImage(product.information.image)}
+              >
+                Event Ticket - {product.information.price}
+              </Button>
+            ) : admin ? (
               <Button
                 color="secondary"
                 className="circular-btn"

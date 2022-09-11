@@ -8,6 +8,7 @@ import { SWRConfig } from 'swr';
 
 import { lightTheme } from '../themes';
 import { AuthProvider, CartProvider, UIProvider } from '../context';
+import { SnackbarProvider } from 'notistack';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,10 +16,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       <PayPalScriptProvider
         options={{
           'client-id':
-            process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID_PRODUCTION?.toString() || '',
+            process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.toString() || '',
           currency: 'USD',
-          'enable-funding':'paypal',
-          "disable-funding": 'card'
+          'enable-funding': 'paypal',
+          'disable-funding': 'card',
         }}
       >
         <SWRConfig
@@ -27,16 +28,18 @@ function MyApp({ Component, pageProps }: AppProps) {
               fetch(resource, init).then((res) => res.json()),
           }}
         >
-          <AuthProvider>
-            <CartProvider>
-              <UIProvider>
-                <ThemeProvider theme={lightTheme}>
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </UIProvider>
-            </CartProvider>
-          </AuthProvider>
+          <SnackbarProvider maxSnack={3}>
+            <AuthProvider>
+              <CartProvider>
+                <UIProvider>
+                  <ThemeProvider theme={lightTheme}>
+                    <CssBaseline />
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </UIProvider>
+              </CartProvider>
+            </AuthProvider>
+          </SnackbarProvider>
         </SWRConfig>
       </PayPalScriptProvider>
     </SessionProvider>

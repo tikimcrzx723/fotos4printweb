@@ -10,8 +10,8 @@ import { sendOrder } from '../../../../libs/mails';
 import { sendOrderMessage } from '../../../../msn';
 
 const headers = {
-  'Square-Version': process.env.SQUARE_VERSION_PRODUCTION!,
-  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN_PRODUCTION!}`,
+  'Square-Version': process.env.SQUARE_VERSION!,
+  Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN!}`,
   'Content-Type': 'application/json',
 };
 
@@ -36,7 +36,7 @@ export default function handler(
 
 const getPayOrder = async (paymentId: string) => {
   try {
-    const { data } = await axios.get(`${process.env.SQUARE_URL_PRODUCTION}/${paymentId}`, {
+    const { data } = await axios.get(`${process.env.SQUARE_URL}/${paymentId}`, {
       headers,
     });
     return data;
@@ -49,7 +49,7 @@ const completeOrder = async (paymentId: string, versionToken: string) => {
   };
   try {
     const { data } = await axios.post(
-      `${process.env.SQUARE_URL_PRODUCTION}/${paymentId}/complete`,
+      `${process.env.SQUARE_URL}/${paymentId}/complete`,
       body,
       {
         headers,
@@ -87,7 +87,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       source_id: sourceId,
     };
 
-    const { data } = await axios.post(`${process.env.SQUARE_URL_PRODUCTION}`, body, {
+    const { data } = await axios.post(`${process.env.SQUARE_URL}`, body, {
       headers,
     });
 

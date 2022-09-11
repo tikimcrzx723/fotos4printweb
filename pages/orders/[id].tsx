@@ -1,16 +1,19 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useState, useId, useEffect } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PayPalButtons } from '@paypal/react-paypal-js';
+import { useSnackbar } from 'notistack';
 
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
   CircularProgress,
   Divider,
   Grid,
+  TextField,
   Typography,
 } from '@mui/material';
 import { CartList, OrderSummary } from '../../components/cart';
@@ -24,11 +27,11 @@ import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { appApi } from '../../api';
 import {
-  ApplePay,
   CreditCard,
   GooglePay,
   PaymentForm,
 } from 'react-square-web-payments-sdk';
+import { useRole } from '../../hooks';
 
 export type OrderResponseBody = {
   id: string;
@@ -46,9 +49,46 @@ interface Props {
 }
 
 const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
+  const { role } = useRole('user/rol');
+  const applyKey = useId();
+  const [showCoupon, setShowCoupon] = useState(true);
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { shippingAddress } = order;
   const [isPaying, setIsPaying] = useState(false);
+  const [applyCoupon, setApplyCoupon] = useState('');
+
+  const onApplyCoupon = async (coupon: string) => {
+    const { data } = await appApi.post('/user/coupon', {
+      user: order.user,
+      cupon: coupon,
+      orderId: order._id,
+    });
+    const message = data.message;
+    const variant =
+      message === 'Coupon Applied Correctly' ? 'success' : 'error';
+
+    enqueueSnackbar(message, {
+      variant,
+      autoHideDuration: 1500,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    });
+    if (message === 'Coupon Applied Correctly') {
+      setShowCoupon(false);
+      router.reload();
+    }
+  };
+
+  useEffect(() => {
+    if (order.subTotal > order.total || order.isPaid || role === 'client') {
+      setShowCoupon(false);
+    } else {
+      setShowCoupon(true);
+    }
+  }, []);
 
   const onOrderCompletedPayPal = async (details: OrderResponseBody) => {
     if (details.status !== 'COMPLETED') {
@@ -135,6 +175,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               <Divider sx={{ my: 1 }} />
 
               <OrderSummary
+                discount={order.subTotal - order.total}
                 deliveryPrice={order.delivery?.price}
                 complete={order.delivery?.required}
                 orderValues={{
@@ -144,6 +185,32 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                   tax: order.tax,
                 }}
               />
+              {showCoupon ? (
+                <Box
+                  key={applyKey}
+                  marginTop={2}
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <TextField
+                    onChange={({ target }) => {
+                      setApplyCoupon(target.value);
+                    }}
+                    variant="outlined"
+                    size="small"
+                    sx={{ width: '70%' }}
+                  />
+                  <Button
+                    sx={{ width: '25%' }}
+                    color="primary"
+                    onClick={() => onApplyCoupon(applyCoupon)}
+                  >
+                    Apply Coupon
+                  </Button>
+                </Box>
+              ) : (
+                <></>
+              )}
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Box
                   display="flex"
@@ -198,12 +265,9 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                           },
                         })}
                         applicationId={
-                          process.env.NEXT_PUBLIC_APPLICATION_ID_PRODUCTION ||
-                          ''
+                          process.env.NEXT_PUBLIC_APPLICATION_ID || ''
                         }
-                        locationId={
-                          process.env.NEXT_PUBLIC_LOCATION_PRODUCTION || ''
-                        }
+                        locationId={process.env.NEXT_PUBLIC_LOCATION || ''}
                         // createPaymentRequest={}
                         cardTokenizeResponseReceived={async (token, buyer) => {
                           const { data } = await appApi.post(

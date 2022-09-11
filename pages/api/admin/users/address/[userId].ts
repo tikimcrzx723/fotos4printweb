@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { IAddress } from '../../../../../interfaces';
 import mongoose from 'mongoose';
 import { db } from '../../../../../database';
-import { Address } from '../../../../../models';
+import { Address, User } from '../../../../../models';
 
 type Data =
   | {
@@ -32,9 +32,9 @@ const getAddress = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   await db.connect();
-  const address = await Address.findOne({ user: userId });
+  const user = await User.findById(userId).populate('address')
   await db.disconnect();
 
-  if (address) return res.status(200).json(address as IAddress);
-  else return res.status(404).json(null);
+  if (user?.address) return res.status(200).json(user.address as any)
+  else return res.status(404).json(null)
 };

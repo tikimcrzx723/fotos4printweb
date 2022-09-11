@@ -66,7 +66,13 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           '-'
         )}/${product.size?.replaceAll(' ', '-')}`;
 
-        const uploadImage = { base64, fileType, extension, path };
+        const uploadImage = {
+          base64,
+          fileType,
+          extension,
+          path,
+          name: `${images?.length}-${product.title}-${product.size}-image`,
+        };
         const { data } = await appApi.post<{ message: string }>(
           '/uploaders/clients/images/upload',
           uploadImage
@@ -78,9 +84,12 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
         i++;
         setCounterImagesAdd(i);
       }
+
       product.userImages = images;
       product.quantity = images!.length;
       updateCartQuantity(product as ICartProduct);
+      await appApi.post('/orders/cart', cart);
+      setCounterImagesAdd(0);
       setChargerImages(false);
     } catch (error) {
       console.log({ error });

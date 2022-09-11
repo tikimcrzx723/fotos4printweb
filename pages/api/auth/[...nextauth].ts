@@ -21,6 +21,13 @@ export default NextAuth({
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT!,
       clientSecret: process.env.FACEBOOK_SECRET!,
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code',
+        }
+      },
     }),
     Credentials({
       name: 'Custom Login',

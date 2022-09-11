@@ -1,4 +1,4 @@
-import { IUser } from './';
+import { ICuponCode, IUser } from './';
 
 export interface IOrder {
   _id?: string;
@@ -6,6 +6,7 @@ export interface IOrder {
   orderItems: IOrderItem[];
   shippingAddress: IShippingAddress;
   paymentResult?: string;
+  coupon?: ICuponCode;
 
   numberOfItems: number;
   subTotal: number;

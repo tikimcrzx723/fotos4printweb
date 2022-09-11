@@ -8,7 +8,6 @@ import {
   Grid,
   Typography,
   Chip,
-  Button,
 } from '@mui/material';
 import {
   AirplaneTicketOutlined,
@@ -33,8 +32,11 @@ const OrderPage: NextPage<Props> = ({ order }) => {
     images.map(async ({ image, quantity }, index) => {
       const url = image;
       const arrFile = image.toString().split('/');
+
       const extension = arrFile[arrFile.length - 1].split('.')[1];
-      const file = `${index + 1}-qty-[${quantity}]-[${name}].${extension}`;
+      const download = arrFile[arrFile.length - 1].split('.')[0];
+
+      const file = `${download}[${quantity}].${extension}`;
 
       const { data } = await appApi({
         url: '/admin/orders/download',

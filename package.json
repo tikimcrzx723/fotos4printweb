@@ -33,8 +33,6 @@
     "react-google-autocomplete": "^2.7.0",
     "react-google-recaptcha": "^2.1.0",
     "react-hook-form": "^7.31.3",
-    "react-imask": "^6.4.2",
-    "react-number-format": "^4.9.3",
     "react-slideshow-image": "^3.7.5",
     "react-square-web-payments-sdk": "^3.2.1",
     "redis": "^4.3.0",

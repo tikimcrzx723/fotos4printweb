@@ -9,6 +9,7 @@ export interface IProduct {
   slug: string;
   tags: string[];
   type: string;
+  onlyImage?: boolean;
 
   // TODO: agregar createdAt y updatedAt
   createdAt?: string;

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
 
@@ -21,14 +21,16 @@ import { CartContext } from '../context/cart/CartContext';
 const HomePage: NextPage = () => {
   const { freeDelivery, closeDelivery } = useContext(UIContext);
   const { isLoggedIn } = useContext(AuthContext);
-  const { updateCartProductsByCache, cart } = useContext(CartContext);
+  const { cart, updateCartProductsByCache } = useContext(CartContext);
   const { cartCache } = useCartCache('orders/cart');
 
+  const cartRender = useMemo(() => {
+    return cart.length === 0 ? cartCache : cart;
+  }, [cart, cartCache]);
+
   useEffect(() => {
-    if (cart.length === 0 && isLoggedIn) {
-      updateCartProductsByCache(cartCache as any);
-    }
-  },[]);
+    updateCartProductsByCache(cartRender as any);
+  }, []);
 
   return (
     <>

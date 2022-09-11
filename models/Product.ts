@@ -15,7 +15,8 @@ const productSchema = new Schema(
       },
     ],
     needImages: { type: Boolean, default: true },
-    minIMages: { type: Number },
+    minIMages: { type: Number, default: 0 },
+    onlyImage: { type: Boolean, default: false },
     slug: { type: String, required: true, unique: true },
     tags: [{ type: String }],
     type: {

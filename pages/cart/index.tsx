@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { CartContext, UIContext } from '../../context';
 
@@ -16,9 +16,9 @@ import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
 import { AddPhotoAlternateOutlined } from '@mui/icons-material';
 import { useAddress, useCartCache } from '../../hooks';
-import appApi from '../../api/appApi';
 
 const CartPage = () => {
+  const { cartCache } = useCartCache('orders/cart');
   const { isLoaded, cart, updateCartProductsByCache } = useContext(CartContext);
   const [messageError, setMessageError] = useState('Please Upload Image');
   const { isDelivery, deliveryOrStore } = useContext(UIContext);
@@ -26,13 +26,13 @@ const CartPage = () => {
   const router = useRouter();
   const { adrress } = useAddress('user/address');
 
-  const { cartCache } = useCartCache('orders/cart');
+  const cartRender = useMemo(() => {
+    return cart.length === 0 ? cartCache : cart;
+  }, [cart, cartCache]);
 
   useEffect(() => {
-    if (cart.length === 0) {
-      updateCartProductsByCache(cartCache as any);
-    }
-  },[]);
+    updateCartProductsByCache(cartRender as any);
+  }, []);
 
   useEffect(() => {
     if (isLoaded && cart.length === 0) {
@@ -67,7 +67,6 @@ const CartPage = () => {
   }, [cart]);
 
   const onCreateOrder = async () => {
-    await appApi.post('/orders/cart', cart);
     if (isDelivery) {
       if (adrress === null || adrress === undefined) {
         router.replace('/perfil/address');
