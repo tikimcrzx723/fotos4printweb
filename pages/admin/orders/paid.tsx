@@ -27,10 +27,11 @@ const PaidOrdersPage = () => {
   ) => {
     if (status === 'completed') {
       const order = data?.find((ord) => ord._id === orderId);
-      const address = await appApi.get(`/admin/users/address/${order?.user}`);
-      console.log(address);
+      const address = await appApi.get(
+        `/admin/users/address/${order?.user?._id}`
+      );
 
-      if (address !== null) {
+      if (address.data !== null) {
         if (address.data.phone.length === 10) {
           const body = {
             phone: address.data.phone,

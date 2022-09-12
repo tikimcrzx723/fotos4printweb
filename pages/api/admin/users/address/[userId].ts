@@ -27,14 +27,14 @@ export default function handler(
 const getAddress = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { userId } = req.query;
 
-  if (mongoose.isValidObjectId(userId)) {
+  if (!mongoose.isValidObjectId(userId)) {
     return res.status(200).json({ message: 'Not found address' });
   }
 
   await db.connect();
-  const user = await User.findById(userId).populate('address')
+  const user = await User.findById(userId).populate('address');
   await db.disconnect();
 
-  if (user?.address) return res.status(200).json(user.address as any)
-  else return res.status(404).json(null)
+  if (user?.address) return res.status(200).json(user.address as any);
+  else return res.status(200).json(null);
 };
