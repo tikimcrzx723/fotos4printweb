@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState, useId, useEffect } from 'react';
+import { PropsWithChildren, useState, useEffect, useContext } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PayPalButtons } from '@paypal/react-paypal-js';
@@ -31,7 +31,7 @@ import {
   GooglePay,
   PaymentForm,
 } from 'react-square-web-payments-sdk';
-import { useRole } from '../../hooks';
+import { AuthContext } from '../../context';
 
 export type OrderResponseBody = {
   id: string;
@@ -49,8 +49,7 @@ interface Props {
 }
 
 const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
-  const { role } = useRole('user/rol');
-  const applyKey = useId();
+  const { user } = useContext(AuthContext);
   const [showCoupon, setShowCoupon] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
@@ -83,12 +82,13 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
   };
 
   useEffect(() => {
-    if (order.subTotal > order.total || order.isPaid || role === 'client') {
+    if (order.subTotal > order.total || order.isPaid || user?.role !== 'client')
       setShowCoupon(false);
-    } else {
-      setShowCoupon(true);
-    }
-  }, []);
+    else setShowCoupon(true);
+  }, [order, user]);
+
+  console.log(user);
+  
 
   const onOrderCompletedPayPal = async (details: OrderResponseBody) => {
     if (details.status !== 'COMPLETED') {
@@ -98,7 +98,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
     setIsPaying(true);
 
     try {
-      const { data } = await appApi.post(`/payments/paypal/pay`, {
+      const { data } = await appApi.post('payments/paypal/pay', {
         transactionId: details.id,
         orderId: order._id,
       });
@@ -141,7 +141,11 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
 
       <Grid container className="fadeIn">
         <Grid item xs={12} sm={7}>
-          <CartList products={order.orderItems} />
+          <CartList
+            saveOrder={true}
+            orderId={order._id}
+            products={order.orderItems}
+          />
         </Grid>
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
@@ -187,7 +191,6 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               />
               {showCoupon ? (
                 <Box
-                  key={applyKey}
                   marginTop={2}
                   display="flex"
                   justifyContent="space-between"

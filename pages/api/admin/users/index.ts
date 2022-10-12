@@ -39,7 +39,7 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: 'No user exists for this id.' });
   }
 
-  const validRoles = ['admin', 'client', 'federal', 'frequent'];
+  const validRoles = ['admin', 'client', 'federal', 'frequent', 'torito-market'];
   if (!validRoles.includes(role)) {
     return res
       .status(400)

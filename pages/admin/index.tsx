@@ -69,16 +69,11 @@ const DashboardPage = () => {
               <CreditCardOutlined color="secondary" sx={{ fontSize: 60 }} />
             }
             text={
-              <a
-                href={`/admin/orders/all`}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer">
                 <Typography variant="body1">Total Orders</Typography>
               </a>
             }
           />
-
           <SummaryTile
             title={completedOrders}
             subTitle="Completed Orders"
@@ -93,7 +88,6 @@ const DashboardPage = () => {
               </a>
             }
           />
-
           <SummaryTile
             title={paidOrders}
             subTitle="Paid Orders"
@@ -104,7 +98,6 @@ const DashboardPage = () => {
               </a>
             }
           />
-
           <SummaryTile
             title={notPaidOrders}
             subTitle="No Paid Orders"
@@ -119,7 +112,6 @@ const DashboardPage = () => {
               </a>
             }
           />
-
           <SummaryTile
             title={numberOfClients}
             subTitle="Clients"
@@ -130,7 +122,6 @@ const DashboardPage = () => {
               </a>
             }
           />
-
           <SummaryTile
             title={numberOfProducts}
             subTitle="Products"
@@ -141,7 +132,6 @@ const DashboardPage = () => {
               </a>
             }
           />
-
           <SummaryTile
             title={productsWithNoInventory}
             subTitle="No Existence"
@@ -150,7 +140,6 @@ const DashboardPage = () => {
             }
             text={<Typography variant="body1">No Existence</Typography>}
           />
-
           <SummaryTile
             title={lowInventory}
             subTitle="Low Inventory"
@@ -162,7 +151,6 @@ const DashboardPage = () => {
             }
             text={<Typography variant="body1">Low Inventory</Typography>}
           />
-
           <SummaryTile
             title={refreshIn}
             subTitle="Updating in:"

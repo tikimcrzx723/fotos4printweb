@@ -20,7 +20,7 @@ import { CartContext } from '../context/cart/CartContext';
 
 const HomePage: NextPage = () => {
   const { freeDelivery, closeDelivery } = useContext(UIContext);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const { cart, updateCartProductsByCache } = useContext(CartContext);
   const { cartCache } = useCartCache('orders/cart');
 
@@ -97,7 +97,7 @@ const HomePage: NextPage = () => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Card>
-              <NextLink href={'/category/press'} passHref prefetch={false}>
+              <NextLink href={'/category/gift'} passHref prefetch={false}>
                 <Link>
                   <CardActionArea>
                     <CardMedia

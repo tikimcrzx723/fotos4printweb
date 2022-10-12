@@ -30,6 +30,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     slug: product.slug,
     title: product.title,
     needImages: product.needImages,
+    minIMages: product.minIMages,
     quantity: product.needImages ? 0 : 1,
   });
 
@@ -65,16 +66,19 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             <Typography variant="h1" component="h1">
               {product.title}
             </Typography>
-            <Typography variant="subtitle1" component="h2">
-              ${priceChange}
+            <Typography variant="h5" component="h2" marginTop={1} marginBottom={2}>
+              Price: ${priceChange}
             </Typography>
 
             {/* Quantity */}
-            <Box sx={{ my: 2 }}>
-              <Typography variant="subtitle2">
+            <Box sx={{ my: 1 }}>
+              <Typography variant="h5" fontWeight={700}>
                 {product.title.toLowerCase().includes('even') ||
-                product.title.toLowerCase().includes('flyer')
+                product.title.toLowerCase().includes('flyer') ||
+                product.title.toLowerCase().includes('card')
                   ? 'Quantity'
+                  : product.needImages === false
+                  ? ''
                   : 'Size'}
               </Typography>
               <SizeSelector
@@ -87,11 +91,12 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             {/* AddCart */}
             {product.price.length > 0 ? (
               <Button
+                sx={{ fontSize: 16 }}
                 color="secondary"
                 className="circular-btn"
                 onClick={onAddProduct}
               >
-                {tempCartProduct.size ? 'Add to cart' : 'Seleccione una talla'}
+                {tempCartProduct.size ? 'Add to cart' : 'Select Option'}
               </Button>
             ) : (
               <Chip
@@ -102,8 +107,10 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             )}
             {/* Description */}
             <Box sx={{ mt: 3 }}>
-              <Typography variant="subtitle2">Description</Typography>
-              <Typography variant="body2">{product.description}</Typography>
+              <Typography variant="h5" marginBottom={1} sx={{fontWeight:700}}>
+                Description
+              </Typography>
+              <Typography variant="body1">{product.description}</Typography>
             </Box>
           </Box>
         </Grid>

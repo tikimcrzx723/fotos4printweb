@@ -1,18 +1,15 @@
-import { FC, PropsWithChildren, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useMemo, useState, useContext } from 'react';
 import NextLink from 'next/link';
 
 import {
-  Box,
   Card,
   CardActionArea,
   CardMedia,
-  Chip,
   Grid,
   Link,
-  Typography,
 } from '@mui/material';
 import { IProduct } from '../../interfaces';
-import { useRole } from '../../hooks';
+import { AuthContext } from '../../context/auth';
 
 interface Props {
   product: IProduct;
@@ -21,13 +18,13 @@ interface Props {
 export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
   const [isHovered, setisHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const { role } = useRole('user/rol');
+  const { user } = useContext(AuthContext);
   const rol =
-    role.message === undefined || null
+    user?.role === undefined || null
       ? 'client'
-      : role.message === 'admin'
+      : user?.role === 'admin'
       ? 'federal'
-      : role.message;
+      : user?.role;
 
   const productImage = useMemo(() => {
     return isHovered
@@ -64,15 +61,6 @@ export const ProductCard: FC<PropsWithChildren<Props>> = ({ product }) => {
           </Link>
         </NextLink>
       </Card>
-
-      <Box
-        sx={{ mt: 1, display: isImageLoaded ? 'block' : 'none' }}
-        className="fadeIn"
-      >
-        <Typography textAlign="center" fontWeight={700} variant="h6">
-          {product.title}
-        </Typography>
-      </Box>
     </Grid>
   );
 };

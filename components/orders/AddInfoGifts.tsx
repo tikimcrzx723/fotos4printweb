@@ -4,7 +4,7 @@ import {
   PropsWithChildren,
   useContext,
   useRef,
-  ChangeEvent,
+  useEffect,
 } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -13,55 +13,73 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { AddToPhotosOutlined } from '@mui/icons-material';
+import { AddToPhotosOutlined, DeleteOutlined } from '@mui/icons-material';
 
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { Box, Grid, Typography, TextField, IconButton } from '@mui/material';
 import { CartContext } from '../../context';
 import { ICartProduct, IOrderItem } from '../../interfaces';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 
 interface Props {
-  product: IOrderItem | ICartProduct;
+  product?: IOrderItem | ICartProduct;
 }
 
 type FormData = {
-  name: string;
-  quantity: number;
+  usb: {
+    name: string;
+    quantity: number;
+  }[];
 };
 
 export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {
-    register,
     handleSubmit,
+    getValues,
+    setValue,
+    register,
     formState: { errors },
-    reset,
-  } = useForm<FormData>({
-    defaultValues: {
-      name: '',
-      quantity: 1,
-    },
+  } = useForm<FormData>({ defaultValues: { usb: [] } });
+  const { control } = useForm();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'usb',
   });
 
   const { updateCartQuantity } = useContext(CartContext);
 
+  useEffect(() => {
+    setValue(
+      'usb',
+      product?.hasOwnProperty('information') ? product?.information.usb : []
+    );
+    getValues('usb').map(() => {
+      append({});
+    });
+  }, [append, getValues]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  console.log(product?.information);
 
   const handleClose = () => {
     updateCartQuantity(product as ICartProduct);
     setOpen(false);
   };
 
-  const onSaveInfo = (data: FormData) => {
-    const information = { name: data.name, quantity: Number(data.quantity) };
-    product.quantity = Number(information.quantity);
-    product.information = information;
-    updateCartQuantity(product as ICartProduct);
+  const onSaveInfo = async (data: FormData) => {
+    let qty = 0;
+    data.usb.map(({ quantity }) => {
+      qty += Number(quantity);
+    });
+    product!.quantity = qty;
+    product!.information = data;
+    setValue('usb', data.usb);
     handleClose();
   };
 
@@ -85,36 +103,41 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
         </DialogTitle>
         <form onSubmit={handleSubmit(onSaveInfo)}>
           <DialogContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Name"
-                  variant="filled"
-                  fullWidth
-                  sx={{ mb: 1 }}
-                  {...register('name', {
-                    required: 'This a required',
-                  })}
-                  helperText={errors.name?.message}
-                />
+            {fields.map((field, index) => (
+              <Grid container spacing={4} key={index}>
+                <Grid item xs={12} sm={5} marginBottom={1}>
+                  <TextField
+                    variant="filled"
+                    label="Name"
+                    {...register(`usb.${index}.name`)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                  <TextField
+                    {...register(`usb.${index}.quantity`)}
+                    type="number"
+                    variant="filled"
+                    label="Quantity"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => remove(index)}
+                    color="error"
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Quantity"
-                  type="number"
-                  variant="filled"
-                  fullWidth
-                  sx={{ mb: 1 }}
-                  {...register('quantity', {
-                    required: 'This a required',
-                    min: 1,
-                  })}
-                  helperText={errors.name?.message}
-                />
-              </Grid>
-            </Grid>
+            ))}
           </DialogContent>
           <DialogActions>
+            <Button color="secondary" onClick={() => append({})} autoFocus>
+              Add Names and QTY
+            </Button>
             <Button type="submit" color="primary" autoFocus>
               Save
             </Button>

@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
     }
   }
 
-  const validRoles = ['admin', 'super-user', 'SEO'];
+  const validRoles = ['admin'];
 
   if (!validRoles.includes(session.user.role)) {
     try {

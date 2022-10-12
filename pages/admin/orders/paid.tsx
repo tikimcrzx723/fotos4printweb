@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ConfirmationNumberOutlined } from '@mui/icons-material';
-import { Chip, Grid, MenuItem, Select } from '@mui/material';
+import { Chip, Grid, MenuItem, Select, TextField } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { AdminLayout } from '../../../components/layouts';
 import useSWR from 'swr';
@@ -13,6 +13,7 @@ const PaidOrdersPage = () => {
     '/api/admin/orders?isPaid=true&orderState=processing'
   );
   const [orders, setOrders] = useState<IOrder[]>([]);
+  const [trackingNumber, setTrackingNumber] = useState('');
 
   useEffect(() => {
     if (data) setOrders(data);
@@ -37,7 +38,7 @@ const PaidOrdersPage = () => {
             phone: address.data.phone,
             msn: order?.delivery?.required
               ? `Your order has Your Has Shipped - Order #${orderId}`
-              : `Your order is ready for pick up #${orderId}`,
+              : `Your order is ready for pick up #${orderId} and tracking number is ${trackingNumber}`,
           };
           await appApi.post('/admin/users/sendOrderMSN', body);
         }
@@ -137,7 +138,22 @@ const PaidOrdersPage = () => {
       subTitle={'Paid Orders'}
       icon={<ConfirmationNumberOutlined />}
     >
-      <Grid container className="fadeIn">
+      <Grid container>
+        <Grid item xs={12} sm={3}></Grid>
+        <Grid item xs={12} sm={3}></Grid>
+        <Grid item xs={12} sm={3}></Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            variant="filled"
+            label="Tracking Number"
+            onChange={(e) => {
+              setTrackingNumber(e.target.value);
+            }}
+            fullWidth
+          ></TextField>
+        </Grid>
+      </Grid>
+      <Grid container className="fadeIn" marginTop={5}>
         <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
           <DataGrid
             rows={rows}

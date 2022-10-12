@@ -92,10 +92,9 @@ const createProduct = async (
     slug,
     type,
   } = req.body as IProduct;
-  console.log(req.body);
 
   if (images.length < 1) {
-    return res.status(400).json({ message: 'At least 2 images are required' });
+    return res.status(400).json({ message: 'At least 1 image are required' });
   }
 
   try {
@@ -127,7 +126,9 @@ const createProduct = async (
         p.priceFrequnt > 0
     );
 
-    const inpPriceMap = priceInput.map((p) => {
+    let inpPriceMap = null;
+
+    inpPriceMap = priceInput.map((p) => {
       return {
         size: p.size,
         priceClient: Number(p.priceClient),
@@ -150,6 +151,8 @@ const createProduct = async (
     if (needImages === false || (needImages as any) === 'false') {
       delete body.minIMages;
     }
+    console.log(Boolean(needImages));
+    console.log(inpPriceMap);
 
     const product = new Product(body);
     await product.save();

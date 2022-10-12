@@ -23,6 +23,7 @@ import {
   DashboardOutlined,
   DomainOutlined,
   HomeOutlined,
+  InventoryOutlined,
   LoginOutlined,
   PhotoCameraOutlined,
   SearchOutlined,
@@ -162,6 +163,12 @@ export const SideMenu = () => {
                   <CategoryOutlined />
                 </ListItemIcon>
                 <ListItemText primary={'Products'} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo('/admin/inventory')}>
+                <ListItemIcon>
+                  <InventoryOutlined />
+                </ListItemIcon>
+                <ListItemText primary={'Inventory'} />
               </ListItem>
               <ListItem button onClick={() => navigateTo('/admin/orders')}>
                 <ListItemIcon>

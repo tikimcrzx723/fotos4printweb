@@ -19,13 +19,12 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from '@mui/icons-material';
-import { AuthContext, CartContext, UIContext } from '../../context';
+import { CartContext, UIContext } from '../../context';
 
 export const Navbar = () => {
   const { asPath, push } = useRouter();
   const { toggleSideMenu } = useContext(UIContext);
   const { numberOfItems } = useContext(CartContext);
-  const { freeDelivery, closeDelivery } = useContext(UIContext);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -35,16 +34,16 @@ export const Navbar = () => {
     push(`/search/${searchTerm}`);
   };
 
-  const { user, isLoggedIn, logout } = useContext(AuthContext);
-
   return (
     <>
       <AppBar>
         <Toolbar>
           <NextLink href="/" passHref>
             <Link display="flex" alignItems="center">
-              <Typography variant="h6">Fotos4print |</Typography>
-              <Typography sx={{ ml: 0.5 }}>Shop</Typography>
+              <Typography variant="h5">Fotos4print |</Typography>
+              <Typography variant="body1" sx={{ ml: 0.5 }}>
+                Shop
+              </Typography>
             </Link>
           </NextLink>
 
@@ -61,7 +60,7 @@ export const Navbar = () => {
                 <Button
                   color={asPath === '/category/photo' ? 'primary' : 'info'}
                 >
-                  Photos
+                  <Typography>Photos</Typography>
                 </Button>
               </Link>
             </NextLink>
@@ -70,7 +69,7 @@ export const Navbar = () => {
                 <Button
                   color={asPath === '/category/gift' ? 'primary' : 'info'}
                 >
-                  Gifts
+                  <Typography>Gifts</Typography>
                 </Button>
               </Link>
             </NextLink>
@@ -79,7 +78,7 @@ export const Navbar = () => {
                 <Button
                   color={asPath === '/category/press' ? 'primary' : 'info'}
                 >
-                  Press
+                  <Typography>Press</Typography>
                 </Button>
               </Link>
             </NextLink>
@@ -89,14 +88,14 @@ export const Navbar = () => {
 
           {isSearchVisible ? (
             <Input
-              sx={{ display: { xs: 'none', sm: 'flex' } }}
+              sx={{ display: { xs: 'none', sm: 'flex', fontSize: 18 } }}
               className="fadeIn"
               autoFocus
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={(e) => (e.key === 'Enter' ? onSearchTerm() : null)}
               type="text"
-              placeholder="Buscar..."
+              placeholder="Search..."
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton onClick={() => setIsSearchVisible(false)}>
@@ -136,32 +135,9 @@ export const Navbar = () => {
           </NextLink>
 
           <Button onClick={toggleSideMenu}>
-            <Typography variant="body1">Menu</Typography>
+            <Typography variant="h6">Menu</Typography>
           </Button>
         </Toolbar>
-        {freeDelivery && isLoggedIn ? (
-          // <Box
-          //   display="flex"
-          //   justifyContent="space-between"
-          //   sx={{ background: 'yellow', marginTop: -1, marginBottom: 2 }}
-          // >
-          //   <Typography color="primary"></Typography>
-          //   <Typography color="primary" variant="h6" sx={{ fontWeight: 700 }}>
-          //     Add $100.00 to your order to receive FREE SHIPPING! (Only OR, WA)
-          //   </Typography>
-          //   <IconButton
-          //     onClick={closeDelivery}
-          //     aria-label="close"
-          //     color="primary"
-          //     size="small"
-          //   >
-          //     <GridCloseIcon fontSize="medium" sx={{ fontWeight: 700 }} />
-          //   </IconButton>
-          // </Box>
-          <></>
-        ) : (
-          <></>
-        )}
       </AppBar>
     </>
   );

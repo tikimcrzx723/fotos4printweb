@@ -22,10 +22,6 @@ import {
   Box,
   Grid,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Card,
   CardMedia,
   TextField,
@@ -54,7 +50,6 @@ export const AddInfoTickets: FC<PropsWithChildren<Props>> = ({ product }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {
     handleSubmit,
-    setValue,
     register,
     formState: { errors },
   } = useForm<FormData>({

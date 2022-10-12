@@ -50,9 +50,6 @@ const RegisterPage = () => {
     }
 
     await signIn('credentials', { email, password });
-
-    // const destination = router.query.p?.toString() || '/';
-    // router.replace(destination);
   };
 
   return (

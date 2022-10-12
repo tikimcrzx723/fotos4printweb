@@ -82,6 +82,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
           <CartList
             products={order.orderItems}
             admin={true}
+            editable={false}
             onDownloadImage={onDownloadImage}
           />
         </Grid>

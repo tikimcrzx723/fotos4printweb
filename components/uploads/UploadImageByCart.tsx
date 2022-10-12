@@ -22,11 +22,15 @@ import { converters } from '../../libs';
 import { ShowListCartImage, Loader } from './';
 
 interface Props {
+  title?: string;
   product: IOrderItem | ICartProduct;
+  editable?: boolean;
 }
 
 export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
+  title = 'Add your images',
   product,
+  editable = true,
 }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -93,6 +97,8 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
       setChargerImages(false);
     } catch (error) {
       console.log({ error });
+      updateCartQuantity(product as ICartProduct);
+      setChargerImages(false);
     }
   };
 
@@ -125,7 +131,8 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
     <div>
       <Box marginBottom={2} marginTop={2}>
         <Button color="primary" onClick={handleClickOpen}>
-          <AddToPhotosOutlined /> Add your Images
+          {title === 'Add your images' ? <AddToPhotosOutlined /> : <></>}
+          {title}
         </Button>
       </Box>
       <Dialog
@@ -143,7 +150,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
                 fullWidth
                 startIcon={<UploadOutlined />}
                 onClick={() => fileInputRef.current?.click()}
-                sx={{ mb: 3 }}
+                sx={{ mb: 3, display: title === 'Add your images' ? '' : 'none' }}
               >
                 Upload Images
               </Button>
@@ -166,6 +173,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
               {!chargerImages ? (
                 product.userImages!.map((img, index) => (
                   <ShowListCartImage
+                    viewInput={title === 'Add your images' ? true : false}
                     key={img.image}
                     product={product as ICartProduct}
                     img={img}
@@ -180,7 +188,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          {!chargerImages ? (
+          {title === 'Add your images' ? (
             <>
               <Button color="error" autoFocus onClick={handleClose}>
                 Cancel
@@ -194,7 +202,9 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
               </Button>
             </>
           ) : (
-            <></>
+            <Button color="error" autoFocus onClick={handleClose}>
+              Close
+            </Button>
           )}
         </DialogActions>
       </Dialog>

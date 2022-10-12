@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest | any, ev: NextFetchEvent) {
     }
   }
 
-  const validRoles = ['client', 'admin', 'federal', 'frequent'];
+  const validRoles = ['client', 'admin', 'federal', 'frequent', 'torito-market'];
 
   if (!validRoles.includes(session.user.role)) {
     try {

@@ -5,21 +5,16 @@ import { FullScreenLoading } from '../../components/ui';
 import { useProducts } from '../../hooks';
 import { ProductList } from '../../components/products';
 
-const WomenPage: NextPage = () => {
+const PressPage: NextPage = () => {
   const { products, isLoading } = useProducts('products?type=press');
   return (
     <ShopLayout
-      title='Studio-Sueno - Press'
-      pageDescription='Find the most important for the presentation of your business.'
+      title="Studio-Sueno - Press"
+      pageDescription="Find the most important for the presentation of your business."
     >
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography variant='h1' component='h1'>
-          Press
-        </Typography>
-      </Box>
       {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   );
 };
 
-export default WomenPage;
+export default PressPage;

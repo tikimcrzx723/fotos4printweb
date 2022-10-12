@@ -1,4 +1,3 @@
-import { FC, PropsWithChildren } from 'react';
 import { ICompany } from '../../interfaces';
 
 import { Box, Typography } from '@mui/material';

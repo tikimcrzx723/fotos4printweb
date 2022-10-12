@@ -12,7 +12,7 @@ export const completeOrder = (
   orderItems.map(({ title, size, quantity, price }) => {
     increment += `
     <tr class="item">
-        <td>${title}[${size}]</td>
+        <td>${size.includes('http') ? `<img src="${size}" alt="${title}"/>` : `${title}-${size}`}]</td>
         <td>${
           title.includes('Event') || title.includes('event')
             ? Number(size) * quantity

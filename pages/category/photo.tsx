@@ -12,11 +12,6 @@ const PhotoPage: NextPage = () => {
       title='Fotos4print - Photos'
       pageDescription='Print your best photos'
     >
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography variant='h1' component='h1'>
-          Photos
-        </Typography>
-      </Box>
       {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   );

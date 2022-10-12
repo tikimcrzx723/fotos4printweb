@@ -17,6 +17,7 @@ interface IProp {
   product: ICartProduct;
   img: IUserImage;
   index: number;
+  viewInput?: boolean;
 
   onDeleteImage: (image: string) => void;
 }
@@ -24,6 +25,7 @@ interface IProp {
 export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
   product,
   img,
+  viewInput = true,
   onDeleteImage,
   index,
 }) => {
@@ -36,7 +38,7 @@ export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
           <CardMedia
             component="img"
             className="fadeIn"
-            image='/pdf.png'
+            image="/pdf.png"
             alt={product.title}
           />
         ) : (
@@ -48,9 +50,10 @@ export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
           />
         )}
 
-        <Grid container marginTop={2} alignItems="center">
+        <Grid container marginTop={2} alignItems="center" marginBottom={0}>
           <Grid item xs={12} sm={12}>
             <TextField
+            disabled={!viewInput}
               type="number"
               variant="filled"
               inputProps={{
@@ -64,19 +67,20 @@ export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
                 updateCartQuantity(product);
               }}
             />
-            <Typography variant="h6" sx={{ textAlign: 'center' }}>
-              {product.userImages![index].quantity}
-            </Typography>
           </Grid>
         </Grid>
         <CardActions>
-          <Button
-            fullWidth
-            color="error"
-            onClick={() => onDeleteImage(img.image)}
-          >
-            Delete
-          </Button>
+          {viewInput ? (
+            <Button
+              fullWidth
+              color="error"
+              onClick={() => onDeleteImage(img.image)}
+            >
+              Delete
+            </Button>
+          ) : (
+            <></>
+          )}
         </CardActions>
       </Card>
     </Grid>

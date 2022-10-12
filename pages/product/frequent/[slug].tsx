@@ -71,7 +71,15 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
             {/* Quantity */}
             <Box sx={{ my: 2 }}>
-              <Typography variant="subtitle2">Quantity</Typography>
+              <Typography variant="h5" fontWeight={700}>
+                {product.title.toLowerCase().includes('even') ||
+                product.title.toLowerCase().includes('flyer') ||
+                product.title.toLowerCase().includes('card')
+                  ? 'Quantity'
+                  : product.needImages === false
+                  ? ''
+                  : 'Size'}
+              </Typography>
               <SizeSelector
                 sizes={sizes}
                 selectedSize={tempCartProduct.size}
@@ -86,7 +94,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                 className="circular-btn"
                 onClick={onAddProduct}
               >
-                {tempCartProduct.size ? 'Add to cart' : 'Seleccione una talla'}
+                {tempCartProduct.size ? 'Add to cart' : 'Select Option'}
               </Button>
             ) : (
               <Chip
@@ -97,8 +105,8 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             )}
             {/* Description */}
             <Box sx={{ mt: 3 }}>
-              <Typography variant="subtitle2">Description</Typography>
-              <Typography variant="body2">{product.description}</Typography>
+              <Typography variant="h6">Description</Typography>
+              <Typography variant="body1">{product.description}</Typography>
             </Box>
           </Box>
         </Grid>

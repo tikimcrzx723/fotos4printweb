@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext } from 'react';
+import { FC, PropsWithChildren, useContext, useId } from 'react';
 import NextLink from 'next/link';
 
 import {
@@ -14,23 +14,34 @@ import { CartContext } from '../../context/cart';
 import { ICartProduct, IOrderItem, IUserImage } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
-import appApi from '../../api/appApi';
-import { AddInfoBussinesCard, AddInfoGifts, AddInfoTickets } from '../orders';
+import { appApi } from '../../api';
+import {
+  AddInfoBussinesCard,
+  AddInfoTickets,
+  AddQuantity,
+  AddInfoGifts,
+} from '../orders';
 import { downLoadImage } from '../../libs';
+import { useRouter } from 'next/router';
 
 interface Props {
   editable?: boolean;
   admin?: boolean;
   products?: IOrderItem[];
   onDownloadImage?: (images: IUserImage[], name: string) => void;
+  orderId?: string;
+  saveOrder?: boolean;
 }
 
 export const CartList: FC<PropsWithChildren<Props>> = ({
   editable = false,
   admin = false,
+  saveOrder = false,
   products,
   onDownloadImage,
+  orderId,
 }) => {
+  const { push } = useRouter();
   const { cart, removeCartProduct } = useContext(CartContext);
   const { role } = useRole('user/rol');
   const rol = role.message === 'admin' ? 'federal' : role.message;
@@ -65,7 +76,17 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               <Link>
                 <CardActionArea>
                   <CardMedia
-                    image={product.image}
+                    image={
+                      product.size?.includes('http')
+                        ? product.size
+                        : product.hasOwnProperty('information')
+                        ? product.title.toLowerCase().includes('event')
+                          ? `https://afbrcpedgr.cloudimg.io/${product.information.image}?width=400`
+                          : product.title.toLowerCase().includes('flyer')
+                          ? `https://afbrcpedgr.cloudimg.io/${product.image}?width=400`
+                          : product.image
+                        : product.image
+                    }
                     component="img"
                     sx={{ borderRadius: '5px' }}
                   />
@@ -75,18 +96,27 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
           </Grid>
           <Grid item xs={6}>
             <Box display="7" flexDirection="column">
-              <Typography variant="body1">
-                {product.title === 'Event Tickets 2in x 5.5in'
-                  ? `No Tickets: `
-                  : product.title.includes('Bussines')
-                  ? `${
-                      product.hasOwnProperty('information')
-                        ? `${product.information.type}:`
-                        : ''
-                    } cards`
-                  : ''}
-                <strong>{product.size}</strong>
-              </Typography>
+              {product.title.includes('USB') &&
+              product.hasOwnProperty('information') ? (
+                product.information.usb.map(
+                  (data: any) => `[${data.quantity}]-${data.name}\n`
+                )
+              ) : (
+                <Typography variant="body1">
+                  {product.title === 'Event Tickets 2in x 5.5in'
+                    ? `No Tickets: `
+                    : product.title.includes('Bussines')
+                    ? `${
+                        product.hasOwnProperty('information')
+                          ? `${product.information.type}:`
+                          : ''
+                      } cards`
+                    : ''}
+                  <strong style={{ fontSize: 20 }}>{`${
+                    product.size?.includes('http') ? '' : product.size
+                  }`}</strong>
+                </Typography>
+              )}
               {/* Conditional */}
               {editable ? (
                 <>
@@ -101,8 +131,10 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                         <UploadImageByCart product={product} />
                       )}
                     </>
-                  ) : (
+                  ) : product.title.includes('USB') ? (
                     <AddInfoGifts product={product} />
+                  ) : (
+                    <AddQuantity product={product} />
                   )}
                 </>
               ) : (
@@ -121,6 +153,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             flexDirection="column"
           >
             <Typography variant="subtitle1">${product.price}</Typography>
+
             {admin &&
             (product.title.includes('Bussines') ||
               product.title.includes('PostCard')) ? (
@@ -155,15 +188,32 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 Event Ticket - {product.information.price}
               </Button>
             ) : admin ? (
-              <Button
-                color="secondary"
-                className="circular-btn"
-                onClick={() =>
-                  onDownloadImage!(product.userImages!, product.title)
-                }
-              >
-                Download
-              </Button>
+              product.needImages ? (
+                <Button
+                  color="secondary"
+                  className="circular-btn"
+                  onClick={() =>
+                    onDownloadImage!(product.userImages!, product.title)
+                  }
+                >
+                  Download
+                </Button>
+              ) : product.title.includes('USB') ? (
+                product.information.hasOwnProperty('name') ? (
+                  <Typography>{product.information.name}</Typography>
+                ) : (
+                  <Button
+                    sx={{ marginTop: 1 }}
+                    color="secondary"
+                    className="circular-btn"
+                    onClick={() => downLoadImage(product.information.logo)}
+                  >
+                    Logo
+                  </Button>
+                )
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
@@ -175,6 +225,26 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               >
                 Remove
               </Button>
+            )}
+            {product.needImages &&
+            editable === false &&
+            product.hasOwnProperty('information') === false ? (
+              saveOrder ? (
+                <Button
+                  color="primary"
+                  onClick={() =>
+                    push(
+                      `/orders/gallery/${orderId}?itemId=${product._id}&size=${product.size}`
+                    )
+                  }
+                >
+                  View Images
+                </Button>
+              ) : (
+                <UploadImageByCart title="View Images" product={product} />
+              )
+            ) : (
+              <></>
             )}
           </Grid>
         </Grid>

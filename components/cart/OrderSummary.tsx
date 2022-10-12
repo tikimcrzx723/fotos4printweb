@@ -10,7 +10,6 @@ import { Grid, Typography } from '@mui/material';
 import { currency } from '../../utils';
 import { CartContext, UIContext } from '../../context';
 import { useCompany } from '../../hooks';
-import { useMemo } from 'react';
 
 interface Props {
   deliveryPrice?: number;

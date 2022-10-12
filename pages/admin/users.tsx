@@ -59,6 +59,7 @@ const UsersPage = () => {
             <MenuItem value="client"> Client </MenuItem>
             <MenuItem value="frequent"> Frequent </MenuItem>
             <MenuItem value="federal"> Federal </MenuItem>
+            <MenuItem value="torito-market"> Torito Market </MenuItem>
           </Select>
         );
       },

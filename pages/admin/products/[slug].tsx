@@ -71,6 +71,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newTagValue, setNewTagValue] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [imageOrSize, setImageOrSize] = useState(false);
 
   const {
     register,
@@ -94,6 +95,9 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
     getValues('price').map(() => {
       append({ size: '', priceClient: 0, priceFrequnt: 0, priceFerderal: 0 });
     });
+    if (product.needImages) {
+      setImageOrSize(true);
+    }
   }, [append, getValues]);
 
   useEffect(() => {
@@ -174,8 +178,23 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
   };
 
   const onSubmit = async (form: FormData) => {
-    if (form.images.length < 1) return alert('Mínimo 2 imagenes');
+    if (form.images.length < 1) return alert('Mínimo 1 imagenes');
     setIsSaving(true);
+
+    if (form.needImages === false || form.needImages === ('false' as any)) {
+      const sizeImg = form.price.map(
+        ({ priceClient, priceFrequnt, priceFerderal }, index) => {
+          return {
+            size: form.images[index + 1],
+            priceClient,
+            priceFrequnt,
+            priceFerderal,
+          };
+        }
+      );
+
+      form.price = sizeImg;
+    }
 
     try {
       const { data } = await appApi({
@@ -250,11 +269,12 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               <RadioGroup
                 row
                 value={getValues('needImages')}
-                onChange={({ target }) =>
+                onChange={({ target }) => {
+                  setImageOrSize(target.value as any);
                   setValue('needImages', target.value as any, {
                     shouldValidate: true,
-                  })
-                }
+                  });
+                }}
               >
                 {validNeedImages.map((option) => (
                   <FormControlLabel
@@ -402,6 +422,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
             ))}
           </RadioGroup>
         </FormControl>
+        {imageOrSize}
         <Grid container spacing={2} marginTop={5}>
           {fields.map((field, index) => (
             <div key={index}>
@@ -425,7 +446,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Client"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth

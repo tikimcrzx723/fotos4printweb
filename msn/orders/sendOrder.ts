@@ -10,5 +10,4 @@ export const sendOrderMessage = async (phone: string, msg: string) => {
     from: '+15039070187',
     to: phone,
   });
-  console.log(message);
 };
