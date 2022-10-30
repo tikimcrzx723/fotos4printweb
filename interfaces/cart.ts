@@ -17,4 +17,5 @@ export interface ICartProduct {
 export interface IUserImage {
   image: string;
   quantity: number;
+  information?: any;
 }

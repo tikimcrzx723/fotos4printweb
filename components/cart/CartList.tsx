@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useContext, useId } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 import NextLink from 'next/link';
 
 import {
@@ -15,12 +15,7 @@ import { ICartProduct, IOrderItem, IUserImage } from '../../interfaces';
 import { UploadImageByCart } from '../uploads/UploadImageByCart';
 import { useRole } from '../../hooks';
 import { appApi } from '../../api';
-import {
-  AddInfoBussinesCard,
-  AddInfoTickets,
-  AddQuantity,
-  AddInfoGifts,
-} from '../orders';
+import { AddInfoBussinesCard, AddQuantity, AddInfoGifts } from '../orders';
 import { downLoadImage } from '../../libs';
 import { useRouter } from 'next/router';
 
@@ -63,11 +58,11 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
 
   return (
     <>
-      {productToShow.map((product) => (
+      {productToShow.map((product, index) => (
         <Grid
           container
           spacing={2}
-          key={product.slug + product.size}
+          key={product.slug + product.size + index}
           sx={{ mb: 1 }}
         >
           <Grid item xs={3}>
@@ -81,7 +76,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                         ? product.size
                         : product.hasOwnProperty('information')
                         ? product.title.toLowerCase().includes('event')
-                          ? `https://afbrcpedgr.cloudimg.io/${product.information.image}?width=400`
+                          ? `https://afbrcpedgr.cloudimg.io/${product.image}?width=400`
                           : product.title.toLowerCase().includes('flyer')
                           ? `https://afbrcpedgr.cloudimg.io/${product.image}?width=400`
                           : product.image
@@ -102,20 +97,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                   (data: any) => `[${data.quantity}]-${data.name}\n`
                 )
               ) : (
-                <Typography variant="body1">
-                  {product.title === 'Event Tickets 2in x 5.5in'
-                    ? `No Tickets: `
-                    : product.title.includes('Bussines')
-                    ? `${
-                        product.hasOwnProperty('information')
-                          ? `${product.information.type}:`
-                          : ''
-                      } cards`
-                    : ''}
-                  <strong style={{ fontSize: 20 }}>{`${
-                    product.size?.includes('http') ? '' : product.size
-                  }`}</strong>
-                </Typography>
+                <></>
               )}
               {/* Conditional */}
               {editable ? (
@@ -125,8 +107,6 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                       {product.title.includes('Bussines') ||
                       product.title.includes('PostCard') ? (
                         <AddInfoBussinesCard product={product} />
-                      ) : product.title.includes('Event') ? (
-                        <AddInfoTickets product={product} />
                       ) : (
                         <UploadImageByCart product={product} />
                       )}
@@ -178,15 +158,6 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                   <></>
                 )}
               </>
-            ) : admin && product.title.includes('Event') ? (
-              <Button
-                sx={{ marginTop: 1 }}
-                color="secondary"
-                className="circular-btn"
-                onClick={() => downLoadImage(product.information.image)}
-              >
-                Event Ticket - {product.information.price}
-              </Button>
             ) : admin ? (
               product.needImages ? (
                 <Button
@@ -226,9 +197,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 Remove
               </Button>
             )}
-            {product.needImages &&
-            editable === false &&
-            product.hasOwnProperty('information') === false ? (
+            {product.needImages && editable === false ? (
               saveOrder ? (
                 <Button
                   color="primary"

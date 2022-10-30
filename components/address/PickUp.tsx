@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const PickUp = () => {
-   const { company } = useCompany('user/company');
+  const { company } = useCompany('user/company');
   return (
     <>
       <Box display="flex" justifyContent="space-between">

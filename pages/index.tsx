@@ -97,7 +97,7 @@ const HomePage: NextPage = () => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Card>
-              <NextLink href={'/category/gift'} passHref prefetch={false}>
+              <NextLink href={'/category/press'} passHref prefetch={false}>
                 <Link>
                   <CardActionArea>
                     <CardMedia

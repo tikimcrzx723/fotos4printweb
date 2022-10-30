@@ -31,7 +31,11 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     title: product.title,
     needImages: product.needImages,
     minIMages: product.minIMages,
-    quantity: product.needImages ? 0 : 1,
+    quantity: product.needImages
+      ? 0
+      : product.title.toLowerCase().includes('event')
+      ? 50
+      : 1,
   });
 
   const onSelectedSize = async (size: string) => {
@@ -66,7 +70,12 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             <Typography variant="h1" component="h1">
               {product.title}
             </Typography>
-            <Typography variant="h5" component="h2" marginTop={1} marginBottom={2}>
+            <Typography
+              variant="h5"
+              component="h2"
+              marginTop={1}
+              marginBottom={2}
+            >
               Price: ${priceChange}
             </Typography>
 
@@ -107,7 +116,11 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             )}
             {/* Description */}
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h5" marginBottom={1} sx={{fontWeight:700}}>
+              <Typography
+                variant="h5"
+                marginBottom={1}
+                sx={{ fontWeight: 700 }}
+              >
                 Description
               </Typography>
               <Typography variant="body1">{product.description}</Typography>

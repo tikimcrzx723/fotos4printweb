@@ -237,24 +237,6 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                     />
                   ) : (
                     <>
-                      <PayPalButtons
-                        createOrder={(data, actions) => {
-                          return actions.order.create({
-                            purchase_units: [
-                              {
-                                amount: {
-                                  value: order.total.toString(),
-                                },
-                              },
-                            ],
-                          });
-                        }}
-                        onApprove={(data, actions) => {
-                          return actions.order!.capture().then((details) => {
-                            onOrderCompletedPayPal(details);
-                          });
-                        }}
-                      />
                       <PaymentForm
                         createPaymentRequest={() => ({
                           requestShippingAddress: true,

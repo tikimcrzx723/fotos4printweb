@@ -1,12 +1,6 @@
 import { FC, PropsWithChildren, useContext } from 'react';
 
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 interface IProp {
   counterCharger: number;
@@ -22,7 +16,12 @@ export const Loader: FC<PropsWithChildren<IProp>> = ({
   return (
     <>
       <Box sx={{ position: 'relative', display: 'inline-flex' }}></Box>
-      <CircularProgress color='secondary' variant="determinate" size={250} value={progress} />
+      <CircularProgress
+        color="secondary"
+        variant="determinate"
+        size={250}
+        value={progress}
+      />
       <Box
         sx={{
           top: 12,

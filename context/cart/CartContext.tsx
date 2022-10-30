@@ -16,6 +16,7 @@ interface ContextProps {
   updateCartQuantity: (product: ICartProduct) => void;
   removeCartProduct: (product: ICartProduct) => void;
   updateAddress: (address: IShippingAddress) => void;
+  updateRepitElements: (product: ICartProduct, index: number) => void;
   updateCartProductsByCache: (products: ICartProduct[]) => void;
 
   // Orders

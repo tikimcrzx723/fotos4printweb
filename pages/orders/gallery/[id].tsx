@@ -29,7 +29,7 @@ const GalleryOrderPage: NextPage<PropsWithChildren<Props>> = ({ cart }) => {
         {cart.title} [{cart.size}] [{cart.quantity}]
       </Typography>
       <Grid container spacing={2} marginTop={1}>
-        {cart.userImages!.map(({ image, quantity }) => (
+        {cart.userImages!.map(({ image, quantity }, index) => (
           <Grid key={image} item xs={12} sm={4} md={3}>
             <Card>
               <CardActionArea>
@@ -45,6 +45,13 @@ const GalleryOrderPage: NextPage<PropsWithChildren<Props>> = ({ cart }) => {
               <Typography textAlign="center" fontWeight={700} variant="h6">
                 Quantity [{quantity}]
               </Typography>
+              {cart.title.toLowerCase().includes('event') ? (
+                <Typography textAlign="center" fontWeight={700} variant="h6">
+                  {'price: $' + cart.userImages![index].information.price}
+                </Typography>
+              ) : (
+                ''
+              )}
             </Box>
           </Grid>
         ))}

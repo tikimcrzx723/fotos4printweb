@@ -1,10 +1,4 @@
-import {
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useReducer,
-  useContext,
-} from 'react';
+import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 
 import {
   IAddress,
@@ -41,7 +35,7 @@ interface Props {}
 
 export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE);
-  
+
   useEffect(() => {
     try {
       const cookieProducts = Cookies.get('cart')
@@ -106,10 +100,15 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     }
   }, []);
 
+  const updateRepitElements = (product: ICartProduct, index: number) => {
+    const productInCart = state.cart;
+  };
+
   const addProductToCart = (product: ICartProduct) => {
     const productInCart = state.cart.some(
       (p) => p._id === product._id && p.size
     );
+
     if (!productInCart) {
       return dispatch({
         type: '[Cart] - Update products in cart',
@@ -128,13 +127,11 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       });
     }
 
-    // Acomulate products
+    //Acomulate products
     const updatedProducts = state.cart.map((p) => {
       if (p._id !== product._id) return p;
       if (p.size !== product.size) return p;
 
-      // update quantity
-      // p.quantity += product.quantity;
       return p;
     });
 
@@ -249,7 +246,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     } else {
       address = {
         firstName: company.name,
-        lastName: 'name',
+        lastName: ' ',
         address: company.address,
         address2: company.address2,
         zip: company.zip,
@@ -304,6 +301,7 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         ...state,
 
         // Methods
+        updateRepitElements,
         addProductToCart,
         updateCartQuantity,
         removeCartProduct,

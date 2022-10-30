@@ -50,12 +50,7 @@ const CartPage = () => {
           product.title.includes('Tickets') ||
           product.title.includes('tickets')
         ) {
-          setMessageError('Please Add Ticket Price');
-          if (product.hasOwnProperty('information')) {
-            if (product.information.price > 0) {
-              counter++;
-            }
-          }
+          counter++
         } else {
           counter++;
         }

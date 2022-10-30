@@ -15,9 +15,13 @@ const orderSchema = new Schema(
         needImages: { type: Boolean, required: true },
         price: { type: Number, required: true },
         userImages: [
-          { image: { type: String }, quantity: { type: Number, default: 1 } },
+          {
+            image: { type: String },
+            quantity: { type: Number, default: 1 },
+            information: { type: Object },
+          },
         ],
-        information: { type: Object },
+        information: { type: Object, default: { none: false } },
       },
     ],
     shippingAddress: {

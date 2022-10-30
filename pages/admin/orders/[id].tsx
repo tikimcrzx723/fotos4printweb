@@ -29,11 +29,15 @@ const OrderPage: NextPage<Props> = ({ order }) => {
   const { shippingAddress } = order;
 
   const onDownloadImage = async (images: IUserImage[], name: string) => {
-    images.map(async ({ image, quantity }, index) => {
+    images.map(async ({ image, quantity }) => {
       const url = image;
       const arrFile = image.toString().split('/');
 
-      const extension = arrFile[arrFile.length - 1].split('.')[1];
+      const extension =
+        arrFile[arrFile.length - 1].split('.')[
+          arrFile[arrFile.length - 1].split('.').length - 1
+        ];
+
       const download = arrFile[arrFile.length - 1].split('.')[0];
 
       const file = `${download}[${quantity}].${extension}`;

@@ -49,6 +49,7 @@ export interface IOrderItem {
 interface IUserImages {
   image: string;
   quantity: number;
+  information?: any;
 }
 
 export interface IShippingAddress {

@@ -67,7 +67,8 @@ const updateProducts = async (
       return res.status(400).json({ message: 'is not a valid ObjectId' });
     }
 
-    await product.update(req.body);
+    const body = productFilter(req.body);
+    await product.update(body);
     await db.disconnect();
 
     return res.status(200).json(product);
@@ -82,16 +83,7 @@ const createProduct = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  const {
-    title,
-    description,
-    images = [],
-    price,
-    needImages,
-    minIMages,
-    slug,
-    type,
-  } = req.body as IProduct;
+  const { images = [] } = req.body as IProduct;
 
   if (images.length < 1) {
     return res.status(400).json({ message: 'At least 1 image are required' });
@@ -107,52 +99,7 @@ const createProduct = async (
         .json({ message: 'A product with this slug already exists' });
     }
 
-    const priceInput = price.filter(
-      (p) =>
-        p.priceClient !== 0 &&
-        p.priceFerderal !== 0 &&
-        p.priceFrequnt !== 0 &&
-        p.size !== null &&
-        p.size !== undefined &&
-        p.size !== '' &&
-        p.priceClient !== null &&
-        p.priceFerderal !== null &&
-        p.priceFrequnt !== null &&
-        p.priceClient !== undefined &&
-        p.priceFerderal !== undefined &&
-        p.priceFrequnt !== undefined &&
-        p.priceClient > 0 &&
-        p.priceFerderal > 0 &&
-        p.priceFrequnt > 0
-    );
-
-    let inpPriceMap = null;
-
-    inpPriceMap = priceInput.map((p) => {
-      return {
-        size: p.size,
-        priceClient: Number(p.priceClient),
-        priceFrequnt: Number(p.priceFrequnt),
-        priceFerderal: Number(p.priceFerderal),
-      };
-    });
-
-    const body = {
-      title,
-      description,
-      images,
-      price: inpPriceMap,
-      needImages,
-      minIMages,
-      slug,
-      type,
-    };
-
-    if (needImages === false || (needImages as any) === 'false') {
-      delete body.minIMages;
-    }
-    console.log(Boolean(needImages));
-    console.log(inpPriceMap);
+    const body = productFilter(req.body);
 
     const product = new Product(body);
     await product.save();
@@ -164,4 +111,45 @@ const createProduct = async (
     console.log(error);
     return res.status(400).json({ message: 'Review server logs' });
   }
+};
+
+const productFilter = (product: IProduct) => {
+  const priceInput = product.price.filter(
+    (p) =>
+      p.priceClient !== 0 &&
+      p.priceFerderal !== 0 &&
+      p.priceFrequnt !== 0 &&
+      p.size !== null &&
+      p.size !== undefined &&
+      p.size !== '' &&
+      p.priceClient !== null &&
+      p.priceFerderal !== null &&
+      p.priceFrequnt !== null &&
+      p.priceClient !== undefined &&
+      p.priceFerderal !== undefined &&
+      p.priceFrequnt !== undefined
+  );
+
+  const inpPriceMap = priceInput.map((p) => {
+    return {
+      size: p.size,
+      priceClient: Number(p.priceClient),
+      priceFrequnt: Number(p.priceFrequnt),
+      priceFerderal: Number(p.priceFerderal),
+    };
+  });
+
+  const body: IProduct = {
+    title: product.title,
+    description: product.description,
+    images: product.images,
+    price: inpPriceMap,
+    needImages: product.needImages,
+    minIMages: product.minIMages,
+    tags: product.tags,
+    slug: product.slug,
+    type: product.type,
+  };
+
+  return body;
 };

@@ -56,10 +56,13 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
       return;
     }
     setImagesLengt(target.files.length);
+    console.log(product.title.toLowerCase().includes('event'));
+
     setChargerImages(true);
 
     try {
       const images = product.userImages?.length === 0 ? [] : product.userImages;
+
       let i = 0;
       for (const file of target.files) {
         const base64: any = await converters.returnBase64(file);
@@ -83,14 +86,17 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
         );
         images!.push({
           image: data.message,
-          quantity: 1,
+          quantity: product.title.toLowerCase().includes('event') ? 50 : 1,
         });
+
         i++;
         setCounterImagesAdd(i);
       }
 
       product.userImages = images;
-      product.quantity = images!.length;
+      product.quantity = product
+        .userImages!.map((item) => item.quantity)
+        .reduce((prev, curr) => prev + curr, 0);
       updateCartQuantity(product as ICartProduct);
       await appApi.post('/orders/cart', cart);
       setCounterImagesAdd(0);
@@ -150,7 +156,10 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
                 fullWidth
                 startIcon={<UploadOutlined />}
                 onClick={() => fileInputRef.current?.click()}
-                sx={{ mb: 3, display: title === 'Add your images' ? '' : 'none' }}
+                sx={{
+                  mb: 3,
+                  display: title === 'Add your images' ? '' : 'none',
+                }}
               >
                 Upload Images
               </Button>

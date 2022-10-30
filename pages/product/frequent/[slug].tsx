@@ -30,7 +30,11 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     slug: product.slug,
     title: product.title,
     needImages: product.needImages,
-    quantity: product.needImages ? 0 : 1,
+    quantity: product.needImages
+      ? 0
+      : product.title.toLowerCase().includes('event')
+      ? 50
+      : 1,
   });
 
   const onSelectedSize = async (size: string) => {
