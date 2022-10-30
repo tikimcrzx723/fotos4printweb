@@ -199,16 +199,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             )}
             {product.needImages && editable === false ? (
               saveOrder ? (
-                <Button
-                  color="primary"
-                  onClick={() =>
-                    push(
-                      `/orders/gallery/${orderId}?itemId=${product._id}&size=${product.size}`
-                    )
-                  }
-                >
-                  View Images
-                </Button>
+                <UploadImageByCart title="View Images" product={product} />
               ) : (
                 <UploadImageByCart title="View Images" product={product} />
               )
