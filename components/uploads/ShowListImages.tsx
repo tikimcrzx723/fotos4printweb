@@ -22,8 +22,8 @@ export const ShowListImages: FC<PropsWithChildren<IProp>> = ({
         <Grid item key={img} xs={xs} sm={sm}>
           <Card>
             <CardMedia
-              component="img"
-              className="fadeIn"
+              component='img'
+              className='fadeIn'
               image={img}
               alt={img}
             />
@@ -31,7 +31,7 @@ export const ShowListImages: FC<PropsWithChildren<IProp>> = ({
               <Button
                 onClick={() => onDeleteImage(img)}
                 fullWidth
-                color="error"
+                color='error'
               >
                 Delete
               </Button>

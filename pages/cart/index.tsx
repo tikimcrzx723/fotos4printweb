@@ -45,12 +45,12 @@ const CartPage = () => {
     cart.map((product) => {
       if (product.quantity > 0) {
         if (
-          product.title.includes('Event') ||
           product.title.includes('event') ||
+          product.title.includes('Event') ||
           product.title.includes('Tickets') ||
           product.title.includes('tickets')
         ) {
-          counter++
+          counter++;
         } else {
           counter++;
         }
@@ -78,22 +78,22 @@ const CartPage = () => {
   }
 
   return (
-    <ShopLayout title={`Cart`} pageDescription="Shopping cart">
+    <ShopLayout title={`Cart`} pageDescription='Shopping cart'>
       <Grid container>
         <Grid item xs={12} sm={7}>
           <CartList editable={true} />
         </Grid>
         <Grid item xs={12} sm={5} marginBottom={5}>
-          <Card className="summary-card">
+          <Card className='summary-card'>
             <CardContent>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="h2">Order</Typography>
+              <Box display='flex' justifyContent='space-between'>
+                <Typography variant='h2'>Order</Typography>
                 {adrress === null ? (
                   <></>
                 ) : (
                   <Box>
                     <Switch
-                      color="secondary"
+                      color='secondary'
                       checked={isDelivery}
                       onChange={deliveryOrStore}
                     />
@@ -106,11 +106,10 @@ const CartPage = () => {
               <Box sx={{ mt: 3 }}>
                 {isCheckBuy ? (
                   <Button
-                    color="secondary"
-                    className="circular-btn"
+                    color='secondary'
+                    className='circular-btn'
                     fullWidth
                     onClick={onCreateOrder}
-                    // href='/checkout/address'
                   >
                     <Typography>Checkout</Typography>
                   </Button>
@@ -118,7 +117,7 @@ const CartPage = () => {
                   <>
                     <Grid
                       container
-                      display="flex"
+                      display='flex'
                       sx={{ alignItems: 'center' }}
                     >
                       <AddPhotoAlternateOutlined />

@@ -1,7 +1,6 @@
 import { PropsWithChildren, useState, useEffect, useContext } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { PayPalButtons } from '@paypal/react-paypal-js';
 import { useSnackbar } from 'notistack';
 
 import {
@@ -32,17 +31,6 @@ import {
   PaymentForm,
 } from 'react-square-web-payments-sdk';
 import { AuthContext } from '../../context';
-
-export type OrderResponseBody = {
-  id: string;
-  status:
-    | 'COMPLETED'
-    | 'SAVED'
-    | 'APPROVED'
-    | 'VOIDED'
-    | 'COMPLETED'
-    | 'PAYER_ACTION_REQUIRED';
-};
 
 interface Props {
   order: IOrder;
@@ -88,28 +76,6 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
   }, [order, user]);
 
   console.log(user);
-  
-
-  const onOrderCompletedPayPal = async (details: OrderResponseBody) => {
-    if (details.status !== 'COMPLETED') {
-      return alert('No Paypal payment');
-    }
-
-    setIsPaying(true);
-
-    try {
-      const { data } = await appApi.post('payments/paypal/pay', {
-        transactionId: details.id,
-        orderId: order._id,
-      });
-
-      router.reload();
-    } catch (error) {
-      setIsPaying(false);
-      console.log(error);
-      alert('Error');
-    }
-  };
 
   const onOrderCompleted = async () => {
     setIsPaying(true);
@@ -117,29 +83,29 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
   };
 
   return (
-    <ShopLayout title="Order summary" pageDescription="Order summary">
-      <Typography variant="h1" component="h1">
+    <ShopLayout title='Order summary' pageDescription='Order summary'>
+      <Typography variant='h1' component='h1'>
         Order: {order._id}
       </Typography>
       {order.isPaid ? (
         <Chip
           sx={{ my: 2 }}
-          label="Order has been paid"
-          variant="outlined"
-          color="success"
+          label='Order has been paid'
+          variant='outlined'
+          color='success'
           icon={<CreditScoreOutlined />}
         />
       ) : (
         <Chip
           sx={{ my: 2 }}
-          label="Pending payment"
-          variant="outlined"
-          color="error"
+          label='Pending payment'
+          variant='outlined'
+          color='error'
           icon={<CreditCardOffOutlined />}
         />
       )}
 
-      <Grid container className="fadeIn">
+      <Grid container className='fadeIn'>
         <Grid item xs={12} sm={7}>
           <CartList
             saveOrder={true}
@@ -148,15 +114,15 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Card className="summary-card">
+          <Card className='summary-card'>
             <CardContent>
-              <Typography variant="h2">
+              <Typography variant='h2'>
                 Summary ({order.numberOfItems} product
                 {order.numberOfItems > 1 ? 's' : ''})
               </Typography>
               <Divider sx={{ my: 1 }} />
 
-              <Typography variant="subtitle1">
+              <Typography variant='subtitle1'>
                 {order.delivery?.required === false
                   ? 'Pick Up In Store'
                   : 'Delivery'}
@@ -192,20 +158,20 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               {showCoupon ? (
                 <Box
                   marginTop={2}
-                  display="flex"
-                  justifyContent="space-between"
+                  display='flex'
+                  justifyContent='space-between'
                 >
                   <TextField
                     onChange={({ target }) => {
                       setApplyCoupon(target.value);
                     }}
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                     sx={{ width: '70%' }}
                   />
                   <Button
                     sx={{ width: '25%' }}
-                    color="primary"
+                    color='primary'
                     onClick={() => onApplyCoupon(applyCoupon)}
                   >
                     Apply Coupon
@@ -214,25 +180,25 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
               ) : (
                 <></>
               )}
-              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
+              <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
                 <Box
-                  display="flex"
-                  justifyContent="center"
-                  className="fadeIn"
+                  display='flex'
+                  justifyContent='center'
+                  className='fadeIn'
                   sx={{ display: isPaying ? 'flex' : 'none' }}
                 >
                   <CircularProgress />
                 </Box>
                 <Box
-                  flexDirection="column"
+                  flexDirection='column'
                   sx={{ display: isPaying ? 'none' : 'flex', flex: 1 }}
                 >
                   {order.isPaid ? (
                     <Chip
                       sx={{ my: 2 }}
-                      label="Order has been paid"
-                      variant="outlined"
-                      color="success"
+                      label='Order has been paid'
+                      variant='outlined'
+                      color='success'
                       icon={<CreditScoreOutlined />}
                     />
                   ) : (
@@ -269,7 +235,7 @@ const OrderPage: NextPage<PropsWithChildren<Props>> = ({ order }) => {
                         {/* <ApplePay /> */}
                         <GooglePay />
                         <Box marginBottom={2}></Box>
-                        <CreditCard lang="us" />
+                        <CreditCard lang='us' />
                       </PaymentForm>
                     </>
                   )}

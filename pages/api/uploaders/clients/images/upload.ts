@@ -43,7 +43,9 @@ const uploadImageUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const absolutePath = `orders/${session.email.split('@')[0]}-${session.email
     .split('@')[1]
-    .replaceAll('.com', '')}/order-${numOfOrders + 1}/${path}`;
+    .replaceAll('.com', Date.now().toString())}/order-${
+    numOfOrders + 1
+  }/${path}`;
   const fileName = name.replaceAll(' ', '-');
 
   const image = await imageUpload.uploadFilesToStorage(

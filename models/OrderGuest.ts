@@ -1,13 +1,10 @@
 import moongose, { model, Model, Schema } from 'mongoose';
-import { IOrder } from '../interfaces/order';
 
-const orderSchema = new Schema(
+const orderGuestSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     orderItems: [
       {
         _id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-        version: { type: Number, default: 1 },
         title: { type: String, required: true },
         size: { type: String, required: true },
         quantity: { type: Number, required: true },
@@ -25,20 +22,14 @@ const orderSchema = new Schema(
         information: { type: Object, default: { none: false } },
       },
     ],
-    shippingAddress: {
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
+    pickUpStore: {
+      company: { type: String, required: true },
       address: { type: String, required: true },
       address2: { type: String },
       zip: { type: String, required: true },
       city: { type: String, required: true },
       state: { type: String, required: true },
       phone: { type: String, required: true },
-    },
-    numberOfItems: { type: Number, required: true },
-    delivery: {
-      price: { type: Number, default: 15 },
-      required: { type: Boolean, default: true },
     },
     subTotal: { type: Number, required: true },
     tax: { type: Number, required: true },
@@ -58,8 +49,3 @@ const orderSchema = new Schema(
   },
   { timestamps: true }
 );
-
-const Order: Model<IOrder> =
-  moongose.models.Order || model('Order', orderSchema);
-
-export default Order;

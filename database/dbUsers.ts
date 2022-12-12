@@ -74,6 +74,6 @@ export const findCompany = async () => {
   const company = await Company.find().lean();
   await db.disconnect();
 
-  if (company.length === 0) return new Address();
+  if (company.length === 0) return null;
   else return JSON.parse(JSON.stringify(company[0]));
 };

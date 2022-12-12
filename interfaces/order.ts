@@ -33,6 +33,7 @@ export interface IDelivery {
 
 export interface IOrderItem {
   _id: string;
+  version?: number;
   title: string;
   size: string;
   quantity: number;

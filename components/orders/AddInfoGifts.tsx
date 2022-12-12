@@ -65,8 +65,6 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
     setOpen(true);
   };
 
-  console.log(product?.information);
-
   const handleClose = () => {
     updateCartQuantity(product as ICartProduct);
     setOpen(false);
@@ -86,7 +84,7 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
   return (
     <div>
       <Box marginBottom={2} marginTop={2}>
-        <Button color="secondary" onClick={handleClickOpen}>
+        <Button color='secondary' onClick={handleClickOpen}>
           <AddToPhotosOutlined /> Add Info
         </Button>
       </Box>
@@ -94,10 +92,10 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
+        aria-labelledby='responsive-dialog-title'
       >
-        <DialogTitle id="responsive-dialog-title">
-          <Box display="flex" justifyContent="space-between">
+        <DialogTitle id='responsive-dialog-title'>
+          <Box display='flex' justifyContent='space-between'>
             <Typography>Add Info</Typography>
           </Box>
         </DialogTitle>
@@ -107,8 +105,8 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
               <Grid container spacing={4} key={index}>
                 <Grid item xs={12} sm={5} marginBottom={1}>
                   <TextField
-                    variant="filled"
-                    label="Name"
+                    variant='filled'
+                    label='Name'
                     {...register(`usb.${index}.name`)}
                     fullWidth
                   />
@@ -116,17 +114,17 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
                 <Grid item xs={12} sm={5}>
                   <TextField
                     {...register(`usb.${index}.quantity`)}
-                    type="number"
-                    variant="filled"
-                    label="Quantity"
+                    type='number'
+                    variant='filled'
+                    label='Quantity'
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <IconButton
-                    aria-label="delete"
+                    aria-label='delete'
                     onClick={() => remove(index)}
-                    color="error"
+                    color='error'
                   >
                     <DeleteOutlined />
                   </IconButton>
@@ -135,10 +133,10 @@ export const AddInfoGifts: FC<PropsWithChildren<Props>> = ({ product }) => {
             ))}
           </DialogContent>
           <DialogActions>
-            <Button color="secondary" onClick={() => append({})} autoFocus>
+            <Button color='secondary' onClick={() => append({})} autoFocus>
               Add Names and QTY
             </Button>
-            <Button type="submit" color="primary" autoFocus>
+            <Button type='submit' color='primary' autoFocus>
               Save
             </Button>
           </DialogActions>

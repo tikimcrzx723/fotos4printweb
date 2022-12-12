@@ -36,4 +36,3 @@ declare module 'react-slideshow-image' {
     scale: number;
   }
 }
-s

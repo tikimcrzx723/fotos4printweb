@@ -17,13 +17,16 @@ import { useRole } from '../../hooks';
 import { appApi } from '../../api';
 import { AddInfoBussinesCard, AddQuantity, AddInfoGifts } from '../orders';
 import { downLoadImage } from '../../libs';
-import { useRouter } from 'next/router';
+import { AddCalendarInfo } from '../orders/AddCalendarInfo';
 
 interface Props {
   editable?: boolean;
   admin?: boolean;
   products?: IOrderItem[];
   onDownloadImage?: (images: IUserImage[], name: string) => void;
+  onDownloadCardAndPost?: (
+    information: [{ type: string; front: string; back: string }]
+  ) => void;
   orderId?: string;
   saveOrder?: boolean;
 }
@@ -34,12 +37,45 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
   saveOrder = false,
   products,
   onDownloadImage,
+  onDownloadCardAndPost,
   orderId,
 }) => {
-  const { push } = useRouter();
   const { cart, removeCartProduct } = useContext(CartContext);
   const { role } = useRole('user/rol');
   const rol = role.message === 'admin' ? 'federal' : role.message;
+
+  const returnImage = (product: IOrderItem) => {
+    if (
+      product.title.toLowerCase().includes('event') ||
+      product.title.toLowerCase().includes('flye')
+    ) {
+      return `https://afbrcpedgr.cloudimg.io/${product.image}?width=800`;
+    } else if (product.size.includes('http')) {
+      return `https://afbrcpedgr.cloudimg.io/${product.size}?width=800`;
+    } else {
+      return `https://afbrcpedgr.cloudimg.io/${product.image}?width=800`;
+    }
+  };
+
+  const returnUploads = (product: IOrderItem | ICartProduct) => {
+    const title = product.title.toLowerCase();
+
+    if (product.needImages) {
+      if (title.includes('usb')) {
+        return <AddInfoGifts product={product} />;
+      } else if (title.includes('bussines') || title.includes('postcard')) {
+        return <AddInfoBussinesCard product={product} />;
+      } else {
+        return <UploadImageByCart product={product} />;
+      }
+    } else {
+      if (title.includes('calenda')) {
+        return <AddCalendarInfo product={product} />;
+      } else {
+        return <AddQuantity product={product} />;
+      }
+    }
+  };
 
   const onRemoveCartProduct = async (product: ICartProduct) => {
     removeCartProduct(product);
@@ -66,23 +102,12 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
           sx={{ mb: 1 }}
         >
           <Grid item xs={3}>
-            {/* Llevar a la pagina del producto */}
             <NextLink href={`/product/${rol}/${product.slug}`} passHref>
               <Link>
                 <CardActionArea>
                   <CardMedia
-                    image={
-                      product.size?.includes('http')
-                        ? product.size
-                        : product.hasOwnProperty('information')
-                        ? product.title.toLowerCase().includes('event')
-                          ? `https://afbrcpedgr.cloudimg.io/${product.image}?width=400`
-                          : product.title.toLowerCase().includes('flyer')
-                          ? `https://afbrcpedgr.cloudimg.io/${product.image}?width=400`
-                          : product.image
-                        : product.image
-                    }
-                    component="img"
+                    image={returnImage(product as any)}
+                    component='img'
                     sx={{ borderRadius: '5px' }}
                   />
                 </CardActionArea>
@@ -90,7 +115,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             </NextLink>
           </Grid>
           <Grid item xs={6}>
-            <Box display="7" flexDirection="column">
+            <Box display='7' flexDirection='column'>
               {product.title.includes('USB') &&
               product.hasOwnProperty('information') ? (
                 product.information.usb.map(
@@ -99,70 +124,45 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               ) : (
                 <></>
               )}
-              {/* Conditional */}
               {editable ? (
+                returnUploads(product)
+              ) : (
                 <>
+                  <Typography variant='h5'>
+                    {product.quantity} {product.title}
+                    {product.quantity > 1 ? 's' : ''}
+                  </Typography>
                   {product.needImages ? (
-                    <>
-                      {product.title.includes('Bussines') ||
-                      product.title.includes('PostCard') ? (
-                        <AddInfoBussinesCard product={product} />
-                      ) : (
-                        <UploadImageByCart product={product} />
-                      )}
-                    </>
-                  ) : product.title.includes('USB') ? (
-                    <AddInfoGifts product={product} />
+                    <Typography variant='h5'>{product.size}</Typography>
                   ) : (
-                    <AddQuantity product={product} />
+                    <></>
                   )}
                 </>
-              ) : (
-                <Typography variant="h5">
-                  {product.quantity} {product.title}
-                  {product.quantity > 1 ? 's' : ''}
-                </Typography>
               )}
             </Box>
           </Grid>
           <Grid
             item
             xs={2}
-            display="flex"
-            alignItems="center"
-            flexDirection="column"
+            display='flex'
+            alignItems='center'
+            flexDirection='column'
           >
-            <Typography variant="subtitle1">${product.price}</Typography>
-
+            <Typography variant='subtitle1'>${product.price}</Typography>
             {admin &&
             (product.title.includes('Bussines') ||
               product.title.includes('PostCard')) ? (
-              <>
-                <Button
-                  color="secondary"
-                  className="circular-btn"
-                  onClick={() => downLoadImage(product.information.front)}
-                >
-                  Front
-                </Button>
-                {product.information.hasOwnProperty('back') ? (
-                  <Button
-                    sx={{ marginTop: 1 }}
-                    color="secondary"
-                    className="circular-btn"
-                    onClick={() => downLoadImage(product.information.back)}
-                  >
-                    Back
-                  </Button>
-                ) : (
-                  <></>
-                )}
-              </>
+              <Button
+                color='secondary'
+                onClick={() => onDownloadCardAndPost!(product.information!)}
+              >
+                Download
+              </Button>
             ) : admin ? (
               product.needImages ? (
                 <Button
-                  color="secondary"
-                  className="circular-btn"
+                  color='secondary'
+                  className='circular-btn'
                   onClick={() =>
                     onDownloadImage!(product.userImages!, product.title)
                   }
@@ -175,8 +175,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 ) : (
                   <Button
                     sx={{ marginTop: 1 }}
-                    color="secondary"
-                    className="circular-btn"
+                    color='secondary'
+                    className='circular-btn'
                     onClick={() => downLoadImage(product.information.logo)}
                   >
                     Logo
@@ -190,19 +190,21 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             )}
             {editable && (
               <Button
-                variant="text"
-                color="secondary"
+                variant='text'
+                color='secondary'
                 onClick={() => onRemoveCartProduct(product as ICartProduct)}
               >
                 Remove
               </Button>
             )}
-            {product.needImages && editable === false ? (
-              saveOrder ? (
-                <UploadImageByCart title="View Images" product={product} />
-              ) : (
-                <UploadImageByCart title="View Images" product={product} />
-              )
+            {(product.needImages &&
+              editable === false &&
+              admin === false &&
+              product.title === 'Bussines Card 2 x 3.5') ||
+            product.title === 'PostCard' ? (
+              <AddInfoBussinesCard editable={false} product={product} />
+            ) : product.needImages && editable === false && admin === false ? (
+              <UploadImageByCart title='View Images' product={product} />
             ) : (
               <></>
             )}
