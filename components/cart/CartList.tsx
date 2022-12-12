@@ -201,7 +201,10 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               editable === false &&
               admin === false &&
               product.title === 'Bussines Card 2 x 3.5') ||
-            product.title === 'PostCard' ? (
+            (product.needImages &&
+              editable === false &&
+              admin === false &&
+              product.title === 'PostCard') ? (
               <AddInfoBussinesCard editable={false} product={product} />
             ) : product.needImages && editable === false && admin === false ? (
               <UploadImageByCart title='View Images' product={product} />
