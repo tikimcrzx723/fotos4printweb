@@ -32,6 +32,7 @@ const validTicketValues = [
   { quantity: 150 },
   { quantity: 200 },
   { quantity: 250 },
+  { quantity: 300 },
   { quantity: 500 },
   { quantity: 750 },
   { quantity: 1000 },
@@ -39,6 +40,10 @@ const validTicketValues = [
   { quantity: 1500 },
   { quantity: 1750 },
   { quantity: 2000 },
+  { quantity: 2500 },
+  { quantity: 3000 },
+  { quantity: 4000 },
+  { quantity: 5000 },
 ];
 
 export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({

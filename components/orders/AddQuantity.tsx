@@ -48,21 +48,15 @@ type FormData = {
 
 export const AddQuantity: FC<PropsWithChildren<Props>> = ({ product }) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
   const [image, setImage] = useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {
-    handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {},
   });
 
   const { updateCartQuantity, cart } = useContext(CartContext);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   useEffect(() => {
     if (product!.hasOwnProperty('information')) {
@@ -71,44 +65,6 @@ export const AddQuantity: FC<PropsWithChildren<Props>> = ({ product }) => {
       }
     }
   }, [product]);
-
-  const handleClose = () => {
-    updateCartQuantity(product as ICartProduct);
-    setOpen(false);
-  };
-
-  const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-    if (target.files!.length > 1) {
-      return;
-    }
-
-    try {
-      for (const file of target.files as any) {
-        const base64: any = await converters.returnBase64(file);
-        const fileType = file.type.split('/')[0];
-        const extension = file.type.split('/')[1];
-        const path = `${product!.title.replaceAll(
-          ' ',
-          '-'
-        )}/${product!.size?.replaceAll(' ', '-')}`;
-        const uploadImage = {
-          base64,
-          fileType,
-          extension,
-          path,
-          name: `${product?.size}`,
-        };
-        const { data } = await appApi.post<{ message: string }>(
-          '/uploaders/clients/images/upload',
-          uploadImage
-        );
-        const image = data.message;
-        setImage(image);
-      }
-    } catch (error) {
-      console.log({ error });
-    }
-  };
 
   return (
     <Grid container spacing={2}>

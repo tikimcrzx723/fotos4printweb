@@ -5,6 +5,7 @@ export interface IProduct {
   images: string[];
   price: IPrice[];
   needImages?: boolean;
+  needDiscount?: boolean;
   minIMages?: number;
   slug: string;
   tags: string[];
@@ -21,4 +22,12 @@ export interface IPrice {
   priceClient: number;
   priceFerderal: number;
   priceFrequnt: number;
+  added?: IAdded[];
+}
+
+export interface IAdded {
+  complement: string;
+  client: number;
+  frequent: number;
+  federal: number;
 }

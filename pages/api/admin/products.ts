@@ -1,3 +1,4 @@
+import { IAdded } from './../../../interfaces/product';
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -136,6 +137,7 @@ const productFilter = (product: IProduct) => {
       priceClient: Number(p.priceClient),
       priceFrequnt: Number(p.priceFrequnt),
       priceFerderal: Number(p.priceFerderal),
+      added: p.added,
     };
   });
 

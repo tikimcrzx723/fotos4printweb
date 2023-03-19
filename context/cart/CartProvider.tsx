@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
+import { FC, PropsWithChildren, useEffect, useReducer, useState } from 'react';
 
 import {
   IAddress,
@@ -68,13 +68,31 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
       0
     );
 
+    let inc = 0;
+
+    if (state.cart.length > 0) {
+      state.cart.forEach((element) => {
+        if (element.information !== undefined || element.information !== null) {
+          if (element.hasOwnProperty('information')) {
+            element.information.forEach((subelemet: any) => {
+              element.added?.forEach((add) => {
+                if (subelemet.type === add.complement) {
+                  inc += add.increment * subelemet.quantity;
+                }
+              });
+            });
+          }
+        }
+      });
+    }
+
     const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
 
     const orderSummary = {
       numberOfItems,
-      subTotal,
+      subTotal: subTotal + inc,
       tax: subTotal * taxRate,
-      total: subTotal * (taxRate + 1),
+      total: subTotal * (taxRate + 1) + inc,
     };
 
     dispatch({ type: '[Cart] - Update order summary', payload: orderSummary });

@@ -78,7 +78,7 @@ export const UploadImageByCart: FC<PropsWithChildren<Props>> = ({
           fileType,
           extension,
           path,
-          name: `${images?.length}-${product.title}-${product.size}-image`,
+          name: `${images?.length}-${product.title}-${product.size}-image-${Date.now().toString()}`,
         };
         const { data } = await appApi.post<{ message: string }>(
           '/uploaders/clients/images/upload',

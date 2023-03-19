@@ -21,7 +21,7 @@ export default function handler(
 const deleteImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { url = '' } = req.body;
   try {
-    const deleted = await imageUpload.deleteFileFromObjectStorage(url);
+    await imageUpload.deleteFileFromObjectStorage(url);
     return res.status(201).json({ message: 'Deleted Images' });
   } catch (error) {
     console.log(error);

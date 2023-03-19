@@ -16,6 +16,13 @@ interface Props {
 const ProductPage: NextPage<Props> = ({ product }) => {
   const router = useRouter();
   const [priceChange, setPrice] = useState(product.price[0].priceFerderal);
+  const [added, setAdded] = useState(
+    product.price[0].hasOwnProperty('added')
+      ? product.price[0].added!.map(({ complement, federal }) => {
+          return { complement, increment: federal };
+        })
+      : [{ complement: 'none', increment: 0 }]
+  );
   const { addProductToCart } = useContext(CartContext);
   const sizes: any = product.price.map((detail) => {
     return detail.size;
@@ -36,13 +43,25 @@ const ProductPage: NextPage<Props> = ({ product }) => {
       : product.title.toLowerCase().includes('event')
       ? 50
       : 1,
+    added: added,
+    priceBase: priceChange,
   });
 
   const onSelectedSize = async (size: string) => {
-    const price = product.price.find((p) => p.size === size)?.priceFerderal;
+    const auxProduct = product.price.find((p) => p.size === size);
+    const price = auxProduct?.priceFerderal;
+    const auxAdded = auxProduct?.hasOwnProperty('added')
+      ? auxProduct.added!.map(({ complement, federal }) => {
+          return { complement, increment: federal };
+        })
+      : [{ complement: 'none', increment: 0 }];
 
     setPrice(price!);
+    setAdded(auxAdded!);
+
     tempCartProduct.price = priceChange;
+    tempCartProduct.priceBase = price;
+    tempCartProduct.added = auxAdded;
     setTempCartProduct((currentProduct) => ({
       ...currentProduct,
       size,

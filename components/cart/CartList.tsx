@@ -18,6 +18,7 @@ import { appApi } from '../../api';
 import { AddInfoBussinesCard, AddQuantity, AddInfoGifts } from '../orders';
 import { downLoadImage } from '../../libs';
 import { AddCalendarInfo } from '../orders/AddCalendarInfo';
+import { AddYardSignComplement } from '../orders/yardsigns/AddYardSignComplement';
 
 interface Props {
   editable?: boolean;
@@ -65,6 +66,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
         return <AddInfoGifts product={product} />;
       } else if (title.includes('bussines') || title.includes('postcard')) {
         return <AddInfoBussinesCard product={product} />;
+      } else if (title.includes('yard')) {
+        return <AddYardSignComplement product={product} />;
       } else {
         return <UploadImageByCart product={product} />;
       }
@@ -76,6 +79,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
       }
     }
   };
+
+  const returnViewsCheckOrder = (product: IOrderItem | ICartProduct) => {};
 
   const onRemoveCartProduct = async (product: ICartProduct) => {
     removeCartProduct(product);
@@ -107,7 +112,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 <CardActionArea>
                   <CardMedia
                     image={returnImage(product as any)}
-                    component='img'
+                    component="img"
                     sx={{ borderRadius: '5px' }}
                   />
                 </CardActionArea>
@@ -115,7 +120,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             </NextLink>
           </Grid>
           <Grid item xs={6}>
-            <Box display='7' flexDirection='column'>
+            <Box display="7" flexDirection="column">
               {product.title.includes('USB') &&
               product.hasOwnProperty('information') ? (
                 product.information.usb.map(
@@ -128,12 +133,12 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 returnUploads(product)
               ) : (
                 <>
-                  <Typography variant='h5'>
+                  <Typography variant="h5">
                     {product.quantity} {product.title}
                     {product.quantity > 1 ? 's' : ''}
                   </Typography>
                   {product.needImages ? (
-                    <Typography variant='h5'>{product.size}</Typography>
+                    <Typography variant="h5">{product.size}</Typography>
                   ) : (
                     <></>
                   )}
@@ -144,16 +149,17 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
           <Grid
             item
             xs={2}
-            display='flex'
-            alignItems='center'
-            flexDirection='column'
+            display="flex"
+            alignItems="center"
+            flexDirection="column"
           >
-            <Typography variant='subtitle1'>${product.price}</Typography>
+            <Typography variant="subtitle1">${product.price}</Typography>
             {admin &&
             (product.title.includes('Bussines') ||
-              product.title.includes('PostCard')) ? (
+              product.title.includes('PostCard') ||
+              product.title.includes('yard')) ? (
               <Button
-                color='secondary'
+                color="secondary"
                 onClick={() => onDownloadCardAndPost!(product.information!)}
               >
                 Download
@@ -161,8 +167,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             ) : admin ? (
               product.needImages ? (
                 <Button
-                  color='secondary'
-                  className='circular-btn'
+                  color="secondary"
+                  className="circular-btn"
                   onClick={() =>
                     onDownloadImage!(product.userImages!, product.title)
                   }
@@ -175,8 +181,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
                 ) : (
                   <Button
                     sx={{ marginTop: 1 }}
-                    color='secondary'
-                    className='circular-btn'
+                    color="secondary"
+                    className="circular-btn"
                     onClick={() => downLoadImage(product.information.logo)}
                   >
                     Logo
@@ -190,8 +196,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
             )}
             {editable && (
               <Button
-                variant='text'
-                color='secondary'
+                variant="text"
+                color="secondary"
                 onClick={() => onRemoveCartProduct(product as ICartProduct)}
               >
                 Remove
@@ -206,8 +212,12 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
               admin === false &&
               product.title === 'PostCard') ? (
               <AddInfoBussinesCard editable={false} product={product} />
+            ) : product.title.includes('yard') &&
+              editable === false &&
+              admin === false ? (
+              <AddYardSignComplement product={product} editable={false} />
             ) : product.needImages && editable === false && admin === false ? (
-              <UploadImageByCart title='View Images' product={product} />
+              <UploadImageByCart title="View Images" product={product} />
             ) : (
               <></>
             )}

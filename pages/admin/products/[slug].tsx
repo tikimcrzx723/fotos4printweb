@@ -34,12 +34,13 @@ import {
 } from '@mui/material';
 
 import { AdminLayout } from '../../../components/layouts';
-import { IProduct } from '../../../interfaces';
+import { IAdded, IProduct } from '../../../interfaces';
 import { dbProducts } from '../../../database';
 import { appApi } from '../../../api';
 import { Product } from '../../../models';
 import { converters } from '../../../libs';
 import { ShowListImages } from '../../../components/uploads';
+import { AddYardSignComplement } from '../../../components/orders/yardsigns/AddYardSignComplement';
 
 const validTypes = ['photo', 'press', 'gift'];
 const validNeedImages = ['yes', 'no'];
@@ -55,6 +56,7 @@ interface FormData {
     priceClient: number;
     priceFerderal: number;
     priceFrequnt: number;
+    added?: IAdded[];
   }[];
   slug: string;
   tags: string[];
@@ -91,6 +93,12 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
     name: 'price',
   });
 
+  const {
+    fields: addedFields,
+    append: appendAdded,
+    remove: removeAdded,
+  } = useFieldArray({ control, name: 'added' });
+
   useEffect(() => {
     getValues('price').map(() => {
       append({ size: '', priceClient: 0, priceFrequnt: 0, priceFerderal: 0 });
@@ -99,6 +107,8 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
       setImageOrSize(true);
     }
   }, [append, getValues]);
+
+  console.log(product);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
@@ -132,6 +142,12 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
   const onDeleteTag = (tag: string) => {
     const updatedTags = getValues('tags').filter((t) => t !== tag);
     setValue('tags', updatedTags, { shouldValidate: true });
+  };
+
+  const addComplement = (index: number) => {
+    product.price[index].added = [
+      { client: 5, frequent: 5, federal: 5, complement: '4/4' },
+    ];
   };
 
   const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -183,12 +199,13 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
 
     if (form.needImages === false || form.needImages === ('false' as any)) {
       const sizeImg = form.price.map(
-        ({ priceClient, priceFrequnt, priceFerderal }, index) => {
+        ({ priceClient, priceFrequnt, priceFerderal, added }, index) => {
           return {
             size: form.images[index + 1],
             priceClient,
             priceFrequnt,
             priceFerderal,
+            added,
           };
         }
       );
@@ -423,9 +440,9 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
           </RadioGroup>
         </FormControl>
         {imageOrSize}
-        <Grid container spacing={2} marginTop={5}>
-          {fields.map((field, index) => (
-            <div key={index}>
+        {fields.map((field, index) => (
+          <div key={'index' + index}>
+            <Grid key={index} container spacing={2} marginTop={5}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={2}>
                   <TextField
@@ -441,7 +458,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     helperText={errors.title?.message}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <TextField
                     label="Price Client"
                     type="number"
@@ -462,7 +479,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     helperText={errors.title?.message}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <TextField
                     label="Price Frequnt"
                     type="number"
@@ -483,7 +500,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     helperText={errors.title?.message}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <TextField
                     label="Price Federal"
                     type="number"
@@ -504,7 +521,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     helperText={errors.title?.message}
                   />
                 </Grid>
-                <Grid item xs={12} sm={1}>
+                <Grid item xs={12} sm={2}>
                   <IconButton
                     aria-label="delete"
                     onClick={() => remove(index)}
@@ -513,10 +530,109 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     <DeleteOutlined />
                   </IconButton>
                 </Grid>
+                <Grid item xs={12} sm={2}>
+                  <Button color="primary" onClick={() => appendAdded({})}>
+                    Complement
+                  </Button>
+                </Grid>
               </Grid>
-            </div>
-          ))}
-        </Grid>
+            </Grid>
+            {addedFields.map((addedField, subIndex) => (
+              <Grid key={`${subIndex}-complement`} container spacing={2}>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    label="complement"
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 1 }}
+                    {...register(
+                      `price.${index}.added.${subIndex}.complement`,
+                      {
+                        required: 'This field is required',
+                        minLength: { value: 2, message: 'Mínimo 2 caracteres' },
+                      }
+                    )}
+                    error={!!errors.price}
+                    helperText={errors.title?.message}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    label="Client"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                    }}
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 1 }}
+                    {...register(`price.${index}.added.${subIndex}.client`, {
+                      required: 'This field is required',
+                      min: {
+                        value: 0,
+                        message: 'The price cannot be less than 0',
+                      },
+                    })}
+                    error={!!errors.price}
+                    helperText={errors.title?.message}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    label="Frequent"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                    }}
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 1 }}
+                    {...register(`price.${index}.added.${subIndex}.frequent`, {
+                      required: 'This field is required',
+                      min: {
+                        value: 0,
+                        message: 'The price cannot be less than 0',
+                      },
+                    })}
+                    error={!!errors.price}
+                    helperText={errors.title?.message}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <TextField
+                    label="Federal"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                    }}
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 1 }}
+                    {...register(`price.${index}.added.${subIndex}.federal`, {
+                      required: 'This field is required',
+                      min: {
+                        value: 0,
+                        message: 'The price cannot be less than 0',
+                      },
+                    })}
+                    error={!!errors.price}
+                    helperText={errors.title?.message}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => removeAdded(index)}
+                    color="error"
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                </Grid>
+                <Grid item xs={12} sm={2}></Grid>
+              </Grid>
+            ))}
+          </div>
+        ))}
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
           <Button
             color="secondary"

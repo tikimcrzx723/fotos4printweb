@@ -50,5 +50,5 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     .lean();
   await db.disconnect();
 
-  return res.status(200).json(orders);
+  return res.status(200).json(orders as any);
 };

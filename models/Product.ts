@@ -6,12 +6,22 @@ const productSchema = new Schema(
     title: { type: String },
     description: { type: String, required: true, default: '' },
     images: [{ type: String }],
+    needDiscount: { type: Boolean },
+    needComplement: { type: Boolean, default: false },
     price: [
       {
         size: { type: String },
         priceClient: { type: Number },
         priceFerderal: { type: Number },
         priceFrequnt: { type: Number },
+        added: [
+          {
+            complement: { type: String, default: 'none' },
+            client: { type: Number, default: 0 },
+            frequent: { type: Number, default: 0 },
+            federal: { type: Number, default: 0 },
+          },
+        ],
       },
     ],
     needImages: { type: Boolean, default: true },

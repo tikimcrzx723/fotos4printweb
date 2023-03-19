@@ -12,6 +12,11 @@ export interface ICartProduct {
   minIMages?: number;
   needImages?: boolean;
   information?: any;
+  added?: {
+    complement: string;
+    increment: number;
+  }[];
+  priceBase?: number;
 }
 
 export interface IUserImage {

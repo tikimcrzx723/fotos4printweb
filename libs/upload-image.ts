@@ -1,8 +1,8 @@
 import { Credentials, S3 } from 'aws-sdk';
 
 const s3Client = new S3({
-  region: process.env.LINODE_OBJECT_STORAGE_REGION,
-  endpoint: process.env.LINODE_OBJECT_STORAGE_ENDPOINT,
+  region: process.env.LINODE_OBJECT_STORAGE_REGION!,
+  endpoint: process.env.LINODE_OBJECT_STORAGE_ENDPOINT!,
   sslEnabled: true,
   s3ForcePathStyle: false,
   credentials: new Credentials({
@@ -34,10 +34,12 @@ export const uploadFilesToStorage = async (
 export const deleteFileFromObjectStorage = async (url: string) => {
   const serverURL = `${process.env.LINODE_OBJECT_URL_NAME!}.${process.env
     .LINODE_OBJECT_STORAGE_ENDPOINT!}/`;
-  const Key = url.split(serverURL)[1];
+
+  const Key = url.split(serverURL);
+
   const params = {
     Bucket: process.env.LINODE_OBJECT_BUCKET!,
-    Key,
+    Key: Key[1],
   };
 
   return s3Client.deleteObject(params).promise();

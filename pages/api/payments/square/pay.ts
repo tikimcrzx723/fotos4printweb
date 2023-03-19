@@ -140,7 +140,6 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     await sendOrderMessage('+15039904525', message);
     await sendOrderMessage('+15595072896', message);
-    await sendOrderMessage('+15418623584', message);
 
     await db.disconnect();
 

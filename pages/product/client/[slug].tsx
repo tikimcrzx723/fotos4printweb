@@ -16,6 +16,13 @@ interface Props {
 const ProductPage: NextPage<Props> = ({ product }) => {
   const router = useRouter();
   const [priceChange, setPrice] = useState(product.price[0].priceClient);
+  const [added, setAdded] = useState(
+    product.price[0].hasOwnProperty('added')
+      ? product.price[0].added!.map(({ complement, client }) => {
+          return { complement, increment: client };
+        })
+      : [{ complement: 'none', increment: 0 }]
+  );
   const { addProductToCart } = useContext(CartContext);
   const sizes: any = product.price.map((detail) => {
     return detail.size;
@@ -36,13 +43,25 @@ const ProductPage: NextPage<Props> = ({ product }) => {
       : product.title.toLowerCase().includes('event')
       ? 50
       : 1,
+    added: added,
+    priceBase: priceChange,
   });
 
   const onSelectedSize = async (size: string) => {
-    const price = product.price.find((p) => p.size === size)?.priceClient;
+    const auxProduct = product.price.find((p) => p.size === size);
+    const price = auxProduct?.priceClient;
+    const auxAdded = auxProduct?.hasOwnProperty('added')
+      ? auxProduct.added!.map(({ complement, client }) => {
+          return { complement, increment: client };
+        })
+      : [{ complement: 'none', increment: 0 }];
 
     setPrice(price!);
+    setAdded(auxAdded!);
+
     tempCartProduct.price = priceChange;
+    tempCartProduct.priceBase = price;
+    tempCartProduct.added = auxAdded;
     setTempCartProduct((currentProduct) => ({
       ...currentProduct,
       size,
@@ -70,17 +89,12 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             <Typography variant="h1" component="h1">
               {product.title}
             </Typography>
-            <Typography
-              variant="h5"
-              component="h2"
-              marginTop={1}
-              marginBottom={2}
-            >
-              Price: ${priceChange}
+            <Typography variant="subtitle1" component="h2">
+              ${priceChange}
             </Typography>
 
             {/* Quantity */}
-            <Box sx={{ my: 1 }}>
+            <Box sx={{ my: 2 }}>
               <Typography variant="h5" fontWeight={700}>
                 {product.title.toLowerCase().includes('even') ||
                 product.title.toLowerCase().includes('flyer') ||
@@ -100,7 +114,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             {/* AddCart */}
             {product.price.length > 0 ? (
               <Button
-                sx={{ fontSize: 16 }}
                 color="secondary"
                 className="circular-btn"
                 onClick={onAddProduct}
@@ -116,13 +129,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             )}
             {/* Description */}
             <Box sx={{ mt: 3 }}>
-              <Typography
-                variant="h5"
-                marginBottom={1}
-                sx={{ fontWeight: 700 }}
-              >
-                Description
-              </Typography>
+              <Typography variant="h6">Description</Typography>
               <Typography variant="body1">{product.description}</Typography>
             </Box>
           </Box>

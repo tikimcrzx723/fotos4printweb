@@ -45,6 +45,8 @@ export interface IOrderItem {
   minIMages?: number;
   needImages?: boolean;
   information?: any;
+  added?: [{ complement: string; increment: number }];
+  priceBase?: number;
 }
 
 interface IUserImages {

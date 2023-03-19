@@ -72,8 +72,38 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
     const backendTotal = (subTotal + delivery?.price!) * (taxRate + 1);
 
-    if (total !== backendTotal) {
-      throw new Error('The total does not match the amount');
+    let increment = 0;
+
+    orderItems.forEach((element) => {
+      if (element.added !== null || element.added !== undefined) {
+        const auxProd = dbProducts
+          .find(
+            (p) => new mongoose.Types.ObjectId(p._id).toString() === element._id
+          )
+          ?.price.find((si) => si.size === element.size)?.added;
+
+        element.added?.forEach((subElement) => {
+          auxProd!.forEach((add) => {
+            element.information.forEach((inf: any) => {
+              if (inf.type === add.complement) {
+                if (rol === 'admin' || rol === 'federal') {
+                  increment += add.federal * inf.quantity;
+                } else if (rol === 'frequent') {
+                  increment += add.frequent * inf.quantity;
+                } else if (rol === 'client') {
+                  increment += add.client * inf.quantity;
+                }
+              }
+            });
+          });
+        });
+      }
+    });
+
+    if (total !== backendTotal + increment) {
+      throw new Error(
+        `The total does not match the amount ${backendTotal})}`
+      );
     }
 
     // All good up to this point
