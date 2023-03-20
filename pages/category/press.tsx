@@ -1,4 +1,3 @@
-import { Box, Typography } from '@mui/material';
 import { NextPage } from 'next';
 import { ShopLayout } from '../../components/layouts';
 import { FullScreenLoading } from '../../components/ui';

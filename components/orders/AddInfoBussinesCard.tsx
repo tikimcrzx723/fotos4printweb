@@ -22,19 +22,17 @@ interface Props {
   editable?: boolean;
 }
 
-const validTypes = [
-  { code: '4/0', type: '4/0, full color front, no back' },
-  { code: '4/4', type: '4/4, full color both side' },
-];
-
 export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
   product,
   editable = true,
 }) => {
   const theme = useTheme();
+  const [isHovered, setisHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { updateCartQuantity, cart } = useContext(CartContext);
+
+  console.log(product);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,20 +72,31 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
         {product?.information!.map((images: any, index: number) => (
           <Grid key={images.front + index} item xs={4} md={4}>
             <CardMedia
-              component='img'
-              className='fadeIn'
+              component="img"
+              className="fadeIn"
               image={images.front}
               alt={product.title}
             />
             {editable ? (
-              <Button
-                onClick={() => onDeleteCard(images)}
-                sx={{ marginTop: 1 }}
-                color='error'
-                fullWidth
-              >
-                <DeleteForeverOutlined /> Delete
-              </Button>
+              <>
+                <Button
+                  onClick={() => onDeleteCard(images)}
+                  sx={{ marginTop: 1 }}
+                  color="error"
+                  fullWidth
+                >
+                  <DeleteForeverOutlined /> Delete
+                </Button>
+                {images.type === '4/4' ? (
+                  <Typography variant="h6" textAlign="center">
+                    Two Sides 
+                  </Typography>
+                ) : (
+                  <Typography variant="h6" textAlign="center">
+                    One Side
+                  </Typography>
+                )}
+              </>
             ) : (
               <></>
             )}
@@ -100,7 +109,7 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
   return (
     <div>
       <Box marginBottom={2} marginTop={2}>
-        <Button color='secondary' onClick={handleClickOpen}>
+        <Button color="secondary" onClick={handleClickOpen}>
           <AddToPhotosOutlined /> Add Info
         </Button>
       </Box>
@@ -108,11 +117,13 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        aria-labelledby='responsive-dialog-title'
+        aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id='responsive-dialog-title'>
-          <Box display='flex' justifyContent='space-between'>
-            <Typography>Business Card</Typography>
+        <DialogTitle id="responsive-dialog-title">
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h4" textAlign="center">
+              Business Card
+            </Typography>
           </Box>
         </DialogTitle>
         <DialogContent>{renderImages(product as any)}</DialogContent>
@@ -121,8 +132,8 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
           <Button
             onClick={handleClose}
             sx={{ marginLeft: 2 }}
-            type='submit'
-            color='error'
+            type="submit"
+            color="error"
             autoFocus
           >
             close

@@ -99,7 +99,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
             fileType,
             extension,
             path,
-            name: `${product?.size}${imagesCard}`,
+            name: `${product?.size}${imagesCard}-${Date.now().toString()}`,
           };
           const { data } = await appApi.post<{ message: string }>(
             '/uploaders/clients/images/upload',
@@ -170,7 +170,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
   return (
     <div>
       <Box marginBottom={2} marginTop={2}>
-        <Button color='primary' onClick={handleClickOpen}>
+        <Button color="primary" onClick={handleClickOpen}>
           <AddToPhotosOutlined /> Add Images
         </Button>
       </Box>
@@ -178,7 +178,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        aria-labelledby='responsive-dialog-title'
+        aria-labelledby="responsive-dialog-title"
       >
         <form onSubmit={handleSubmit(onSaveInfo)}>
           <DialogContent>
@@ -189,7 +189,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                   <Select
                     key={product?._id}
                     value={add40or44}
-                    label='Type'
+                    label="Type"
                     onChange={({ target }) => {
                       setValue('type', target.value as any, {
                         shouldValidate: true,
@@ -197,7 +197,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                       setAdd40or44(target.value);
                       setAddBackPhoto(target.value === '4/4' ? true : false);
                     }}
-                    variant='filled'
+                    variant="filled"
                   >
                     {validTypes.map(({ code, type }) => (
                       <MenuItem key={code} value={code}>
@@ -224,10 +224,10 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
 
                 <input
                   ref={fileInputRefFront}
-                  type='file'
+                  type="file"
                   multiple
                   onChange={onFilesSelected}
-                  accept='.png, .jpg, .jpeg, .JPEG'
+                  accept=".png, .jpg, .jpeg, .JPEG"
                   style={{ display: 'none' }}
                 />
                 {addBackPhoto ? (
@@ -248,10 +248,10 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
 
                     <input
                       ref={fileInputRefBack}
-                      type='file'
+                      type="file"
                       multiple
                       onChange={onFilesSelected}
-                      accept='.png, .jpg, .jpeg, .JPEG, .pdf'
+                      accept=".png, .jpg, .jpeg, .JPEG, .pdf"
                       style={{ display: 'none' }}
                     />
                   </>
@@ -266,8 +266,8 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                   Front
                   <Card sx={{ textAlign: 'center' }}>
                     <CardMedia
-                      component='img'
-                      className='fadeIn'
+                      component="img"
+                      className="fadeIn"
                       image={`https://afbrcpedgr.cloudimg.io/${frontImage}?width=400`}
                       alt={product!.title}
                     />
@@ -275,7 +275,7 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                   {editable ? (
                     <Button
                       fullWidth
-                      color='error'
+                      color="error"
                       onClick={() => {
                         onDeleteImage(frontImage);
                         setFrontImage('');
@@ -295,15 +295,15 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                   Back
                   <Card sx={{ textAlign: 'center' }}>
                     <CardMedia
-                      component='img'
-                      className='fadeIn'
+                      component="img"
+                      className="fadeIn"
                       image={`https://afbrcpedgr.cloudimg.io/${backImage}?width=400`}
                       alt={product!.title}
                     />
                   </Card>
                   <Button
                     fullWidth
-                    color='error'
+                    color="error"
                     onClick={() => {
                       onDeleteImage(backImage, 'back');
                       setBackImage('');
@@ -318,10 +318,10 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button color='error' onClick={handleClose}>
+            <Button color="error" onClick={handleClose}>
               Close
             </Button>
-            <Button type='submit' color='primary' autoFocus>
+            <Button type="submit" color="primary" autoFocus>
               Save
             </Button>
           </DialogActions>
