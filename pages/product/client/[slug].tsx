@@ -47,6 +47,8 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     priceBase: priceChange,
   });
 
+  
+
   const onSelectedSize = async (size: string) => {
     const auxProduct = product.price.find((p) => p.size === size);
     const price = auxProduct?.priceClient;

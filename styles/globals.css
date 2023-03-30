@@ -49,3 +49,9 @@
 .css-1ytlwq5-MuiAlert-icon {
   display: none;
 }
+
+.business-card {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #000;
+}

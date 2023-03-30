@@ -108,8 +108,6 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
     }
   }, [append, getValues]);
 
-  console.log(product);
-
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (name === 'title') {

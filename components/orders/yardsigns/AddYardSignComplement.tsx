@@ -6,10 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import {
-  AddToPhotosOutlined,
-  DeleteForeverOutlined,
-} from '@mui/icons-material';
+import { AddToPhotosOutlined } from '@mui/icons-material';
 
 import { Box, Grid, Typography, CardMedia, TextField } from '@mui/material';
 import { ICartProduct, IOrderItem } from '../../../interfaces';
@@ -37,8 +34,6 @@ export const AddYardSignComplement: FC<PropsWithChildren<Props>> = ({
 
   const handleClose = () => {
     let qty = 0;
-
-    console.log(product);
 
     if (product!.hasOwnProperty('information')) {
       product?.information!.map((images: any, index: number) => {
@@ -127,14 +122,6 @@ export const AddYardSignComplement: FC<PropsWithChildren<Props>> = ({
               >
                 Delete
               </Button>
-              {/* <Button
-                  sx={{ marginTop: 2 }}
-                  color="primary"
-                  fullWidth
-                  onClick={handleClickOpen}
-                >
-                  <AddToPhotosOutlined /> Add Images
-                </Button> */}
               {product.information[index].type === '4/4' ? (
                 <Typography variant="h6" textAlign="center">
                   Two Sides

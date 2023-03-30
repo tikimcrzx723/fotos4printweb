@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FC, useState, PropsWithChildren, useContext } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,6 +11,7 @@ import {
   AddToPhotosOutlined,
   DeleteForeverOutlined,
 } from '@mui/icons-material';
+import './AddInfoBussinesCard.module.css';
 
 import { Box, Grid, Typography, CardMedia } from '@mui/material';
 import { ICartProduct, IOrderItem } from '../../interfaces';
@@ -27,12 +29,9 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
   editable = true,
 }) => {
   const theme = useTheme();
-  const [isHovered, setisHovered] = useState(false);
   const [open, setOpen] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { updateCartQuantity, cart } = useContext(CartContext);
-
-  console.log(product);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,6 +71,7 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
         {product?.information!.map((images: any, index: number) => (
           <Grid key={images.front + index} item xs={4} md={4}>
             <CardMedia
+              sx={{ marginBottom: 1 }}
               component="img"
               className="fadeIn"
               image={images.front}
@@ -89,7 +89,7 @@ export const AddInfoBussinesCard: FC<PropsWithChildren<Props>> = ({
                 </Button>
                 {images.type === '4/4' ? (
                   <Typography variant="h6" textAlign="center">
-                    Two Sides 
+                    Two Sides
                   </Typography>
                 ) : (
                   <Typography variant="h6" textAlign="center">

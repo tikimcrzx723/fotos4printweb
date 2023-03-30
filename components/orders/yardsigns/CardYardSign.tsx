@@ -31,6 +31,8 @@ import { useForm } from 'react-hook-form';
 import { converters } from '../../../libs';
 import { appApi } from '../../../api';
 import { CartContext } from '../../../context';
+import { returnImageSize } from '../../../libs/size-image';
+import { signal } from '@preact/signals-react';
 
 interface Props {
   product?: IOrderItem | ICartProduct;
@@ -46,6 +48,9 @@ const validTypes = [
   { code: '4/4', type: '4/4, full color both side' },
 ];
 
+const imageWidth = signal(0);
+const imageHeigth = signal(0);
+
 export const CardYardSign: FC<PropsWithChildren<Props>> = ({
   product,
   editable = true,
@@ -55,11 +60,13 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [imagesCard, setImagesCard] = useState('');
   const [add40or44, setAdd40or44] = useState('4/0');
+  const [imageSize, setImageSize] = useState({ width: 0, heigth: 0 });
   const [addBackPhoto, setAddBackPhoto] = useState(false);
   const [backImage, setBackImage] = useState('');
   const [frontImage, setFrontImage] = useState('');
   const fileInputRefBack = useRef<HTMLInputElement>(null);
   const fileInputRefFront = useRef<HTMLInputElement>(null);
+
   const {
     handleSubmit,
     setValue,
@@ -107,6 +114,8 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
             uploadImage
           );
           const image = data.message;
+          returnImageSize(image, setImageSize);
+
           if (imagesCard === 'front') {
             setFrontImage(image);
           } else if (imagesCard === 'back') {
@@ -120,10 +129,6 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
   };
 
   const onDeleteImage = async (image: string, side = 'front') => {
-    if (side === 'front') {
-    } else {
-    }
-
     await appApi.post('/uploaders/clients/images/delete', { url: image });
     updateCartQuantity(product as any);
   };
@@ -139,6 +144,8 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
         back: backImage,
         front: frontImage,
         quantity: 1,
+        increment: product!.added!.find((el) => el.complement === '4/4')!
+          .increment,
       });
       product!.information = infoArr!;
     } else if (add40or44 === '4/0' && frontImage.length > 0) {
@@ -146,6 +153,7 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
         type: '4/0',
         front: frontImage,
         quantity: 1,
+        increment: 0,
       });
       product!.information = infoArr;
     }

@@ -26,7 +26,7 @@ interface Props {
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
-  const { shippingAddress } = order;
+  const { shippingAddress, orderItems } = order;
 
   const onDownloadImage = async (images: IUserImage[], name: string) => {
     images.map(async ({ image, quantity }) => {
@@ -73,29 +73,29 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 
   return (
     <AdminLayout
-      title='Order Summary'
+      title="Order Summary"
       subTitle={`OrderId: ${order._id}`}
       icon={<AirplaneTicketOutlined />}
     >
       {order.isPaid ? (
         <Chip
           sx={{ my: 2 }}
-          label='Order has been paid'
-          variant='outlined'
-          color='success'
+          label="Order has been paid"
+          variant="outlined"
+          color="success"
           icon={<CreditScoreOutlined />}
         />
       ) : (
         <Chip
           sx={{ my: 2 }}
-          label='Pending payment'
-          variant='outlined'
-          color='error'
+          label="Pending payment"
+          variant="outlined"
+          color="error"
           icon={<CreditCardOffOutlined />}
         />
       )}
 
-      <Grid container className='fadeIn'>
+      <Grid container className="fadeIn">
         <Grid item xs={12} sm={7}>
           <CartList
             products={order.orderItems}
@@ -106,16 +106,16 @@ const OrderPage: NextPage<Props> = ({ order }) => {
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Card className='summary-card'>
+          <Card className="summary-card">
             <CardContent>
-              <Typography variant='h2'>
+              <Typography variant="h2">
                 Summary ({order.numberOfItems}{' '}
                 {order.numberOfItems > 1 ? 'products' : 'product'})
               </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box>
-                <Typography variant='subtitle1'>Delivery Address</Typography>
+                <Typography variant="subtitle1">Delivery Address</Typography>
               </Box>
 
               <Typography>
@@ -136,6 +136,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Divider sx={{ my: 1 }} />
 
               <OrderSummary
+                cartOrder={orderItems as any}
                 orderValues={{
                   numberOfItems: order.numberOfItems,
                   subTotal: order.subTotal,
@@ -144,24 +145,24 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 }}
               />
 
-              <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {/* TODO */}
 
-                <Box display='flex' flexDirection='column'>
+                <Box display="flex" flexDirection="column">
                   {order.isPaid ? (
                     <Chip
                       sx={{ my: 2, flex: 1 }}
-                      label='Order has been paid'
-                      variant='outlined'
-                      color='success'
+                      label="Order has been paid"
+                      variant="outlined"
+                      color="success"
                       icon={<CreditScoreOutlined />}
                     />
                   ) : (
                     <Chip
                       sx={{ my: 2, flex: 1 }}
-                      label='Pending payment'
-                      variant='outlined'
-                      color='error'
+                      label="Pending payment"
+                      variant="outlined"
+                      color="error"
                       icon={<CreditCardOffOutlined />}
                     />
                   )}

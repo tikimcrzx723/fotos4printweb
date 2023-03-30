@@ -22,7 +22,7 @@ import { appApi } from '../../api';
 
 const SummaryPage = () => {
   const router = useRouter();
-  const { numberOfItems, createOrder, updateCartProductsByCache } =
+  const { numberOfItems, createOrder, cart, updateCartProductsByCache } =
     useContext(CartContext);
   const { isDelivery } = useContext(UIContext);
 
@@ -74,7 +74,7 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <OrderSummary />
+              <OrderSummary cartOrder={cart} />
 
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Button

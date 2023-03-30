@@ -78,22 +78,22 @@ const CartPage = () => {
   }
 
   return (
-    <ShopLayout title={`Cart`} pageDescription='Shopping cart'>
+    <ShopLayout title={`Cart`} pageDescription="Shopping cart">
       <Grid container>
         <Grid item xs={12} sm={7}>
           <CartList editable={true} />
         </Grid>
         <Grid item xs={12} sm={5} marginBottom={5}>
-          <Card className='summary-card'>
+          <Card className="summary-card">
             <CardContent>
-              <Box display='flex' justifyContent='space-between'>
-                <Typography variant='h2'>Order</Typography>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h2">Order</Typography>
                 {adrress === null ? (
                   <></>
                 ) : (
                   <Box>
                     <Switch
-                      color='secondary'
+                      color="secondary"
                       checked={isDelivery}
                       onChange={deliveryOrStore}
                     />
@@ -102,12 +102,12 @@ const CartPage = () => {
                 )}
               </Box>
               <Divider sx={{ my: 1 }} />
-              <OrderSummary />
+              <OrderSummary cartOrder={cart} />
               <Box sx={{ mt: 3 }}>
                 {isCheckBuy ? (
                   <Button
-                    color='secondary'
-                    className='circular-btn'
+                    color="secondary"
+                    className="circular-btn"
                     fullWidth
                     onClick={onCreateOrder}
                   >
@@ -117,7 +117,7 @@ const CartPage = () => {
                   <>
                     <Grid
                       container
-                      display='flex'
+                      display="flex"
                       sx={{ alignItems: 'center' }}
                     >
                       <AddPhotoAlternateOutlined />

@@ -20,14 +20,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <SnackbarProvider maxSnack={3}>
           <AuthProvider>
-            <CartProvider>
-              <UIProvider>
-                <ThemeProvider theme={lightTheme}>
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </UIProvider>
-            </CartProvider>
+              <CartProvider>
+                <UIProvider>
+                  <ThemeProvider theme={lightTheme}>
+                    <CssBaseline />
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </UIProvider>
+              </CartProvider>
           </AuthProvider>
         </SnackbarProvider>
       </SWRConfig>
