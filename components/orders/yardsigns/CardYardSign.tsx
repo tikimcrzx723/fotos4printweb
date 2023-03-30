@@ -32,8 +32,6 @@ import { converters } from '../../../libs';
 import { appApi } from '../../../api';
 import { CartContext } from '../../../context';
 import { returnImageSize } from '../../../libs/size-image';
-import { signal } from '@preact/signals-react';
-
 interface Props {
   product?: IOrderItem | ICartProduct;
   editable?: boolean;
@@ -48,8 +46,6 @@ const validTypes = [
   { code: '4/4', type: '4/4, full color both side' },
 ];
 
-const imageWidth = signal(0);
-const imageHeigth = signal(0);
 
 export const CardYardSign: FC<PropsWithChildren<Props>> = ({
   product,
