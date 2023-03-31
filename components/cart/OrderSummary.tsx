@@ -83,7 +83,9 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
                 </Typography>
               </Grid>
               <Grid item xs={3}>
-                <Typography>{product.size}</Typography>
+                <Typography>
+                  {product.size?.includes('http') ? '-' : product.size}
+                </Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography>{inf.quantity}</Typography>
@@ -108,7 +110,9 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
               <Typography>{product.title}</Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography>{product.size}</Typography>
+              <Typography>
+                {product.size?.includes('http') ? '-' : product.size}
+              </Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography>{product.quantity}</Typography>
