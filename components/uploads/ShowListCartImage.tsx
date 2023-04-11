@@ -1,6 +1,5 @@
-import { FC, PropsWithChildren, useContext, useState, useEffect } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 import { ICartProduct } from '../../interfaces';
-import { AttachMoneyOutlined } from '@mui/icons-material';
 
 import {
   Button,
@@ -12,7 +11,6 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from '@mui/material';
 import { IUserImage } from '../../interfaces';
 import { CartContext } from '../../context';
@@ -26,25 +24,10 @@ interface IProp {
   onDeleteImage: (image: string) => void;
 }
 
-const validTicketValues = [
-  { quantity: 50 },
-  { quantity: 100 },
-  { quantity: 150 },
-  { quantity: 200 },
-  { quantity: 250 },
-  { quantity: 300 },
-  { quantity: 500 },
-  { quantity: 750 },
-  { quantity: 1000 },
-  { quantity: 1250 },
-  { quantity: 1500 },
-  { quantity: 1750 },
-  { quantity: 2000 },
-  { quantity: 2500 },
-  { quantity: 3000 },
-  { quantity: 4000 },
-  { quantity: 5000 },
-];
+const validTicketValues = [{ quantity: 50 }];
+for (let index = 2; index < 201; index++) {
+  validTicketValues.push({ quantity: index * 50 });
+}
 
 export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
   product,
@@ -98,7 +81,7 @@ export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
                     ? product.userImages![index].information.hasOwnProperty(
                         'price'
                       )
-                    : (product.userImages![index].information = {price:5}),
+                    : (product.userImages![index].information = { price: 5 }),
                 };
                 updateCartQuantity(product);
               }}

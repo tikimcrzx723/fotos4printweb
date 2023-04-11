@@ -1,40 +1,8 @@
-import {
-  FC,
-  useState,
-  PropsWithChildren,
-  useContext,
-  useRef,
-  ChangeEvent,
-} from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import {
-  AddPhotoAlternateOutlined,
-  AddToPhotosOutlined,
-} from '@mui/icons-material';
-
-import {
-  Box,
-  Grid,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Card,
-  CardMedia,
-  TextField,
-} from '@mui/material';
+import { FC, useState, PropsWithChildren, useContext } from 'react';
+import { Grid, TextField } from '@mui/material';
 import { CartContext } from '../../context';
 import { ICartProduct, IOrderItem } from '../../interfaces';
 import { useForm } from 'react-hook-form';
-import { converters } from '../../libs';
-import { appApi } from '../../api';
 import { useEffect } from 'react';
 
 interface Props {
@@ -47,9 +15,7 @@ type FormData = {
 };
 
 export const AddQuantity: FC<PropsWithChildren<Props>> = ({ product }) => {
-  const theme = useTheme();
   const [image, setImage] = useState('');
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {
     formState: { errors },
   } = useForm<FormData>({
@@ -82,8 +48,8 @@ export const AddQuantity: FC<PropsWithChildren<Props>> = ({ product }) => {
               product!.quantity = Number(target.value);
               updateCartQuantity(product as any);
             } else {
-              product!.quantity = 1
-              updateCartQuantity(product as any)
+              product!.quantity = 1;
+              updateCartQuantity(product as any);
             }
           }}
         />

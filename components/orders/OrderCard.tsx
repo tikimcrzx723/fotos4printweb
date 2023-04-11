@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
 import {
@@ -30,20 +30,20 @@ export const OrderCard: FC<PropsWithChildren<Props>> = ({ order }) => {
           <Link>
             <CardActionArea>
               <CardMedia
-                component='img'
+                component="img"
                 image={'/avatar.png'}
                 alt={order._id!}
-                className='fadeIn'
+                className="fadeIn"
               />
-              <Typography gutterBottom variant='h5' component='div'>
+              <Typography gutterBottom variant="h5" component="div">
                 {order.user?.email}
               </Typography>
               <CardContent>
-                <Typography variant='h5'>
+                <Typography variant="h5">
                   No. Orders = {order.orders}
                 </Typography>
-                <Typography variant='h5'>No. Items = {order.items}</Typography>
-                <Typography variant='h5'>Total = {total}</Typography>
+                <Typography variant="h5">No. Items = {order.items}</Typography>
+                <Typography variant="h5">Total = {total}</Typography>
               </CardContent>
             </CardActionArea>
           </Link>

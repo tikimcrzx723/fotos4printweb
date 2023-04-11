@@ -1,5 +1,5 @@
-import { FacebookOutlined, Instagram } from '@mui/icons-material';
-import { Box, Container, Grid, Link, Typography } from '@mui/material';
+import { FacebookOutlined } from '@mui/icons-material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 
@@ -49,7 +49,9 @@ export const Footer = () => {
               </Box>
               <Box>
                 <Typography variant="body1">503 990-4525</Typography>
-                <Typography variant="body1">347 N Front st Woodburn OR 97071</Typography>
+                <Typography variant="body1">
+                  347 N Front st Woodburn OR 97071
+                </Typography>
               </Box>
             </Grid>
           </Grid>

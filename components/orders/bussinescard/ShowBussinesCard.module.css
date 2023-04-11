@@ -1,0 +1,36 @@
+.card {
+  width: 563px;
+  height: 338px;
+}
+
+.card-side {
+  height: 338px;
+  transition: all 1s ease;
+  position: absolute;
+  margin: auto;
+  width: 563px;
+  backface-visibility: hidden;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+}
+
+.card-side-back {
+  transform: rotateY(180deg);
+}
+
+.card:hover .card-side-front {
+  transform: rotateY(-180deg);
+}
+
+.card:hover .card-side-back {
+  transform: rotateY(0deg);
+}
+
+.card-cont {
+  width: 100%;
+}
+
+.card-cta {
+  margin: 60px;
+}

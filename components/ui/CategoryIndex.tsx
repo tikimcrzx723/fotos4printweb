@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardMedia,
   Grid,
   Link,
   Typography,
