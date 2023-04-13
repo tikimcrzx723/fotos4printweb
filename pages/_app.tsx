@@ -8,6 +8,9 @@ import { SWRConfig } from 'swr';
 import { lightTheme } from '../themes';
 import { AuthProvider, CartProvider, UIProvider } from '../context';
 import { SnackbarProvider } from 'notistack';
+import ReactGA from 'react-ga4'
+
+ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ADSENSE!)
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
