@@ -17,6 +17,7 @@ import { GridCloseIcon } from '@mui/x-data-grid';
 import { AuthContext, UIContext } from '../context';
 import { useCartCache } from '../hooks';
 import { CartContext } from '../context/cart/CartContext';
+// @ts-ignore 
 import ReactGA from 'react-ga4'
 
 const HomePage: NextPage = () => {
