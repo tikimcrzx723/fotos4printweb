@@ -19,9 +19,8 @@ import { useCartCache } from '../hooks';
 import { CartContext } from '../context/cart/CartContext';
 import ReactGA from 'react-ga4'
 
-ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ADSENSE!)
-
 const HomePage: NextPage = () => {
+  ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ADSENSE!)
   const { freeDelivery, closeDelivery } = useContext(UIContext);
   const { isLoggedIn, user } = useContext(AuthContext);
   const { cart, updateCartProductsByCache } = useContext(CartContext);
