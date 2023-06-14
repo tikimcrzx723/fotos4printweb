@@ -55,3 +55,57 @@
   padding: 4px;
   border: 1px solid #000;
 }
+
+.css-6xn9zp-MuiButtonBase-root-MuiButton-root:hover {
+  background-color: transparent;
+  border-bottom: 4px solid #fa57ae;
+  color: #454545;
+  width: 80px;
+  border-radius: 0px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.css-6xn9zp-MuiButtonBase-root-MuiButton-root {
+  background-color: transparent;
+  color: #454545;
+  border-bottom: 4px solid transparent;
+  width: 80px;
+  border-radius: 0px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.css-uogeqm-MuiButtonBase-root-MuiButton-root {
+    font-weight: 500;
+    font-size: 0.8125rem;
+    line-height: 1.75;
+    letter-spacing: 0.02857em;
+    background-color: transparent;
+    text-transform: uppercase;
+    width: 80px;
+    min-width: 80px;
+    padding: 4px 10px;
+    border-bottom: 4px solid #FEE22B;
+    border-radius: 0;color: #454545;
+    box-shadow: none;
+    text-transform: none;
+    box-shadow: none;
+}
+.css-uogeqm-MuiButtonBase-root-MuiButton-root:hover {
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  background-color: transparent;
+  width: 80px;
+  min-width: 80px;
+  padding: 4px 10px;
+  border-bottom: 4px solid #f9d90c;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.menu-button:hover{
+  background-color: rgba(0, 0, 0, 0.04);
+  border-bottom: 4px solid transparent;
+  border-radius: 4px;
+}
