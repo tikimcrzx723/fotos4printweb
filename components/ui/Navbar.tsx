@@ -36,14 +36,21 @@ export const Navbar = () => {
 
   return (
     <>
-      <AppBar>
+      <AppBar style={{ backgroundColor: '#F5F5F5 !important'}}>
         <Toolbar>
           <NextLink href="/" passHref>
             <Link display="flex" alignItems="center">
-              <Typography variant="h5">Fotos4print |</Typography>
-              <Typography variant="body1" sx={{ ml: 0.5 }}>
-                Shop
-              </Typography>
+               <Box
+        component="img"
+        sx={{
+          height: 80,
+          width: 103,
+          maxHeight: { xs: 80, md: 61 },
+          maxWidth: { xs: 103, md: 79 },
+        }}
+        alt="EL SUENO"
+        src="/assets/img/Logo.png"
+      />
             </Link>
           </NextLink>
 
@@ -56,29 +63,29 @@ export const Navbar = () => {
             className="fadeIn"
           >
             <NextLink href="/category/photo" passHref>
-              <Link>
+              <Link style={{width: '80px'}}>
                 <Button
                   color={asPath === '/category/photo' ? 'primary' : 'info'}
                 >
-                  <Typography>Photos</Typography>
+                  <Typography fontSize={20}>Photos</Typography>
                 </Button>
               </Link>
             </NextLink>
             <NextLink href="/category/gift" passHref>
-              <Link>
+              <Link style={{width: '80px'}}>
                 <Button
                   color={asPath === '/category/gift' ? 'primary' : 'info'}
                 >
-                  <Typography>Gifts</Typography>
+                  <Typography fontSize={20}>Gifts</Typography>
                 </Button>
               </Link>
             </NextLink>
             <NextLink href="/category/press" passHref>
-              <Link>
+              <Link style={{width: '80px'}}>
                 <Button
                   color={asPath === '/category/press' ? 'primary' : 'info'}
                 >
-                  <Typography>Press</Typography>
+                  <Typography fontSize={20}>Press</Typography>
                 </Button>
               </Link>
             </NextLink>
@@ -122,7 +129,7 @@ export const Navbar = () => {
           </IconButton>
 
           <NextLink href="/cart" passHref>
-            <Link>
+            <Link style={{width: '80px'}}>
               <IconButton>
                 <Badge
                   badgeContent={numberOfItems > 9 ? '+9' : numberOfItems}
@@ -134,7 +141,7 @@ export const Navbar = () => {
             </Link>
           </NextLink>
 
-          <Button onClick={toggleSideMenu}>
+          <Button onClick={toggleSideMenu} className="menu-button">
             <Typography variant="h6">Menu</Typography>
           </Button>
         </Toolbar>
