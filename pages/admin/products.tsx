@@ -25,7 +25,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'title',
-    headerName: 'title',
+    headerName: 'Title',
     width: 230,
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
@@ -62,8 +62,9 @@ const ProductsPage = () => {
           startIcon={<AddOutlined />}
           color='secondary'
           href='/admin/products/new'
+          className='add-button'
         >
-          Create new Product
+          New Product
         </Button>
       </Box>
       <Grid container className='fadeIn'>

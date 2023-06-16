@@ -53,8 +53,9 @@ const ProductsPage = () => {
           startIcon={<AddOutlined />}
           color="secondary"
           href="/admin/coupons/new"
+          className='add-button'
         >
-          Create new Coupon
+          New Coupon
         </Button>
       </Box>
       <Grid container className="fadeIn">

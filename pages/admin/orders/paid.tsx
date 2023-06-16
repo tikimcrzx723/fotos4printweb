@@ -138,12 +138,13 @@ const PaidOrdersPage = () => {
       subTitle={'Paid Orders'}
       icon={<ConfirmationNumberOutlined />}
     >
-      <Grid container>
+      <Grid container style={{ background: '#F5F5F5'}}>
         <Grid item xs={12} sm={3}></Grid>
         <Grid item xs={12} sm={3}></Grid>
         <Grid item xs={12} sm={3}></Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={3} style={{ background: '#FFFFFF'}}>
           <TextField
+            style={{ background: '#FFFFFF'}}
             variant="filled"
             label="Tracking Number"
             onChange={(e) => {

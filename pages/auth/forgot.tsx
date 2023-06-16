@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { signIn, getSession, getProviders } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from '../../components/layouts';
@@ -37,10 +37,23 @@ const ForgotPage = () => {
   return (
     <AuthLayout title="Forgot Password">
       <form onSubmit={handleSubmit(onForgotPassword)} noValidate>
-        <Box sx={{ width: 350, padding: '10px 20px' }}>
+      <Box sx={{ width: 450, padding: '20px 50px',  backgroundColor: '#FFFFFF' }}>
+          <Box textAlign={'center'}>
+            <Box className='auth-image'
+                component="img"
+                sx={{
+                  height: 122,
+                  width: 158,
+                  maxHeight: { xs: 122, md: 160 },
+                  maxWidth: { xs: 158, md: 206 },
+                }}
+                alt="EL SUENO"
+                src="/assets/img/Logo.png"
+              />
+            </Box>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h1" component="h1">
+              <Typography variant="h1" component="h1" align='center'>
                 Recover Account
               </Typography>
             </Grid>
@@ -69,6 +82,18 @@ const ForgotPage = () => {
               >
                 Recover
               </Button>
+            </Grid>
+            <Grid item xs={12} display='flex' justifyContent='center'>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/login?p=${router.query.p?.toString()}`
+                    : '/auth/login'
+                }
+                passHref
+              >
+                <Link underline='always'>Back to login</Link>
+              </NextLink>
             </Grid>
           </Grid>
         </Box>

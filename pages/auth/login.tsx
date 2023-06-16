@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from '../../components/layouts';
 import { validations } from '../../utils';
-import { ErrorOutline } from '@mui/icons-material';
+import { ErrorOutline, FacebookOutlined } from '@mui/icons-material';
 
 type FormData = {
   email: string;
@@ -50,11 +50,25 @@ const LoginPage = () => {
   return (
     <AuthLayout title="Login">
       <form onSubmit={handleSubmit(onLoginUser)} noValidate>
-        <Box sx={{ width: 350, padding: '10px 20px' }}>
+        
+        <Box sx={{ width: 450, padding: '20px 50px',  backgroundColor: '#FFFFFF' }}>
+          <Box textAlign={'center'}>
+            <Box className='auth-image'
+                component="img"
+                sx={{
+                  height: 122,
+                  width: 158,
+                  maxHeight: { xs: 122, md: 160 },
+                  maxWidth: { xs: 158, md: 206 },
+                }}
+                alt="EL SUENO"
+                src="/assets/img/Logo.png"
+              />
+            </Box>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h1" component="h1">
-                Sign in to foto4print
+              <Typography variant="h2" component="h2" align='center'>
+                Sign in
               </Typography>
               <Chip
                 label="We do not recognize this user / password"
@@ -105,8 +119,7 @@ const LoginPage = () => {
               </Button>
             </Grid>
 
-            <Grid item xs={12} display="flex" justifyContent="end">
-              <Typography>New to foto4print?</Typography>
+            <Grid item xs={12} display="flex" justifyContent="center">
               <NextLink
                 href={
                   router.query.p
@@ -120,11 +133,11 @@ const LoginPage = () => {
                   underline="always"
                   color="secondary"
                 >
-                  create an account
+                  Create an account
                 </Link>
               </NextLink>
             </Grid>
-            <Grid item xs={12} display="flex" justifyContent="end">
+            <Grid item xs={12} display="flex" justifyContent="center">
               <Typography>Forgot your</Typography>
               <NextLink href="/auth/forgot" passHref>
                 <Link
@@ -154,11 +167,21 @@ const LoginPage = () => {
                     key={provider.id}
                     variant="outlined"
                     fullWidth
+                    className={ provider.name == 'Google' ? 'google-button' : 'facebook-button'}
                     color="primary"
                     sx={{ mb: 1 }}
                     onClick={() => signIn(provider.id)}
                   >
+                    <span className='left-icon'>
+                    {provider.name == 'Google' ? 
+                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="23px" height="23px" viewBox="0 0 48 48" ><g><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path><path fill="none" d="M0 0h48v48H0z"></path></g></svg>
+                    : <FacebookOutlined fontSize='large' />}
+                    
+                    </span>
+                    <span style={{}}>
+                      
                     {provider.name}
+                    </span>
                   </Button>
                 );
               })}

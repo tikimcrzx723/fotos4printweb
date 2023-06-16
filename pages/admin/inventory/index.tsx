@@ -63,8 +63,8 @@ const DashboardInventory = () => {
               <CreditCardOutlined color="secondary" sx={{ fontSize: 60 }} />
             }
             text={
-              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer">
-                <Typography variant="body1">Total Orders</Typography>
+              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer" className='card-link'>
+                <Typography variant="body1" >Total Orders</Typography>
               </a>
             }
           />
@@ -78,6 +78,7 @@ const DashboardInventory = () => {
                 href={`/admin/orders/completed`}
                 target="_blank"
                 rel="noreferrer"
+                className='card-link'
               >
                 <Typography variant="body1">Completed Orders</Typography>
               </a>
@@ -89,7 +90,7 @@ const DashboardInventory = () => {
             subTitle="Paid Orders"
             icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 60 }} />}
             text={
-              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer">
+              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer" className='card-link'>
                 <Typography variant="body1">Paid Orders</Typography>
               </a>
             }
@@ -104,6 +105,7 @@ const DashboardInventory = () => {
                 href={`/admin/orders/notpaid`}
                 target="_blank"
                 rel="noreferrer"
+                className='card-link'
               >
                 <Typography variant="body1">No Paid Orders</Typography>
               </a>
@@ -115,8 +117,8 @@ const DashboardInventory = () => {
             subTitle="Clients Orders"
             icon={<GroupOutlined color="primary" sx={{ fontSize: 60 }} />}
             text={
-              <a href={`/admin/users`} target="_blank" rel="noreferrer">
-                <Typography variant="body1">Clients Orders</Typography>
+              <a href={`/admin/users`} target="_blank" rel="noreferrer" className='card-link'>
+                <Typography variant="body1" >Clients Orders</Typography>
               </a>
             }
           />
@@ -126,7 +128,7 @@ const DashboardInventory = () => {
             icon={
               <AccessTimeOutlined color="secondary" sx={{ fontSize: 60 }} />
             }
-            text={<Typography variant="body1">RefreshIn</Typography>}
+            text={<Typography variant="body1" className='card-link'>RefreshIn</Typography>}
           />
         </Grid>
       </AdminLayout>

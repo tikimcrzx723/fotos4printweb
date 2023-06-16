@@ -61,15 +61,15 @@ const DashboardPage = () => {
         subTitle="General statistics"
         icon={<DashboardOutlined />}
       >
-        <Grid container spacing={3}>
+        <Grid container spacing={3} >
           <SummaryTile
-            title={numberOfOrders}
+            title={ numberOfOrders}
             subTitle="Total Orders"
             icon={
               <CreditCardOutlined color="secondary" sx={{ fontSize: 60 }} />
             }
             text={
-              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer">
+              <a href={`/admin/orders/all`} target="_blank" rel="noreferrer" className='card-link'>
                 <Typography variant="body1">Total Orders</Typography>
               </a>
             }
@@ -83,6 +83,7 @@ const DashboardPage = () => {
                 href={`/admin/orders/completed`}
                 target="_blank"
                 rel="noreferrer"
+                className='card-link'
               >
                 <Typography variant="body1">Completed Orders</Typography>
               </a>
@@ -93,7 +94,7 @@ const DashboardPage = () => {
             subTitle="Paid Orders"
             icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 60 }} />}
             text={
-              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer">
+              <a href={`/admin/orders/paid`} target="_blank" rel="noreferrer" className='card-link'>
                 <Typography variant="body1">Paid Orders</Typography>
               </a>
             }
@@ -107,6 +108,7 @@ const DashboardPage = () => {
                 href={`/admin/orders/notpaid`}
                 target="_blank"
                 rel="noreferrer"
+                className='card-link'
               >
                 <Typography variant="body1">No Paid Orders</Typography>
               </a>
@@ -117,7 +119,7 @@ const DashboardPage = () => {
             subTitle="Clients"
             icon={<GroupOutlined color="primary" sx={{ fontSize: 60 }} />}
             text={
-              <a href={`/admin/users`} target="_blank" rel="noreferrer">
+              <a href={`/admin/users`} target="_blank" rel="noreferrer" className='card-link'>
                 <Typography variant="body1">Clients</Typography>
               </a>
             }
@@ -127,7 +129,7 @@ const DashboardPage = () => {
             subTitle="Products"
             icon={<CategoryOutlined color="warning" sx={{ fontSize: 60 }} />}
             text={
-              <a href={`/admin/products`} target="_blank" rel="noreferrer">
+              <a href={`/admin/products`} target="_blank" rel="noreferrer" className='card-link'>
                 <Typography variant="body1">Products</Typography>
               </a>
             }
@@ -138,7 +140,7 @@ const DashboardPage = () => {
             icon={
               <CancelPresentationOutlined color="error" sx={{ fontSize: 60 }} />
             }
-            text={<Typography variant="body1">No Existence</Typography>}
+            text={<Typography variant="body1" className='card-link'>No Existence</Typography>}
           />
           <SummaryTile
             title={lowInventory}
@@ -149,7 +151,7 @@ const DashboardPage = () => {
                 sx={{ fontSize: 60 }}
               />
             }
-            text={<Typography variant="body1">Low Inventory</Typography>}
+            text={<Typography variant="body1" className='card-link'>Low Inventory</Typography>}
           />
           <SummaryTile
             title={refreshIn}
@@ -157,7 +159,7 @@ const DashboardPage = () => {
             icon={
               <AccessTimeOutlined color="secondary" sx={{ fontSize: 60 }} />
             }
-            text={<Typography variant="body1">RefreshIn</Typography>}
+            text={<Typography variant="body1" className='card-link'>RefreshIn</Typography>}
           />
         </Grid>
       </AdminLayout>

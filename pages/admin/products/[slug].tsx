@@ -238,7 +238,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
           <Button
-            color="secondary"
+            className='save-button'
             startIcon={<SaveOutlined />}
             sx={{ width: '150px' }}
             type="submit"
@@ -397,6 +397,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               />
 
               <Chip
+                style={{ padding: '5px 0'}}
                 label="It is necessary to 1 images"
                 color="error"
                 variant="outlined"
@@ -641,6 +642,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
               marginRight: 2,
             }}
             type="submit"
+            className='add-button'
             onClick={() => append({ size: '24x35in', price: 25 })}
             disabled={isSaving}
           >
