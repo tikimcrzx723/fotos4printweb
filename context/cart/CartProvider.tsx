@@ -72,7 +72,10 @@ export const CartProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
 
     if (state.cart.length > 0) {
       state.cart.forEach((element) => {
-        if (element.information !== undefined || element.information !== null) {
+        if (
+          (element.information !== undefined || element.information !== null) &&
+          element.hasOwnProperty('added')
+        ) {
           if (element.hasOwnProperty('information')) {
             element.information.forEach((subelemet: any) => {
               element.added?.forEach((add) => {

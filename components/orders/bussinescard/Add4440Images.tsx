@@ -138,8 +138,10 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
     const infoArr: any = product!.hasOwnProperty('information')
       ? product!.information
       : [];
+      console.log(infoArr);
 
     if (add40or44 === '4/4' && backImage.length > 0 && frontImage.length > 0) {
+
       infoArr.push({
         type: '4/4',
         back: backImage,
@@ -221,7 +223,6 @@ export const Add4440Images: FC<PropsWithChildren<Props>> = ({
                 ) : (
                   <></>
                 )}
-
                 <input
                   ref={fileInputRefFront}
                   type="file"

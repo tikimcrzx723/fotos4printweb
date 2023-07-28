@@ -1,4 +1,3 @@
-import { IAdded } from './../../../interfaces/product';
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

@@ -42,6 +42,7 @@ export const OrderSummary: FC<PropsWithChildren<Props>> = ({
   const summaryValues = orderValues
     ? orderValues
     : { numberOfItems, subTotal, total, tax };
+  console.log(summaryValues);
 
   useEffect(() => {
     if (summaryValues.subTotal > summaryValues.total) {

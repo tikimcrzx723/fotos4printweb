@@ -19,6 +19,7 @@ import { AddInfoBussinesCard, AddQuantity, AddInfoGifts } from '../orders';
 import { downLoadImage } from '../../libs';
 import { AddCalendarInfo } from '../orders/AddCalendarInfo';
 import { AddYardSignComplement } from '../orders/yardsigns/AddYardSignComplement';
+import { AddEnvelope } from '../orders/envelope/AddEnvelope';
 
 interface Props {
   editable?: boolean;
@@ -68,6 +69,8 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
         return <AddInfoBussinesCard product={product} />;
       } else if (title.includes('yard')) {
         return <AddYardSignComplement product={product} />;
+      } else if (title.toLowerCase().includes('env')) {
+        return <AddEnvelope product={product} />;
       } else {
         return <UploadImageByCart product={product} />;
       }
@@ -79,9 +82,7 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
       }
     }
   };
-
-  const returnViewsCheckOrder = (product: IOrderItem | ICartProduct) => {};
-
+  
   const onRemoveCartProduct = async (product: ICartProduct) => {
     removeCartProduct(product);
     if (product.userImages !== null) {

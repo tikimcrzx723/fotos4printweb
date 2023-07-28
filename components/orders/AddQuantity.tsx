@@ -22,7 +22,7 @@ export const AddQuantity: FC<PropsWithChildren<Props>> = ({ product }) => {
     defaultValues: {},
   });
 
-  const { updateCartQuantity, cart } = useContext(CartContext);
+  const { updateCartQuantity } = useContext(CartContext);
 
   useEffect(() => {
     if (product!.hasOwnProperty('information')) {

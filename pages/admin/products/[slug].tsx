@@ -211,6 +211,8 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
       form.price = sizeImg;
     }
 
+    console.log(form);
+
     try {
       const { data } = await appApi({
         url: '/admin/products',
@@ -482,7 +484,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Frequnt"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth
@@ -503,7 +505,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Price Federal"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth
@@ -559,7 +561,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Client"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth
@@ -580,7 +582,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Frequent"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth
@@ -601,7 +603,7 @@ const ProductAdminPage: NextPage<PropsWithChildren<Props>> = ({ product }) => {
                     label="Federal"
                     type="number"
                     InputProps={{
-                      inputProps: { min: '0', max: '10000', step: '0.05' },
+                      inputProps: { min: '0', max: '10000', step: '0.01' },
                     }}
                     variant="filled"
                     fullWidth

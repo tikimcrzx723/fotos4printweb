@@ -84,7 +84,11 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         element.added?.forEach((subElement) => {
           auxProd!.forEach((add) => {
+            console.log(add);
+            
             element.information.forEach((inf: any) => {
+              console.log(inf);
+              
               if (inf.type === add.complement) {
                 if (rol === 'admin' || rol === 'federal') {
                   increment += add.federal * inf.quantity;
@@ -100,10 +104,11 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       }
     });
 
+    console.log(increment);
+    
+
     if (total !== backendTotal + increment) {
-      throw new Error(
-        `The total does not match the amount ${backendTotal})}`
-      );
+      throw new Error(`The total does not match the amount ${backendTotal})}`);
     }
 
     // All good up to this point

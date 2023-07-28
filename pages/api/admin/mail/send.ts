@@ -10,9 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  await sgMail.setApiKey(
-    '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'
-  );
+  await sgMail.setApiKey(process.env.SG_API_KEY!);
 
   const msg = {
     to: 'tikimcrzx723@gmail.com',
