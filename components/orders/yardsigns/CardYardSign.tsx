@@ -273,7 +273,7 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
                     <CardMedia
                       component="img"
                       className="fadeIn"
-                      image={`https://afbrcpedgr.cloudimg.io/${frontImage}?width=400`}
+                      image={`https://cdwjpmyywa.cloudimg.io/${frontImage}?width=400`}
                       alt={product!.title}
                     />
                   </Card>
@@ -303,7 +303,7 @@ export const CardYardSign: FC<PropsWithChildren<Props>> = ({
                     <CardMedia
                       component="img"
                       className="fadeIn"
-                      image={`https://afbrcpedgr.cloudimg.io/${backImage}?width=400`}
+                      image={`https://cdwjpmyywa.cloudimg.io/${backImage}?width=400`}
                       alt={product!.title}
                     />
                   </Card>

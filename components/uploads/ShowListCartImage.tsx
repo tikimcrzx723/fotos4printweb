@@ -52,7 +52,7 @@ export const ShowListCartImage: FC<PropsWithChildren<IProp>> = ({
           <CardMedia
             component="img"
             className="fadeIn"
-            image={`https://afbrcpedgr.cloudimg.io/${img.image}?width=400`}
+            image={`https://cdwjpmyywa.cloudimg.io/${img.image}?width=400`}
             alt={product.title}
           />
         )}

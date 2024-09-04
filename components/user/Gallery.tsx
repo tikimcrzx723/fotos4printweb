@@ -14,7 +14,7 @@ export const Gallery: FC<PropsWithChildren<Props>> = ({ images }) => {
             <CardActionArea>
               <CardMedia
                 component="img"
-                image={`https://afbrcpedgr.cloudimg.io/${image}?width=300`}
+                image={`https://cdwjpmyywa.cloudimg.io/${image}?width=300`}
                 alt="user images"
                 className="fadeIn"
               />

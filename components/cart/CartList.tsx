@@ -51,11 +51,11 @@ export const CartList: FC<PropsWithChildren<Props>> = ({
       product.title.toLowerCase().includes('event') ||
       product.title.toLowerCase().includes('flye')
     ) {
-      return `https://afbrcpedgr.cloudimg.io/${product.image}?width=800`;
+      return `https://cdwjpmyywa.cloudimg.io/${product.image}?width=800`;
     } else if (product.size.includes('http')) {
-      return `https://afbrcpedgr.cloudimg.io/${product.size}?width=800`;
+      return `https://cdwjpmyywa.cloudimg.io/${product.size}?width=800`;
     } else {
-      return `https://afbrcpedgr.cloudimg.io/${product.image}?width=800`;
+      return `https://cdwjpmyywa.cloudimg.io/${product.image}?width=800`;
     }
   };
 
