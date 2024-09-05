@@ -32,17 +32,17 @@ const PaidOrdersPage = () => {
         `/admin/users/address/${order?.user?._id}`
       );
 
-      if (address.data !== null) {
-        if (address.data.phone.length === 10) {
-          const body = {
-            phone: address.data.phone,
-            msn: order?.delivery?.required
-              ? `Your order has Your Has Shipped - Order #${orderId}`
-              : `Your order is ready for pick up #${orderId} and tracking number is ${trackingNumber}`,
-          };
-          await appApi.post('/admin/users/sendOrderMSN', body);
-        }
-      }
+      // if (address.data !== null) {
+      //   if (address.data.phone.length === 10) {
+      //     const body = {
+      //       phone: address.data.phone,
+      //       msn: order?.delivery?.required
+      //         ? `Your order has Your Has Shipped - Order #${orderId}`
+      //         : `Your order is ready for pick up #${orderId} and tracking number is ${trackingNumber}`,
+      //     };
+      //     await appApi.post('/admin/users/sendOrderMSN', body);
+      //   }
+      // }
     }
     const previosOrders = orders.map((order) => ({ ...order }));
     const updatedOrders = orders.map((order) => ({

@@ -40,9 +40,7 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (orderState !== undefined) {
     filter = { isPaid, orderState };
   }
-
-  console.log(isPaid);
-  console.log(orderState);
+  
   await db.connect();
   const orders = await Order.find(filter)
     .sort({ createdAt: 'desc' })
